@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LeafMailer Pro · Configurable Email Platform</title>
+  <title>MAILER PRO · Smart Email Marketing</title>
   <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <!-- Google Font Inter -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+  </script>
   <style>
     /* ----- RESET & VARIABLES (Premium SaaS) ----- */
     * {
@@ -17,7 +20,7 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
     :root {
-      --bg: #f2f6fc;
+      --bg: #f4f7fc;
       --card: #ffffff;
       --text: #0a1a2f;
       --text-secondary: #4a5f7a;
@@ -34,6 +37,9 @@
       --radius: 16px;
       --radius-sm: 10px;
       --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      --sidebar-width: 260px;
+      --top-nav-height: 68px;
+      --accent: #1a5cff;
     }
     .dark {
       --bg: #0b1428;
@@ -44,6 +50,9 @@
       --primary: #3b82f6;
       --primary-dark: #2563eb;
       --primary-light: #1e2f4a;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.5);
     }
     body {
       background: var(--bg);
@@ -60,25 +69,25 @@
     .top-nav {
       background: var(--card);
       border-bottom: 1px solid var(--border);
-      padding: 0 32px;
-      height: 70px;
+      padding: 0 28px;
+      height: var(--top-nav-height);
       display: flex;
       align-items: center;
       justify-content: space-between;
       position: sticky;
       top: 0;
       z-index: 100;
-      backdrop-filter: blur(12px);
-      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(14px);
+      background: rgba(255, 255, 255, 0.82);
       transition: var(--transition);
     }
     .dark .top-nav {
-      background: rgba(22, 32, 53, 0.85);
+      background: rgba(22, 32, 53, 0.88);
     }
     .top-nav .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       font-size: 22px;
       font-weight: 700;
       color: var(--primary);
@@ -87,18 +96,19 @@
     .top-nav .brand i { font-size: 26px; }
     .top-nav .brand small {
       font-weight: 400;
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text-secondary);
       letter-spacing: 0.3px;
+      margin-left: 4px;
     }
     .top-nav .right {
       display: flex;
       align-items: center;
-      gap: 18px;
+      gap: 16px;
     }
     .top-nav .right .avatar {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       background: var(--primary-light);
       color: var(--primary);
@@ -106,7 +116,7 @@
       align-items: center;
       justify-content: center;
       font-weight: 600;
-      font-size: 16px;
+      font-size: 15px;
       cursor: pointer;
       transition: var(--transition);
     }
@@ -121,18 +131,18 @@
       padding: 4px;
     }
 
-    /* ----- LAYOUT ----- */
-    .app { display: flex; min-height: calc(100vh - 70px); }
+    /* ----- SIDEBAR ----- */
+    .app { display: flex; min-height: calc(100vh - var(--top-nav-height)); }
     .sidebar {
-      width: 250px;
+      width: var(--sidebar-width);
       background: var(--card);
       border-right: 1px solid var(--border);
-      padding: 20px 16px;
+      padding: 20px 14px;
       display: flex;
       flex-direction: column;
       position: sticky;
-      top: 70px;
-      height: calc(100vh - 70px);
+      top: var(--top-nav-height);
+      height: calc(100vh - var(--top-nav-height));
       overflow-y: auto;
       transition: var(--transition);
       flex-shrink: 0;
@@ -156,6 +166,7 @@
       justify-content: center;
       font-weight: 600;
       font-size: 16px;
+      flex-shrink: 0;
     }
     .sidebar .profile .info .name { font-weight: 600; font-size: 15px; }
     .sidebar .profile .info .workspace { font-size: 12px; color: var(--text-secondary); }
@@ -169,7 +180,7 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      padding: 12px 14px;
+      padding: 11px 14px;
       border-radius: var(--radius-sm);
       color: var(--text-secondary);
       text-decoration: none;
@@ -205,6 +216,7 @@
     }
     .sidebar .footer-links a:hover { background: var(--bg); color: var(--text); }
 
+    /* ----- MAIN CONTENT ----- */
     .main {
       flex: 1;
       padding: 28px 36px;
@@ -271,6 +283,7 @@
     .btn-success:hover { opacity: 0.9; transform: translateY(-2px); }
     .btn-danger { background: var(--danger); color: #fff; }
     .btn-danger:hover { opacity: 0.9; transform: translateY(-2px); }
+    .w-full { width: 100%; }
 
     /* ----- CARDS & GRID ----- */
     .grid-4 {
@@ -357,6 +370,7 @@
     .badge-sent { background: var(--success); color: #fff; }
     .badge-failed { background: var(--danger); color: #fff; }
     .badge-sending { background: var(--warning); color: #fff; }
+    .badge-scheduled { background: var(--primary-light); color: var(--primary); }
 
     /* ----- FORMS ----- */
     .form-group { margin-bottom: 18px; }
@@ -398,7 +412,6 @@
     .text-center { text-align: center; }
     .mt-16 { margin-top: 16px; }
     .mb-16 { margin-bottom: 16px; }
-    .w-full { width: 100%; }
 
     /* ----- TABS ----- */
     .tab-bar {
@@ -432,7 +445,7 @@
     /* ----- TEMPLATE GALLERY ----- */
     .template-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
       gap: 16px;
       margin-bottom: 24px;
     }
@@ -452,6 +465,7 @@
     }
     .template-card i { font-size: 32px; color: var(--primary); margin-bottom: 6px; }
     .template-card .name { font-weight: 600; font-size: 14px; }
+    .template-card .actions { margin-top: 8px; display: flex; justify-content: center; gap: 6px; }
 
     /* ----- DOMAIN CARDS ----- */
     .domain-card {
@@ -480,8 +494,9 @@
     }
     .domain-card .status.verified { color: var(--success); font-weight: 600; }
     .domain-card .status.pending { color: var(--warning); font-weight: 600; }
+    .domain-card .status.not-configured { color: var(--text-secondary); font-weight: 600; }
 
-    /* ----- HELP / INSTRUCTION WELL ----- */
+    /* ----- WELL / HELP ----- */
     .well {
       background: var(--bg);
       border-radius: var(--radius-sm);
@@ -492,7 +507,7 @@
     .well ul { padding-left: 20px; margin-bottom: 8px; }
     .well ul li { margin-bottom: 4px; font-size: 14px; }
 
-    /* ----- PAGES (sections) ----- */
+    /* ----- PAGES ----- */
     .page-section { display: none; animation: fadeSlide 0.3s ease; }
     .page-section.active { display: block; }
     @keyframes fadeSlide {
@@ -500,56 +515,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ----- RESPONSIVE ----- */
-    @media (max-width: 1024px) {
-      .sidebar { width: 72px; padding: 16px 8px; }
-      .sidebar .profile .info { display: none; }
-      .sidebar .profile .avatar-sm { margin: 0 auto; }
-      .sidebar nav a span { display: none; }
-      .sidebar nav a { justify-content: center; padding: 12px; }
-      .sidebar .footer-links a span { display: none; }
-      .sidebar .footer-links a { justify-content: center; padding: 10px; }
-      .main { padding: 20px; }
-    }
-    @media (max-width: 768px) {
-      .top-nav { padding: 0 16px; height: 60px; }
-      .hamburger { display: block; }
-      .sidebar {
-        position: fixed;
-        top: 60px;
-        left: -280px;
-        width: 280px;
-        height: calc(100vh - 60px);
-        z-index: 99;
-        transition: left 0.3s ease;
-        box-shadow: var(--shadow-lg);
-      }
-      .sidebar.open { left: 0; }
-      .sidebar .profile .info { display: block; }
-      .sidebar nav a span { display: inline; }
-      .sidebar .footer-links a span { display: inline; }
-      .main { padding: 16px; }
-      .grid-4 { grid-template-columns: 1fr 1fr; gap: 14px; }
-      .page-header h1 { font-size: 20px; }
-    }
-    @media (max-width: 480px) {
-      .grid-4 { grid-template-columns: 1fr; }
-      .top-nav .brand small { display: none; }
-    }
-
-    /* Drop zone */
-    .drop-zone {
-      border: 2px dashed var(--border);
-      border-radius: var(--radius-sm);
-      padding: 36px 20px;
-      text-align: center;
-      transition: var(--transition);
-      cursor: pointer;
-    }
-    .drop-zone:hover { border-color: var(--primary); background: var(--primary-light); }
-    .drop-zone i { font-size: 36px; color: var(--text-secondary); margin-bottom: 6px; }
-
-    /* Settings section tabs */
+    /* ----- SETTINGS TABS ----- */
     .settings-tabs {
       display: flex;
       gap: 4px;
@@ -579,6 +545,58 @@
     .settings-tabs button:hover { color: var(--text); }
     .settings-panel { display: none; animation: fadeSlide 0.3s ease; }
     .settings-panel.active { display: block; }
+
+    /* ----- DROP ZONE ----- */
+    .drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-sm);
+      padding: 36px 20px;
+      text-align: center;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .drop-zone:hover { border-color: var(--primary); background: var(--primary-light); }
+    .drop-zone i { font-size: 36px; color: var(--text-secondary); margin-bottom: 6px; }
+
+    /* ----- RESPONSIVE ----- */
+    @media (max-width: 1024px) {
+      :root { --sidebar-width: 72px; }
+      .sidebar .profile .info { display: none; }
+      .sidebar .profile .avatar-sm { margin: 0 auto; }
+      .sidebar nav a span { display: none; }
+      .sidebar nav a { justify-content: center; padding: 12px; }
+      .sidebar .footer-links a span { display: none; }
+      .sidebar .footer-links a { justify-content: center; padding: 10px; }
+      .main { padding: 20px; }
+    }
+    @media (max-width: 768px) {
+      .top-nav { padding: 0 16px; height: 60px; }
+      .hamburger { display: block; }
+      :root { --sidebar-width: 280px; --top-nav-height: 60px; }
+      .sidebar {
+        position: fixed;
+        top: var(--top-nav-height);
+        left: -320px;
+        width: 280px;
+        height: calc(100vh - var(--top-nav-height));
+        z-index: 99;
+        transition: left 0.3s ease;
+        box-shadow: var(--shadow-lg);
+      }
+      .sidebar.open { left: 0; }
+      .sidebar .profile .info { display: block; }
+      .sidebar nav a span { display: inline; }
+      .sidebar .footer-links a span { display: inline; }
+      .main { padding: 16px; }
+      .grid-4 { grid-template-columns: 1fr 1fr; gap: 14px; }
+      .page-header h1 { font-size: 20px; }
+    }
+    @media (max-width: 480px) {
+      .grid-4 { grid-template-columns: 1fr; }
+      .top-nav .brand small { display: none; }
+      .settings-tabs button { padding: 6px 14px; font-size: 12px; }
+      .tab-bar button { padding: 6px 14px; font-size: 12px; }
+    }
   </style>
 </head>
 <body>
@@ -587,11 +605,11 @@
   <header class="top-nav">
     <div class="brand">
       <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
-      <i class="fas fa-leaf" style="color:var(--primary);"></i> LeafMailer <small>· Pro</small>
+      <i class="fas fa-envelope" style="color:var(--primary);"></i> MAILER PRO <small>· Smart Email Marketing</small>
     </div>
     <div class="right">
       <button class="btn btn-outline btn-sm" id="themeToggle"><i class="fas fa-moon"></i></button>
-      <div class="avatar">JD</div>
+      <div class="avatar" id="navAvatar">JD</div>
     </div>
   </header>
 
@@ -600,10 +618,10 @@
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
       <div class="profile">
-        <div class="avatar-sm">JD</div>
+        <div class="avatar-sm" id="sidebarAvatar">JD</div>
         <div class="info">
           <div class="name" id="sidebarUserName">John Doe</div>
-          <div class="workspace" id="sidebarWorkspace">Acme Corp</div>
+          <div class="workspace" id="sidebarWorkspace">MAILER PRO</div>
         </div>
       </div>
       <nav>
@@ -612,6 +630,7 @@
         <a href="#" data-page="compose"><i class="fas fa-pen-fancy"></i><span>Compose</span></a>
         <a href="#" data-page="templates"><i class="fas fa-paste"></i><span>Templates</span></a>
         <a href="#" data-page="contacts"><i class="fas fa-address-book"></i><span>Contacts</span></a>
+        <a href="#" data-page="analytics"><i class="fas fa-chart-line"></i><span>Analytics</span></a>
         <a href="#" data-page="domain"><i class="fas fa-globe"></i><span>Domain Setup</span></a>
         <a href="#" data-page="settings"><i class="fas fa-sliders-h"></i><span>Settings</span></a>
       </nav>
@@ -634,14 +653,14 @@
           </div>
         </div>
         <div class="grid-4" id="statsGrid">
-          <div class="stat-card"><div class="label">Total Contacts</div><div class="value" id="statContacts">0</div><div class="sub"><i class="fas fa-arrow-up" style="color:var(--success);"></i> +8 this week</div><div class="icon-bg"><i class="fas fa-users"></i></div></div>
-          <div class="stat-card"><div class="label">Campaigns</div><div class="value" id="statCampaigns">0</div><div class="sub">2 active</div><div class="icon-bg"><i class="fas fa-bullhorn"></i></div></div>
+          <div class="stat-card"><div class="label">Total Contacts</div><div class="value" id="statContacts">0</div><div class="sub"><i class="fas fa-arrow-up" style="color:var(--success);"></i> +12 this week</div><div class="icon-bg"><i class="fas fa-users"></i></div></div>
+          <div class="stat-card"><div class="label">Campaigns</div><div class="value" id="statCampaigns">0</div><div class="sub">3 active</div><div class="icon-bg"><i class="fas fa-bullhorn"></i></div></div>
           <div class="stat-card"><div class="label">Emails Sent</div><div class="value" id="statSent">0</div><div class="sub">98% delivery</div><div class="icon-bg"><i class="fas fa-paper-plane"></i></div></div>
           <div class="stat-card"><div class="label">Failed</div><div class="value" id="statFailed">0</div><div class="sub">0.3% bounce</div><div class="icon-bg"><i class="fas fa-exclamation-triangle"></i></div></div>
         </div>
         <div class="row-2">
           <div class="card">
-            <div class="card-header"><h3><i class="fas fa-clock"></i> Recent Campaigns</h3><a href="#" style="font-size:14px; color:var(--primary);">View all</a></div>
+            <div class="card-header"><h3><i class="fas fa-clock"></i> Recent Campaigns</h3><a href="#" style="font-size:14px; color:var(--primary);" id="viewAllCampaigns">View all</a></div>
             <div class="table-wrap">
               <table>
                 <thead><tr><th>Campaign</th><th>Status</th><th>Recipients</th><th>Date</th></tr></thead>
@@ -659,28 +678,17 @@
             <button class="btn btn-primary w-full" id="quickSendBtn" style="justify-content:center;"><i class="fas fa-paper-plane"></i> Send</button>
           </div>
         </div>
-
-        <!-- Instruction Well -->
+        <!-- Personalization Well -->
         <div class="card mt-16">
-          <div class="card-header"><h3><i class="fas fa-info-circle"></i> Email Personalization</h3></div>
+          <div class="card-header"><h3><i class="fas fa-info-circle"></i> Dynamic Variables</h3></div>
           <div class="well">
-            <h4>Available Variables</h4>
+            <p>Use these variables in your email content for personalization:</p>
             <ul>
-              <li><b>[-email-]</b> : Recipient Email</li>
-              <li><b>[-time-]</b> : Date &amp; Time</li>
-              <li><b>[-emailuser-]</b> : Email User (user@domain)</li>
-              <li><b>[-randomstring-]</b> : Random alphanumeric string</li>
-              <li><b>[-randomnumber-]</b> : Random number</li>
-              <li><b>[-randomletters-]</b> : Random letters</li>
-              <li><b>[-randommd5-]</b> : Random MD5 hash</li>
+              <li><code>{{name}}</code> – Recipient's full name</li>
+              <li><code>{{email}}</code> – Recipient's email</li>
+              <li><code>{{company}}</code> – Recipient's company</li>
+              <li><code>{{location}}</code> – Recipient's location</li>
             </ul>
-            <h4>Example</h4>
-            <p>Recipient: <b>user@domain.com</b></p>
-            <ul>
-              <li><code>hello [-emailuser-]</code> → <b>hello user</b></li>
-              <li><code>your code is [-randommd5-]</code> → <b>e10adc3949ba59abbe56e057f20f883e</b></li>
-            </ul>
-            <p class="text-muted" style="margin-top:8px;"><i class="fas fa-leaf" style="color:var(--primary);"></i> LeafMailer v2.7 · <a href="#" style="color:var(--primary);">leafmailer.pw</a></p>
           </div>
         </div>
       </section>
@@ -690,43 +698,43 @@
         <div class="page-header"><h1><i class="fas fa-pen-fancy"></i> Compose</h1></div>
         <div class="card">
           <div class="card-header"><h3><i class="fas fa-edit"></i> Email Builder</h3></div>
-          <form id="composeForm">
-            <div class="form-row">
-              <div class="form-group"><label>From Email</label><input type="email" id="composeFromEmail" placeholder="sender@example.com" /></div>
-              <div class="form-group"><label>Sender Name</label><input type="text" id="composeFromName" placeholder="Your Business" /></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Reply-To</label><input type="email" id="composeReplyTo" placeholder="reply@example.com" /></div>
-              <div class="form-group"><label>Attachments <small>(multiple)</small></label><input type="file" id="composeAttachment" multiple /></div>
-            </div>
+          <div class="form-row">
+            <div class="form-group"><label>From Name</label><input type="text" id="composeFromName" placeholder="Your Name" /></div>
+            <div class="form-group"><label>From Email</label><input type="email" id="composeFromEmail" placeholder="sender@example.com" /></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Reply-To</label><input type="email" id="composeReplyTo" placeholder="reply@example.com" /></div>
             <div class="form-group"><label>Subject</label><input type="text" id="composeSubject" placeholder="Amazing offer inside" /></div>
-            <div class="form-row">
-              <div class="form-group"><label>Message HTML</label><textarea id="composeHtml" rows="6">&lt;h1&gt;Hello [-emailuser-],&lt;/h1&gt;&lt;p&gt;Welcome to LeafMailer Pro.&lt;/p&gt;&lt;a href=&quot;#&quot; style=&quot;background:#1a5cff;color:#fff;padding:10px 24px;border-radius:40px;text-decoration:none;&quot;&gt;Get Started&lt;/a&gt;</textarea></div>
-              <div class="form-group"><label>Email List (one per line)</label><textarea id="composeEmailList" rows="6">user1@example.com
-user2@example.com
-user3@example.com</textarea></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Message Type</label>
-                <div style="display:flex; gap:20px; padding-top:6px;">
-                  <label><input type="radio" name="messageType" value="1" checked /> HTML</label>
-                  <label><input type="radio" name="messageType" value="2" /> Plain</label>
-                </div>
-              </div>
-              <div class="form-group"><label>Encoding</label>
-                <select class="form-control" id="composeEncoding">
-                  <option value="UTF-8">UTF-8</option>
-                  <option value="ISO-8859-1">ISO-8859-1</option>
-                </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>To (comma separated or one per line)</label><textarea id="composeTo" rows="3" placeholder="recipient1@example.com, recipient2@example.com"></textarea></div>
+            <div class="form-group"><label>HTML Content</label><textarea id="composeHtml" rows="8">&lt;h1&gt;Hello {{name}},&lt;/h1&gt;&lt;p&gt;Welcome to MAILER PRO.&lt;/p&gt;&lt;a href=&quot;#&quot; style=&quot;background:#1a5cff;color:#fff;padding:10px 24px;border-radius:40px;text-decoration:none;&quot;&gt;Get Started&lt;/a&gt;</textarea></div>
+          </div>
+          <div class="form-group"><label>Plain Text Fallback</label><textarea id="composePlain" rows="3">Hello {{name}}, welcome to MAILER PRO.</textarea></div>
+          <div class="form-row">
+            <div class="form-group"><label>Message Type</label>
+              <div style="display:flex; gap:20px; padding-top:6px;">
+                <label><input type="radio" name="msgType" value="1" checked /> HTML</label>
+                <label><input type="radio" name="msgType" value="2" /> Plain</label>
               </div>
             </div>
-            <div class="flex">
-              <button type="button" class="btn btn-primary" id="composeSendBtn"><i class="fas fa-paper-plane"></i> Send</button>
-              <button type="button" class="btn btn-outline" id="composeSaveDraft"><i class="fas fa-save"></i> Draft</button>
-              <button type="button" class="btn btn-outline" id="composePreviewBtn"><i class="fas fa-eye"></i> Preview</button>
+            <div class="form-group"><label>Encoding</label>
+              <select id="composeEncoding"><option value="UTF-8">UTF-8</option><option value="ISO-8859-1">ISO-8859-1</option></select>
             </div>
-          </form>
+          </div>
+          <div class="flex">
+            <button class="btn btn-primary" id="composeSendBtn"><i class="fas fa-paper-plane"></i> Send</button>
+            <button class="btn btn-outline" id="composeSaveDraft"><i class="fas fa-save"></i> Draft</button>
+            <button class="btn btn-outline" id="composePreviewBtn"><i class="fas fa-eye"></i> Preview</button>
+            <button class="btn btn-outline" id="composeScheduleBtn"><i class="fas fa-calendar"></i> Schedule</button>
+          </div>
           <div id="composePreviewArea" style="margin-top:18px; padding:18px; background:var(--bg); border-radius:var(--radius-sm); display:none;"></div>
+          <div id="composeProgress" style="margin-top:12px; display:none;">
+            <div style="background:var(--bg); border-radius:20px; height:6px; overflow:hidden;">
+              <div id="sendProgressBar" style="height:100%; width:0%; background:var(--primary); transition:width 0.3s;"></div>
+            </div>
+            <p id="sendProgressText" class="text-muted" style="font-size:13px; margin-top:4px;">Sending...</p>
+          </div>
         </div>
       </section>
 
@@ -750,19 +758,17 @@ user3@example.com</textarea></div>
         <div class="page-header"><h1><i class="fas fa-paste"></i> Templates</h1><button class="btn btn-primary" id="newTemplateBtn"><i class="fas fa-plus"></i> New Template</button></div>
         <div class="tab-bar">
           <button class="active" data-tpl="all">All</button>
-          <button data-tpl="marketing">Marketing</button>
-          <button data-tpl="newsletter">Newsletter</button>
           <button data-tpl="welcome">Welcome</button>
+          <button data-tpl="promotion">Promotion</button>
+          <button data-tpl="newsletter">Newsletter</button>
+          <button data-tpl="order">Order</button>
+          <button data-tpl="announcement">Announcement</button>
         </div>
-        <div class="template-grid" id="templateGallery">
-          <div class="template-card" data-html="<h1 style='color:#1a5cff;'>Special Offer</h1><p>Get 20% off today</p><a href='#' style='background:#1a5cff;color:#fff;padding:8px 20px;border-radius:40px;text-decoration:none;'>Shop Now</a>"><i class="fas fa-tag"></i><div class="name">Promo</div></div>
-          <div class="template-card" data-html="<h2>📰 Newsletter</h2><p>Latest updates for you.</p><a href='#'>Read more →</a>"><i class="fas fa-newspaper"></i><div class="name">News</div></div>
-          <div class="template-card" data-html="<h1>Welcome [-emailuser-]!</h1><p>We're thrilled to have you.</p><a href='#' style='background:#1a5cff;color:#fff;padding:8px 20px;border-radius:40px;text-decoration:none;'>Get Started</a>"><i class="fas fa-hand-peace"></i><div class="name">Welcome</div></div>
-          <div class="template-card" data-html="<h2>🚀 Product Launch</h2><p>Check our new features.</p><a href='#'>Learn more</a>"><i class="fas fa-rocket"></i><div class="name">Launch</div></div>
-        </div>
+        <div class="template-grid" id="templateGallery"></div>
         <div class="card">
           <div class="card-header"><h3><i class="fas fa-edit"></i> Template Editor</h3></div>
-          <div class="form-group"><label>HTML</label><textarea id="templateEditor" rows="5">&lt;h1&gt;Hello [-emailuser-]&lt;/h1&gt;&lt;p&gt;Your template here.&lt;/p&gt;</textarea></div>
+          <div class="form-group"><label>Template Name</label><input type="text" id="templateName" placeholder="My Template" /></div>
+          <div class="form-group"><label>HTML</label><textarea id="templateEditor" rows="6">&lt;h1&gt;Hello {{name}},&lt;/h1&gt;&lt;p&gt;Your template here.&lt;/p&gt;</textarea></div>
           <div class="flex">
             <button class="btn btn-primary" id="saveTemplateBtn"><i class="fas fa-save"></i> Save</button>
             <button class="btn btn-outline" id="previewTemplateBtn"><i class="fas fa-eye"></i> Preview</button>
@@ -781,16 +787,46 @@ user3@example.com</textarea></div>
           </div>
         </div>
         <div class="card">
-          <div class="form-group"><input type="text" id="contactSearch" placeholder="Search by name or email..." /></div>
+          <div class="form-row">
+            <div class="form-group"><input type="text" id="contactSearch" placeholder="Search by name or email..." /></div>
+            <div class="form-group">
+              <select id="contactGroupFilter">
+                <option value="all">All Groups</option>
+                <option value="customers">Customers</option>
+                <option value="leads">Leads</option>
+                <option value="farmers">Farmers</option>
+              </select>
+            </div>
+          </div>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>Name</th><th>Email</th><th>Company</th><th>Actions</th></tr></thead>
+              <thead><tr><th>Name</th><th>Email</th><th>Company</th><th>Group</th><th>Actions</th></tr></thead>
               <tbody id="contactsTable">
-                <tr><td colspan="4" class="text-muted text-center">No contacts</td></tr>
+                <tr><td colspan="5" class="text-muted text-center">No contacts</td></tr>
               </tbody>
             </table>
           </div>
-          <div class="drop-zone mt-16" id="dropZone"><i class="fas fa-cloud-upload-alt"></i><p>Drop CSV or Excel file here, or click to browse</p></div>
+          <div class="drop-zone mt-16" id="dropZone"><i class="fas fa-cloud-upload-alt"></i><p>Drop CSV file here or click to browse</p></div>
+        </div>
+      </section>
+
+      <!-- ==================== ANALYTICS ==================== -->
+      <section id="page-analytics" class="page-section">
+        <div class="page-header"><h1><i class="fas fa-chart-line"></i> Analytics</h1></div>
+        <div class="grid-4">
+          <div class="stat-card"><div class="label">Delivery Rate</div><div class="value" id="analyticsDelivery">98%</div><div class="sub">+2% vs last month</div></div>
+          <div class="stat-card"><div class="label">Open Rate</div><div class="value" id="analyticsOpen">64%</div><div class="sub">industry avg 42%</div></div>
+          <div class="stat-card"><div class="label">Click Rate</div><div class="value" id="analyticsClick">12%</div><div class="sub">+1.4%</div></div>
+          <div class="stat-card"><div class="label">Bounce Rate</div><div class="value" id="analyticsBounce">0.8%</div><div class="sub">healthy</div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3><i class="fas fa-chart-bar"></i> Campaign Performance</h3></div>
+          <div style="height:200px; display:flex; align-items:flex-end; gap:12px; padding:20px 0;" id="chartBars">
+            <div style="flex:1; text-align:center;"><div style="height:120px; background:var(--primary); border-radius:6px 6px 0 0; width:40px; margin:0 auto;"></div><span class="text-muted" style="font-size:12px;">Week 1</span></div>
+            <div style="flex:1; text-align:center;"><div style="height:80px; background:var(--primary); border-radius:6px 6px 0 0; width:40px; margin:0 auto; opacity:0.7;"></div><span class="text-muted" style="font-size:12px;">Week 2</span></div>
+            <div style="flex:1; text-align:center;"><div style="height:150px; background:var(--primary); border-radius:6px 6px 0 0; width:40px; margin:0 auto;"></div><span class="text-muted" style="font-size:12px;">Week 3</span></div>
+            <div style="flex:1; text-align:center;"><div style="height:95px; background:var(--primary); border-radius:6px 6px 0 0; width:40px; margin:0 auto; opacity:0.8;"></div><span class="text-muted" style="font-size:12px;">Week 4</span></div>
+          </div>
         </div>
       </section>
 
@@ -798,162 +834,94 @@ user3@example.com</textarea></div>
       <section id="page-domain" class="page-section">
         <div class="page-header"><h1><i class="fas fa-globe"></i> Domain Setup</h1></div>
         <div class="card">
-          <div class="card-header"><h3><i class="fas fa-shield-alt"></i> Deliverability</h3></div>
-          <div class="domain-card"><div class="left"><i class="fas fa-envelope"></i><div><strong>SPF</strong><div class="text-muted" style="font-size:13px;">v=spf1 include:spf.leafmailer.pw ~all</div></div></div><div class="status verified"><i class="fas fa-check-circle"></i> Verified</div></div>
-          <div class="domain-card"><div class="left"><i class="fas fa-key"></i><div><strong>DKIM</strong><div class="text-muted" style="font-size:13px;">mail._domainkey TXT</div></div></div><div class="status verified"><i class="fas fa-check-circle"></i> Verified</div></div>
-          <div class="domain-card"><div class="left"><i class="fas fa-flag"></i><div><strong>DMARC</strong><div class="text-muted" style="font-size:13px;">_dmarc.leafmailer.pw TXT</div></div></div><div class="status pending"><i class="fas fa-clock"></i> Pending</div></div>
+          <div class="card-header"><h3><i class="fas fa-shield-alt"></i> Deliverability Configuration</h3></div>
+          <div class="domain-card"><div class="left"><i class="fas fa-envelope"></i><div><strong>SPF</strong><div class="text-muted" style="font-size:13px;">v=spf1 include:spf.mailerpro.com ~all</div></div></div><div class="status verified"><i class="fas fa-check-circle"></i> Verified</div></div>
+          <div class="domain-card"><div class="left"><i class="fas fa-key"></i><div><strong>DKIM</strong><div class="text-muted" style="font-size:13px;">mailerpro._domainkey TXT</div></div></div><div class="status verified"><i class="fas fa-check-circle"></i> Verified</div></div>
+          <div class="domain-card"><div class="left"><i class="fas fa-flag"></i><div><strong>DMARC</strong><div class="text-muted" style="font-size:13px;">_dmarc.mailerpro.com TXT</div></div></div><div class="status pending"><i class="fas fa-clock"></i> Pending</div></div>
           <div class="well mt-16">
             <strong>📘 DNS Setup Instructions</strong><br />
             Add these records to your domain's DNS provider. Verification may take up to 48 hours.
           </div>
+          <div class="mt-16">
+            <h4 style="font-weight:600; margin-bottom:8px;">✅ Deliverability Checklist</h4>
+            <div><input type="checkbox" id="checkVerifiedSender" checked /> <label for="checkVerifiedSender">Verified sender email</label></div>
+            <div><input type="checkbox" id="checkDomainAuth" checked /> <label for="checkDomainAuth">Domain authentication configured</label></div>
+            <div><input type="checkbox" id="checkReplyTo" checked /> <label for="checkReplyTo">Reply-to configured</label></div>
+          </div>
         </div>
       </section>
 
-      <!-- ==================== SETTINGS (Fully Configurable) ==================== -->
+      <!-- ==================== SETTINGS (Full Control) ==================== -->
       <section id="page-settings" class="page-section">
         <div class="page-header"><h1><i class="fas fa-sliders-h"></i> Settings</h1></div>
-
-        <!-- Settings Tabs -->
         <div class="settings-tabs">
-          <button class="active" data-settings="general">General</button>
-          <button data-settings="smtp">SMTP</button>
+          <button class="active" data-settings="emailjs">EmailJS</button>
           <button data-settings="sender">Sender</button>
           <button data-settings="branding">Branding</button>
-          <button data-settings="advanced">Advanced</button>
+          <button data-settings="templates">Default Templates</button>
+          <button data-settings="theme">Theme</button>
         </div>
 
-        <!-- GENERAL SETTINGS -->
-        <div class="settings-panel active" id="settings-general">
+        <!-- EmailJS -->
+        <div class="settings-panel active" id="settings-emailjs">
           <div class="card">
-            <div class="card-header"><h3><i class="fas fa-cog"></i> General Settings</h3></div>
-            <div class="form-row">
-              <div class="form-group"><label>Application Name</label><input type="text" id="settingsAppName" value="LeafMailer Pro" /></div>
-              <div class="form-group"><label>Default Language</label>
-                <select id="settingsLanguage">
-                  <option value="en">English</option>
-                  <option value="es">Spanish</option>
-                  <option value="fr">French</option>
-                  <option value="de">German</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Time Zone</label>
-                <select id="settingsTimezone">
-                  <option value="UTC">UTC</option>
-                  <option value="America/New_York">America/New_York</option>
-                  <option value="Europe/London">Europe/London</option>
-                  <option value="Asia/Dubai">Asia/Dubai</option>
-                  <option value="Australia/Sydney">Australia/Sydney</option>
-                </select>
-              </div>
-              <div class="form-group"><label>Date Format</label>
-                <select id="settingsDateFormat">
-                  <option value="m/d/Y">MM/DD/YYYY</option>
-                  <option value="d/m/Y">DD/MM/YYYY</option>
-                  <option value="Y-m-d">YYYY-MM-DD</option>
-                </select>
-              </div>
-            </div>
-            <button class="btn btn-primary" data-save="general"><i class="fas fa-save"></i> Save General Settings</button>
+            <div class="card-header"><h3><i class="fas fa-key"></i> EmailJS Configuration</h3></div>
+            <div class="form-group"><label>Public Key</label><input type="text" id="settingsPublicKey" placeholder="user_xxxx" /></div>
+            <div class="form-group"><label>Service ID</label><input type="text" id="settingsServiceId" placeholder="service_xxx" /></div>
+            <div class="form-group"><label>Template ID</label><input type="text" id="settingsTemplateId" placeholder="template_xxx" /></div>
+            <button class="btn btn-primary" data-save="emailjs"><i class="fas fa-save"></i> Save EmailJS Settings</button>
           </div>
         </div>
 
-        <!-- SMTP SETTINGS -->
-        <div class="settings-panel" id="settings-smtp">
-          <div class="card">
-            <div class="card-header"><h3><i class="fas fa-server"></i> SMTP Configuration</h3></div>
-            <div class="form-row">
-              <div class="form-group"><label>SMTP Host</label><input type="text" id="settingsSmtpHost" value="smtp.gmail.com" /></div>
-              <div class="form-group"><label>SMTP Port</label><input type="text" id="settingsSmtpPort" value="587" /></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>SMTP Username</label><input type="text" id="settingsSmtpUser" value="user@example.com" /></div>
-              <div class="form-group"><label>SMTP Password</label><input type="password" id="settingsSmtpPass" value="••••••••" /></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Encryption</label>
-                <select id="settingsSmtpEncryption">
-                  <option value="tls">TLS</option>
-                  <option value="ssl">SSL</option>
-                  <option value="none">None</option>
-                </select>
-              </div>
-              <div class="form-group"><label>SMTP Auth</label>
-                <select id="settingsSmtpAuth">
-                  <option value="1">Enabled</option>
-                  <option value="0">Disabled</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group"><label>SMTP Timeout (seconds)</label><input type="number" id="settingsSmtpTimeout" value="30" /></div>
-            <button class="btn btn-primary" data-save="smtp"><i class="fas fa-save"></i> Save SMTP Settings</button>
-          </div>
-        </div>
-
-        <!-- SENDER SETTINGS -->
+        <!-- Sender -->
         <div class="settings-panel" id="settings-sender">
           <div class="card">
             <div class="card-header"><h3><i class="fas fa-user-tie"></i> Sender Information</h3></div>
-            <div class="form-row">
-              <div class="form-group"><label>From Name</label><input type="text" id="settingsFromName" value="John Doe" /></div>
-              <div class="form-group"><label>From Email</label><input type="email" id="settingsFromEmail" value="john@acme.com" /></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Reply-To Email</label><input type="email" id="settingsReplyTo" value="reply@acme.com" /></div>
-              <div class="form-group"><label>Return Path</label><input type="email" id="settingsReturnPath" value="bounce@acme.com" /></div>
-            </div>
-            <div class="form-group"><label>Sender Signature (HTML)</label><textarea id="settingsSignature" rows="3">-- <br>John Doe<br>Acme Corp<br>john@acme.com</textarea></div>
+            <div class="form-group"><label>Sender Name</label><input type="text" id="settingsSenderName" placeholder="John Doe" /></div>
+            <div class="form-group"><label>Sender Email</label><input type="email" id="settingsSenderEmail" placeholder="john@example.com" /></div>
+            <div class="form-group"><label>Reply-To Email</label><input type="email" id="settingsReplyToEmail" placeholder="reply@example.com" /></div>
+            <div class="form-group"><label>Default Footer Text</label><textarea id="settingsFooterText" rows="2">© 2026 MAILER PRO. All rights reserved.</textarea></div>
             <button class="btn btn-primary" data-save="sender"><i class="fas fa-save"></i> Save Sender Settings</button>
           </div>
         </div>
 
-        <!-- BRANDING SETTINGS -->
+        <!-- Branding -->
         <div class="settings-panel" id="settings-branding">
           <div class="card">
             <div class="card-header"><h3><i class="fas fa-paint-brush"></i> Branding</h3></div>
-            <div class="form-row">
-              <div class="form-group"><label>Company Name</label><input type="text" id="settingsCompanyName" value="Acme Corp" /></div>
-              <div class="form-group"><label>Company Website</label><input type="text" id="settingsCompanyWebsite" value="https://acme.com" /></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Primary Color</label><input type="color" id="settingsPrimaryColor" value="#1a5cff" /></div>
-              <div class="form-group"><label>Logo URL</label><input type="text" id="settingsLogoUrl" placeholder="https://example.com/logo.png" /></div>
-            </div>
-            <div class="form-group"><label>Company Address</label><textarea id="settingsCompanyAddress" rows="2">123 Main St, City, State 12345</textarea></div>
+            <div class="form-group"><label>Company / Brand Name</label><input type="text" id="settingsBrandName" value="MAILER PRO" /></div>
+            <div class="form-group"><label>Tagline</label><input type="text" id="settingsTagline" value="Smart Email Marketing Platform" /></div>
+            <div class="form-group"><label>Logo URL (optional)</label><input type="text" id="settingsLogoUrl" placeholder="https://example.com/logo.png" /></div>
             <button class="btn btn-primary" data-save="branding"><i class="fas fa-save"></i> Save Branding Settings</button>
           </div>
         </div>
 
-        <!-- ADVANCED SETTINGS -->
-        <div class="settings-panel" id="settings-advanced">
+        <!-- Default Templates -->
+        <div class="settings-panel" id="settings-templates">
           <div class="card">
-            <div class="card-header"><h3><i class="fas fa-code"></i> Advanced Settings</h3></div>
-            <div class="form-row">
-              <div class="form-group"><label>Mailer Type</label>
-                <select id="settingsMailerType">
-                  <option value="mail">PHP mail()</option>
-                  <option value="smtp" selected>SMTP</option>
-                  <option value="sendmail">Sendmail</option>
-                  <option value="qmail">Qmail</option>
-                </select>
-              </div>
-              <div class="form-group"><label>Sendmail Path</label><input type="text" id="settingsSendmailPath" value="/usr/sbin/sendmail" /></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Max Emails Per Batch</label><input type="number" id="settingsBatchSize" value="100" /></div>
-              <div class="form-group"><label>Delay Between Emails (ms)</label><input type="number" id="settingsDelay" value="200" /></div>
-            </div>
-            <div class="form-group"><label>Custom Headers (one per line)</label><textarea id="settingsCustomHeaders" rows="3">X-Mailer: LeafMailer Pro
-X-Priority: 3</textarea></div>
-            <div class="form-group">
-              <label><input type="checkbox" id="settingsDebugMode" /> Enable Debug Mode</label>
-            </div>
-            <button class="btn btn-primary" data-save="advanced"><i class="fas fa-save"></i> Save Advanced Settings</button>
-            <button class="btn btn-danger" id="resetSettingsBtn" style="margin-left:12px;"><i class="fas fa-undo"></i> Reset All Settings</button>
+            <div class="card-header"><h3><i class="fas fa-paste"></i> Default Template Settings</h3></div>
+            <div class="form-group"><label>Default Email Template (HTML)</label><textarea id="settingsDefaultTemplate" rows="6">&lt;h1&gt;Hello {{name}},&lt;/h1&gt;&lt;p&gt;Welcome to MAILER PRO.&lt;/p&gt;</textarea></div>
+            <button class="btn btn-primary" data-save="templates"><i class="fas fa-save"></i> Save Default Template</button>
           </div>
         </div>
 
+        <!-- Theme -->
+        <div class="settings-panel" id="settings-theme">
+          <div class="card">
+            <div class="card-header"><h3><i class="fas fa-palette"></i> Theme Customization</h3></div>
+            <div class="form-row">
+              <div class="form-group"><label>Accent Color</label><input type="color" id="settingsAccentColor" value="#1a5cff" /></div>
+              <div class="form-group"><label>Mode</label>
+                <select id="settingsThemeMode">
+                  <option value="light">Light</option>
+                  <option value="dark">Dark</option>
+                  <option value="system">System</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-primary" data-save="theme"><i class="fas fa-save"></i> Save Theme Settings</button>
+          </div>
+        </div>
       </section>
 
     </main>
@@ -963,65 +931,56 @@ X-Priority: 3</textarea></div>
     (function() {
       "use strict";
 
-      // ----- STATE (persisted) -----
+      // ============================================================
+      //  STATE (persisted in LocalStorage)
+      // ============================================================
       let state = {
-        contacts: JSON.parse(localStorage.getItem('lm_contacts')) || [
-          { name: 'Alice Johnson', email: 'alice@example.com', company: 'Acme Corp' },
-          { name: 'Bob Smith', email: 'bob@example.com', company: 'Beta Inc' },
-          { name: 'Carol White', email: 'carol@example.com', company: 'Gamma LLC' }
+        contacts: JSON.parse(localStorage.getItem('mp_contacts')) || [
+          { name: 'Alice Johnson', email: 'alice@example.com', company: 'Acme Corp', group: 'customers', location: 'New York' },
+          { name: 'Bob Smith', email: 'bob@example.com', company: 'Beta Inc', group: 'leads', location: 'London' },
+          { name: 'Carol White', email: 'carol@example.com', company: 'Gamma LLC', group: 'farmers', location: 'Sydney' }
         ],
-        campaigns: JSON.parse(localStorage.getItem('lm_campaigns')) || [],
-        templates: JSON.parse(localStorage.getItem('lm_templates')) || [],
-        drafts: JSON.parse(localStorage.getItem('lm_drafts')) || [],
-        sentCount: parseInt(localStorage.getItem('lm_sent')) || 0,
-        failedCount: parseInt(localStorage.getItem('lm_failed')) || 0,
-        settings: JSON.parse(localStorage.getItem('lm_settings')) || {
-          // General
-          appName: 'LeafMailer Pro',
-          language: 'en',
-          timezone: 'UTC',
-          dateFormat: 'm/d/Y',
-          // SMTP
-          smtpHost: 'smtp.gmail.com',
-          smtpPort: '587',
-          smtpUser: 'user@example.com',
-          smtpPass: '••••••••',
-          smtpEncryption: 'tls',
-          smtpAuth: '1',
-          smtpTimeout: '30',
+        campaigns: JSON.parse(localStorage.getItem('mp_campaigns')) || [],
+        templates: JSON.parse(localStorage.getItem('mp_templates')) || [],
+        drafts: JSON.parse(localStorage.getItem('mp_drafts')) || [],
+        sentCount: parseInt(localStorage.getItem('mp_sent')) || 0,
+        failedCount: parseInt(localStorage.getItem('mp_failed')) || 0,
+        // All settings are stored here
+        settings: JSON.parse(localStorage.getItem('mp_settings')) || {
+          // EmailJS
+          publicKey: '',
+          serviceId: '',
+          templateId: '',
           // Sender
-          fromName: 'John Doe',
-          fromEmail: 'john@acme.com',
-          replyTo: 'reply@acme.com',
-          returnPath: 'bounce@acme.com',
-          signature: '-- \nJohn Doe\nAcme Corp\njohn@acme.com',
+          senderName: 'John Doe',
+          senderEmail: 'john@example.com',
+          replyToEmail: 'reply@example.com',
+          footerText: '© 2026 MAILER PRO. All rights reserved.',
           // Branding
-          companyName: 'Acme Corp',
-          companyWebsite: 'https://acme.com',
-          primaryColor: '#1a5cff',
+          brandName: 'MAILER PRO',
+          tagline: 'Smart Email Marketing Platform',
           logoUrl: '',
-          companyAddress: '123 Main St, City, State 12345',
-          // Advanced
-          mailerType: 'smtp',
-          sendmailPath: '/usr/sbin/sendmail',
-          batchSize: '100',
-          delay: '200',
-          customHeaders: 'X-Mailer: LeafMailer Pro\nX-Priority: 3',
-          debugMode: false
+          // Default Template
+          defaultTemplate: '<h1>Hello {{name}},</h1><p>Welcome to MAILER PRO.</p>',
+          // Theme
+          accentColor: '#1a5cff',
+          themeMode: 'light'
         }
       };
 
       function persist() {
-        localStorage.setItem('lm_contacts', JSON.stringify(state.contacts));
-        localStorage.setItem('lm_campaigns', JSON.stringify(state.campaigns));
-        localStorage.setItem('lm_templates', JSON.stringify(state.templates));
-        localStorage.setItem('lm_drafts', JSON.stringify(state.drafts));
-        localStorage.setItem('lm_sent', String(state.sentCount));
-        localStorage.setItem('lm_failed', String(state.failedCount));
-        localStorage.setItem('lm_settings', JSON.stringify(state.settings));
+        localStorage.setItem('mp_contacts', JSON.stringify(state.contacts));
+        localStorage.setItem('mp_campaigns', JSON.stringify(state.campaigns));
+        localStorage.setItem('mp_templates', JSON.stringify(state.templates));
+        localStorage.setItem('mp_drafts', JSON.stringify(state.drafts));
+        localStorage.setItem('mp_sent', String(state.sentCount));
+        localStorage.setItem('mp_failed', String(state.failedCount));
+        localStorage.setItem('mp_settings', JSON.stringify(state.settings));
       }
 
-      // ----- RENDER FUNCTIONS -----
+      // ============================================================
+      //  RENDER FUNCTIONS
+      // ============================================================
       function renderDashboard() {
         document.getElementById('statContacts').innerText = state.contacts.length;
         document.getElementById('statCampaigns').innerText = state.campaigns.length;
@@ -1034,28 +993,33 @@ X-Priority: 3</textarea></div>
         } else {
           let html = '';
           state.campaigns.slice(-4).reverse().forEach(c => {
-            const cls = c.status === 'sent' ? 'badge-sent' : c.status === 'failed' ? 'badge-failed' : c.status === 'sending' ? 'badge-sending' : 'badge-draft';
+            const cls = c.status === 'sent' ? 'badge-sent' : c.status === 'failed' ? 'badge-failed' : c.status === 'sending' ? 'badge-sending' : c.status === 'scheduled' ? 'badge-scheduled' : 'badge-draft';
             html += `<tr><td><strong>${c.name}</strong></td><td><span class="badge ${cls}">${c.status || 'draft'}</span></td><td>${c.recipients || 0}</td><td>${new Date(c.date).toLocaleDateString()}</td></tr>`;
           });
           tbody.innerHTML = html;
         }
       }
 
-      function renderContacts(filter = '') {
+      function renderContacts(filter = '', group = 'all') {
         const tbody = document.getElementById('contactsTable');
         let list = state.contacts;
         if (filter) list = list.filter(c => c.name.toLowerCase().includes(filter) || c.email.toLowerCase().includes(filter));
+        if (group !== 'all') list = list.filter(c => c.group === group);
         if (list.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center">No contacts</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center">No contacts</td></tr>';
           return;
         }
         let html = '';
         list.forEach((c, idx) => {
+          const actualIdx = state.contacts.indexOf(c);
           html += `<tr>
             <td><strong>${c.name}</strong></td>
             <td>${c.email}</td>
             <td>${c.company || ''}</td>
-            <td><button class="btn btn-outline btn-sm" data-delcontact="${idx}"><i class="fas fa-times"></i></button></td>
+            <td><span class="badge badge-draft">${c.group || 'unlabeled'}</span></td>
+            <td>
+              <button class="btn btn-outline btn-sm" data-delcontact="${actualIdx}"><i class="fas fa-times"></i></button>
+            </td>
           </tr>`;
         });
         tbody.innerHTML = html;
@@ -1063,7 +1027,7 @@ X-Priority: 3</textarea></div>
           btn.addEventListener('click', function() {
             state.contacts.splice(parseInt(this.dataset.delcontact), 1);
             persist();
-            renderContacts(document.getElementById('contactSearch').value.toLowerCase());
+            renderContacts(document.getElementById('contactSearch').value.toLowerCase(), document.getElementById('contactGroupFilter').value);
             renderDashboard();
           });
         });
@@ -1077,7 +1041,7 @@ X-Priority: 3</textarea></div>
         }
         let html = '';
         state.campaigns.forEach((c, i) => {
-          const cls = c.status === 'sent' ? 'badge-sent' : c.status === 'failed' ? 'badge-failed' : c.status === 'sending' ? 'badge-sending' : 'badge-draft';
+          const cls = c.status === 'sent' ? 'badge-sent' : c.status === 'failed' ? 'badge-failed' : c.status === 'sending' ? 'badge-sending' : c.status === 'scheduled' ? 'badge-scheduled' : 'badge-draft';
           html += `<tr>
             <td><strong>${c.name}</strong></td>
             <td>${c.subject}</td>
@@ -1111,98 +1075,178 @@ X-Priority: 3</textarea></div>
         });
       }
 
-      // ----- LOAD SETTINGS INTO UI -----
-      function loadSettingsUI() {
-        const s = state.settings;
-        // General
-        document.getElementById('settingsAppName').value = s.appName || 'LeafMailer Pro';
-        document.getElementById('settingsLanguage').value = s.language || 'en';
-        document.getElementById('settingsTimezone').value = s.timezone || 'UTC';
-        document.getElementById('settingsDateFormat').value = s.dateFormat || 'm/d/Y';
-        // SMTP
-        document.getElementById('settingsSmtpHost').value = s.smtpHost || 'smtp.gmail.com';
-        document.getElementById('settingsSmtpPort').value = s.smtpPort || '587';
-        document.getElementById('settingsSmtpUser').value = s.smtpUser || 'user@example.com';
-        document.getElementById('settingsSmtpPass').value = s.smtpPass || '••••••••';
-        document.getElementById('settingsSmtpEncryption').value = s.smtpEncryption || 'tls';
-        document.getElementById('settingsSmtpAuth').value = s.smtpAuth || '1';
-        document.getElementById('settingsSmtpTimeout').value = s.smtpTimeout || '30';
-        // Sender
-        document.getElementById('settingsFromName').value = s.fromName || 'John Doe';
-        document.getElementById('settingsFromEmail').value = s.fromEmail || 'john@acme.com';
-        document.getElementById('settingsReplyTo').value = s.replyTo || 'reply@acme.com';
-        document.getElementById('settingsReturnPath').value = s.returnPath || 'bounce@acme.com';
-        document.getElementById('settingsSignature').value = s.signature || '-- \nJohn Doe\nAcme Corp\njohn@acme.com';
-        // Branding
-        document.getElementById('settingsCompanyName').value = s.companyName || 'Acme Corp';
-        document.getElementById('settingsCompanyWebsite').value = s.companyWebsite || 'https://acme.com';
-        document.getElementById('settingsPrimaryColor').value = s.primaryColor || '#1a5cff';
-        document.getElementById('settingsLogoUrl').value = s.logoUrl || '';
-        document.getElementById('settingsCompanyAddress').value = s.companyAddress || '123 Main St, City, State 12345';
-        // Advanced
-        document.getElementById('settingsMailerType').value = s.mailerType || 'smtp';
-        document.getElementById('settingsSendmailPath').value = s.sendmailPath || '/usr/sbin/sendmail';
-        document.getElementById('settingsBatchSize').value = s.batchSize || '100';
-        document.getElementById('settingsDelay').value = s.delay || '200';
-        document.getElementById('settingsCustomHeaders').value = s.customHeaders || 'X-Mailer: LeafMailer Pro\nX-Priority: 3';
-        document.getElementById('settingsDebugMode').checked = s.debugMode || false;
-
-        // Update sidebar
-        document.getElementById('sidebarUserName').textContent = s.fromName || 'John Doe';
-        document.getElementById('sidebarWorkspace').textContent = s.companyName || 'Acme Corp';
+      function renderTemplates() {
+        const container = document.getElementById('templateGallery');
+        const allTemplates = [
+          { name: 'Welcome', icon: 'fa-hand-peace', html: '<h1>Welcome {{name}}!</h1><p>We\'re thrilled to have you on board.</p><a href="#" style="background:#1a5cff;color:#fff;padding:8px 20px;border-radius:40px;text-decoration:none;">Get Started</a>', category: 'welcome' },
+          { name: 'Promotion', icon: 'fa-tag', html: '<h1 style="color:#1a5cff;">Special Offer</h1><p>Get 20% off today</p><a href="#" style="background:#1a5cff;color:#fff;padding:8px 20px;border-radius:40px;text-decoration:none;">Shop Now</a>', category: 'promotion' },
+          { name: 'Newsletter', icon: 'fa-newspaper', html: '<h2>📰 Newsletter</h2><p>Latest updates for you.</p><a href="#">Read more →</a>', category: 'newsletter' },
+          { name: 'Order Confirmation', icon: 'fa-file-invoice', html: '<h2>Order #1234</h2><p>Thank you for your purchase!</p><a href="#" style="background:#1a5cff;color:#fff;padding:8px 20px;border-radius:40px;text-decoration:none;">View Order</a>', category: 'order' },
+          { name: 'Announcement', icon: 'fa-bullhorn', html: '<h2>📢 Important Update</h2><p>We have exciting news to share.</p><a href="#">Learn more</a>', category: 'announcement' }
+        ];
+        // Merge with custom templates
+        const customTemplates = state.templates.map((t, i) => ({ name: t.name || 'Custom ' + (i+1), icon: 'fa-pen', html: t.html, category: 'custom', custom: true, idx: i }));
+        const all = [...allTemplates, ...customTemplates];
+        let html = '';
+        const filter = document.querySelector('.tab-bar .active')?.dataset.tpl || 'all';
+        const filtered = filter === 'all' ? all : all.filter(t => t.category === filter);
+        filtered.forEach(t => {
+          html += `<div class="template-card" data-html="${t.html.replace(/"/g, '&quot;')}">
+            <i class="fas ${t.icon}"></i>
+            <div class="name">${t.name}</div>
+            <div class="actions">
+              <button class="btn btn-outline btn-sm select-template" style="padding:2px 10px;">Select</button>
+              ${t.custom ? `<button class="btn btn-outline btn-sm del-template" data-idx="${t.idx}" style="padding:2px 10px;color:var(--danger);"><i class="fas fa-trash"></i></button>` : ''}
+            </div>
+          </div>`;
+        });
+        container.innerHTML = html;
+        // Select template
+        container.querySelectorAll('.select-template').forEach((btn, idx) => {
+          btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const card = this.closest('.template-card');
+            const html = card.dataset.html;
+            document.getElementById('templateEditor').value = html;
+            document.getElementById('templatePreview').innerHTML = html;
+          });
+        });
+        // Delete custom template
+        container.querySelectorAll('.del-template').forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const idx = parseInt(this.dataset.idx);
+            state.templates.splice(idx, 1);
+            persist();
+            renderTemplates();
+          });
+        });
+        // Click card to select
+        container.querySelectorAll('.template-card').forEach(card => {
+          card.addEventListener('click', function() {
+            document.getElementById('templateEditor').value = this.dataset.html;
+            document.getElementById('templatePreview').innerHTML = this.dataset.html;
+          });
+        });
       }
 
-      // ----- SAVE SETTINGS -----
+      // ============================================================
+      //  LOAD SETTINGS INTO UI
+      // ============================================================
+      function loadSettingsUI() {
+        const s = state.settings;
+        // EmailJS
+        document.getElementById('settingsPublicKey').value = s.publicKey || '';
+        document.getElementById('settingsServiceId').value = s.serviceId || '';
+        document.getElementById('settingsTemplateId').value = s.templateId || '';
+        // Sender
+        document.getElementById('settingsSenderName').value = s.senderName || 'John Doe';
+        document.getElementById('settingsSenderEmail').value = s.senderEmail || 'john@example.com';
+        document.getElementById('settingsReplyToEmail').value = s.replyToEmail || 'reply@example.com';
+        document.getElementById('settingsFooterText').value = s.footerText || '© 2026 MAILER PRO. All rights reserved.';
+        // Branding
+        document.getElementById('settingsBrandName').value = s.brandName || 'MAILER PRO';
+        document.getElementById('settingsTagline').value = s.tagline || 'Smart Email Marketing Platform';
+        document.getElementById('settingsLogoUrl').value = s.logoUrl || '';
+        // Default Template
+        document.getElementById('settingsDefaultTemplate').value = s.defaultTemplate || '<h1>Hello {{name}},</h1><p>Welcome to MAILER PRO.</p>';
+        // Theme
+        document.getElementById('settingsAccentColor').value = s.accentColor || '#1a5cff';
+        document.getElementById('settingsThemeMode').value = s.themeMode || 'light';
+
+        // Apply theme
+        applyTheme(s.themeMode, s.accentColor);
+
+        // Update sidebar / UI
+        document.getElementById('sidebarUserName').textContent = s.senderName || 'John Doe';
+        document.getElementById('sidebarWorkspace').textContent = s.brandName || 'MAILER PRO';
+        const initials = (s.senderName || 'JD').split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
+        document.getElementById('sidebarAvatar').textContent = initials;
+        document.getElementById('navAvatar').textContent = initials;
+
+        // Compose defaults
+        document.getElementById('composeFromName').value = s.senderName || '';
+        document.getElementById('composeFromEmail').value = s.senderEmail || '';
+        document.getElementById('composeReplyTo').value = s.replyToEmail || '';
+        document.getElementById('composeHtml').value = s.defaultTemplate || '<h1>Hello {{name}},</h1><p>Welcome to MAILER PRO.</p>';
+      }
+
+      function applyTheme(mode, accent) {
+        if (mode === 'dark') document.body.classList.add('dark');
+        else if (mode === 'light') document.body.classList.remove('dark');
+        else if (mode === 'system') {
+          if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.body.classList.add('dark');
+          } else {
+            document.body.classList.remove('dark');
+          }
+        }
+        if (accent) {
+          document.documentElement.style.setProperty('--primary', accent);
+          document.documentElement.style.setProperty('--primary-dark', accent);
+          document.documentElement.style.setProperty('--primary-light', accent + '20');
+        }
+      }
+
+      // ============================================================
+      //  SAVE SETTINGS
+      // ============================================================
       function saveSettings(section) {
         const s = state.settings;
-        // General
-        if (section === 'general' || !section) {
-          s.appName = document.getElementById('settingsAppName').value;
-          s.language = document.getElementById('settingsLanguage').value;
-          s.timezone = document.getElementById('settingsTimezone').value;
-          s.dateFormat = document.getElementById('settingsDateFormat').value;
+        if (section === 'emailjs' || !section) {
+          s.publicKey = document.getElementById('settingsPublicKey').value.trim();
+          s.serviceId = document.getElementById('settingsServiceId').value.trim();
+          s.templateId = document.getElementById('settingsTemplateId').value.trim();
         }
-        // SMTP
-        if (section === 'smtp' || !section) {
-          s.smtpHost = document.getElementById('settingsSmtpHost').value;
-          s.smtpPort = document.getElementById('settingsSmtpPort').value;
-          s.smtpUser = document.getElementById('settingsSmtpUser').value;
-          s.smtpPass = document.getElementById('settingsSmtpPass').value;
-          s.smtpEncryption = document.getElementById('settingsSmtpEncryption').value;
-          s.smtpAuth = document.getElementById('settingsSmtpAuth').value;
-          s.smtpTimeout = document.getElementById('settingsSmtpTimeout').value;
-        }
-        // Sender
         if (section === 'sender' || !section) {
-          s.fromName = document.getElementById('settingsFromName').value;
-          s.fromEmail = document.getElementById('settingsFromEmail').value;
-          s.replyTo = document.getElementById('settingsReplyTo').value;
-          s.returnPath = document.getElementById('settingsReturnPath').value;
-          s.signature = document.getElementById('settingsSignature').value;
+          s.senderName = document.getElementById('settingsSenderName').value.trim();
+          s.senderEmail = document.getElementById('settingsSenderEmail').value.trim();
+          s.replyToEmail = document.getElementById('settingsReplyToEmail').value.trim();
+          s.footerText = document.getElementById('settingsFooterText').value;
         }
-        // Branding
         if (section === 'branding' || !section) {
-          s.companyName = document.getElementById('settingsCompanyName').value;
-          s.companyWebsite = document.getElementById('settingsCompanyWebsite').value;
-          s.primaryColor = document.getElementById('settingsPrimaryColor').value;
-          s.logoUrl = document.getElementById('settingsLogoUrl').value;
-          s.companyAddress = document.getElementById('settingsCompanyAddress').value;
+          s.brandName = document.getElementById('settingsBrandName').value.trim();
+          s.tagline = document.getElementById('settingsTagline').value.trim();
+          s.logoUrl = document.getElementById('settingsLogoUrl').value.trim();
         }
-        // Advanced
-        if (section === 'advanced' || !section) {
-          s.mailerType = document.getElementById('settingsMailerType').value;
-          s.sendmailPath = document.getElementById('settingsSendmailPath').value;
-          s.batchSize = document.getElementById('settingsBatchSize').value;
-          s.delay = document.getElementById('settingsDelay').value;
-          s.customHeaders = document.getElementById('settingsCustomHeaders').value;
-          s.debugMode = document.getElementById('settingsDebugMode').checked;
+        if (section === 'templates' || !section) {
+          s.defaultTemplate = document.getElementById('settingsDefaultTemplate').value;
+        }
+        if (section === 'theme' || !section) {
+          s.accentColor = document.getElementById('settingsAccentColor').value;
+          s.themeMode = document.getElementById('settingsThemeMode').value;
+          applyTheme(s.themeMode, s.accentColor);
         }
         persist();
         loadSettingsUI();
         alert('✅ Settings saved successfully!');
       }
 
-      // ----- NAVIGATION -----
+      // ============================================================
+      //  EMAIL SENDING (EmailJS)
+      // ============================================================
+      function sendEmailWithProgress(to, subject, html, plain, fromName, fromEmail, replyTo) {
+        const s = state.settings;
+        if (!s.publicKey || !s.serviceId || !s.templateId) {
+          alert('⚠️ Please configure EmailJS in Settings (Public Key, Service ID, Template ID).');
+          return Promise.reject('missing settings');
+        }
+        emailjs.init(s.publicKey);
+        const params = {
+          to_email: to,
+          from_name: fromName || s.senderName || 'MAILER PRO',
+          from_email: fromEmail || s.senderEmail || 'noreply@mailerpro.com',
+          reply_to: replyTo || s.replyToEmail || '',
+          subject: subject,
+          message_html: html,
+          message_plain: plain || ''
+        };
+        return emailjs.send(s.serviceId, s.templateId, params);
+      }
+
+      // ============================================================
+      //  NAVIGATION
+      // ============================================================
       document.querySelectorAll('.sidebar nav a').forEach(link => {
         link.addEventListener('click', function(e) {
           e.preventDefault();
@@ -1213,22 +1257,51 @@ X-Priority: 3</textarea></div>
           const target = document.getElementById('page-' + page);
           if (target) target.classList.add('active');
           document.getElementById('sidebar').classList.remove('open');
+          // Update page title
+          const titles = {
+            dashboard: 'Dashboard',
+            campaigns: 'Campaigns',
+            compose: 'Compose',
+            templates: 'Templates',
+            contacts: 'Contacts',
+            analytics: 'Analytics',
+            domain: 'Domain Setup',
+            settings: 'Settings'
+          };
+          document.querySelector('.page-header h1').innerHTML = `<i class="fas fa-${page === 'dashboard' ? 'th-large' : page === 'campaigns' ? 'bullhorn' : page === 'compose' ? 'pen-fancy' : page === 'templates' ? 'paste' : page === 'contacts' ? 'address-book' : page === 'analytics' ? 'chart-line' : page === 'domain' ? 'globe' : 'sliders-h'}"></i> ${titles[page] || page}`;
         });
       });
 
-      // ----- HAMBURGER -----
+      // View all campaigns link
+      document.getElementById('viewAllCampaigns').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector('.sidebar nav a[data-page="campaigns"]').click();
+      });
+
+      // ============================================================
+      //  HAMBURGER
+      // ============================================================
       document.getElementById('hamburgerBtn').addEventListener('click', function() {
         document.getElementById('sidebar').classList.toggle('open');
       });
 
-      // ----- THEME -----
+      // ============================================================
+      //  THEME TOGGLE (top nav)
+      // ============================================================
       document.getElementById('themeToggle').addEventListener('click', function() {
-        document.body.classList.toggle('dark');
+        const current = state.settings.themeMode || 'light';
+        const next = current === 'light' ? 'dark' : 'light';
+        state.settings.themeMode = next;
+        document.getElementById('settingsThemeMode').value = next;
+        persist();
+        loadSettingsUI();
         const icon = this.querySelector('i');
-        icon.className = document.body.classList.contains('dark') ? 'fas fa-sun' : 'fas fa-moon';
+        icon.className = next === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
       });
 
-      // ----- SETTINGS TABS -----
+      // ============================================================
+      //  SETTINGS TABS
+      // ============================================================
       document.querySelectorAll('.settings-tabs button').forEach(btn => {
         btn.addEventListener('click', function() {
           document.querySelectorAll('.settings-tabs button').forEach(b => b.classList.remove('active'));
@@ -1239,102 +1312,159 @@ X-Priority: 3</textarea></div>
         });
       });
 
-      // ----- SAVE SETTINGS BUTTONS -----
+      // ============================================================
+      //  SAVE SETTINGS BUTTONS
+      // ============================================================
       document.querySelectorAll('[data-save]').forEach(btn => {
         btn.addEventListener('click', function() {
-          const section = this.dataset.save;
-          saveSettings(section);
+          saveSettings(this.dataset.save);
         });
       });
 
-      // ----- RESET SETTINGS -----
-      document.getElementById('resetSettingsBtn').addEventListener('click', function() {
-        if (!confirm('⚠️ This will reset all settings to defaults. Continue?')) return;
-        state.settings = {
-          appName: 'LeafMailer Pro',
-          language: 'en',
-          timezone: 'UTC',
-          dateFormat: 'm/d/Y',
-          smtpHost: 'smtp.gmail.com',
-          smtpPort: '587',
-          smtpUser: 'user@example.com',
-          smtpPass: '••••••••',
-          smtpEncryption: 'tls',
-          smtpAuth: '1',
-          smtpTimeout: '30',
-          fromName: 'John Doe',
-          fromEmail: 'john@acme.com',
-          replyTo: 'reply@acme.com',
-          returnPath: 'bounce@acme.com',
-          signature: '-- \nJohn Doe\nAcme Corp\njohn@acme.com',
-          companyName: 'Acme Corp',
-          companyWebsite: 'https://acme.com',
-          primaryColor: '#1a5cff',
-          logoUrl: '',
-          companyAddress: '123 Main St, City, State 12345',
-          mailerType: 'smtp',
-          sendmailPath: '/usr/sbin/sendmail',
-          batchSize: '100',
-          delay: '200',
-          customHeaders: 'X-Mailer: LeafMailer Pro\nX-Priority: 3',
-          debugMode: false
-        };
-        persist();
-        loadSettingsUI();
-        alert('✅ All settings reset to defaults.');
-      });
-
-      // ----- QUICK SEND (simulated) -----
+      // ============================================================
+      //  QUICK SEND
+      // ============================================================
       document.getElementById('quickSendBtn').addEventListener('click', function() {
         const to = document.getElementById('quickEmail').value.trim();
         const subject = document.getElementById('quickSubject').value.trim();
         const msg = document.getElementById('quickMessage').value.trim();
         if (!to || !subject || !msg) return alert('Please fill in all fields.');
-        state.sentCount += 1;
-        persist();
-        renderDashboard();
-        alert('✅ Email sent to ' + to + ' (simulated using ' + state.settings.mailerType + ')');
-        document.getElementById('quickEmail').value = '';
-        document.getElementById('quickSubject').value = '';
-        document.getElementById('quickMessage').value = '';
+        const s = state.settings;
+        sendEmailWithProgress(to, subject, `<p>${msg}</p>`, msg, s.senderName, s.senderEmail, s.replyToEmail)
+          .then(() => {
+            state.sentCount += 1;
+            persist();
+            renderDashboard();
+            alert('✅ Email sent successfully to ' + to);
+            document.getElementById('quickEmail').value = '';
+            document.getElementById('quickSubject').value = '';
+            document.getElementById('quickMessage').value = '';
+          })
+          .catch((err) => {
+            state.failedCount += 1;
+            persist();
+            renderDashboard();
+            alert('❌ Failed to send: ' + (err.text || err.message || 'Check EmailJS settings'));
+          });
       });
 
-      // ----- COMPOSE SEND (simulated) -----
+      // ============================================================
+      //  COMPOSE SEND (bulk)
+      // ============================================================
       document.getElementById('composeSendBtn').addEventListener('click', function() {
-        const list = document.getElementById('composeEmailList').value.split('\n').filter(e => e.trim());
-        if (list.length === 0) return alert('Add at least one recipient.');
+        const toRaw = document.getElementById('composeTo').value;
+        const recipients = toRaw.split(/[,\n]/).map(s => s.trim()).filter(s => s);
+        if (recipients.length === 0) return alert('Add at least one recipient.');
         const subject = document.getElementById('composeSubject').value || 'No subject';
-        state.sentCount += list.length;
-        state.campaigns.push({
-          name: 'Campaign ' + (state.campaigns.length + 1),
-          subject: subject,
-          status: 'sent',
-          recipients: list.length,
-          date: new Date().toISOString()
+        const html = document.getElementById('composeHtml').value;
+        const plain = document.getElementById('composePlain').value;
+        const fromName = document.getElementById('composeFromName').value || state.settings.senderName;
+        const fromEmail = document.getElementById('composeFromEmail').value || state.settings.senderEmail;
+        const replyTo = document.getElementById('composeReplyTo').value || state.settings.replyToEmail;
+        const msgType = document.querySelector('input[name="msgType"]:checked').value;
+
+        const progress = document.getElementById('composeProgress');
+        const progressBar = document.getElementById('sendProgressBar');
+        const progressText = document.getElementById('sendProgressText');
+        progress.style.display = 'block';
+        progressBar.style.width = '0%';
+        progressText.textContent = 'Sending 0/' + recipients.length + '...';
+
+        let sent = 0, failed = 0;
+        const promises = recipients.map((email, idx) => {
+          return sendEmailWithProgress(email, subject, html, plain, fromName, fromEmail, replyTo)
+            .then(() => {
+              sent++;
+              state.sentCount += 1;
+              const pct = Math.round(((idx + 1) / recipients.length) * 100);
+              progressBar.style.width = pct + '%';
+              progressText.textContent = `Sending ${idx+1}/${recipients.length}... (${sent} sent, ${failed} failed)`;
+              return { email, success: true };
+            })
+            .catch(() => {
+              failed++;
+              state.failedCount += 1;
+              const pct = Math.round(((idx + 1) / recipients.length) * 100);
+              progressBar.style.width = pct + '%';
+              progressText.textContent = `Sending ${idx+1}/${recipients.length}... (${sent} sent, ${failed} failed)`;
+              return { email, success: false };
+            });
         });
-        persist();
-        renderCampaigns();
-        renderDashboard();
-        alert('✅ Sent to ' + list.length + ' recipients (simulated using ' + state.settings.mailerType + ')');
+
+        Promise.all(promises).then(results => {
+          persist();
+          renderDashboard();
+          progressBar.style.width = '100%';
+          progressText.textContent = `✅ Complete! ${sent} sent, ${failed} failed.`;
+          setTimeout(() => { progress.style.display = 'none'; }, 3000);
+          // Save as campaign
+          state.campaigns.push({
+            name: 'Campaign ' + (state.campaigns.length + 1),
+            subject: subject,
+            status: failed > 0 ? 'failed' : 'sent',
+            recipients: recipients.length,
+            date: new Date().toISOString()
+          });
+          persist();
+          renderCampaigns();
+          renderDashboard();
+        });
       });
 
+      // ============================================================
+      //  COMPOSE DRAFT
+      // ============================================================
       document.getElementById('composeSaveDraft').addEventListener('click', function() {
         state.drafts.push({
+          to: document.getElementById('composeTo').value,
           subject: document.getElementById('composeSubject').value,
           html: document.getElementById('composeHtml').value,
-          list: document.getElementById('composeEmailList').value
+          plain: document.getElementById('composePlain').value,
+          fromName: document.getElementById('composeFromName').value,
+          fromEmail: document.getElementById('composeFromEmail').value,
+          date: new Date().toISOString()
         });
         persist();
         alert('📝 Draft saved!');
       });
 
+      // ============================================================
+      //  COMPOSE PREVIEW
+      // ============================================================
       document.getElementById('composePreviewBtn').addEventListener('click', function() {
         const area = document.getElementById('composePreviewArea');
-        area.innerHTML = document.getElementById('composeHtml').value || '<i>Empty</i>';
+        let html = document.getElementById('composeHtml').value || '<i>Empty</i>';
+        // Simple variable substitution preview
+        html = html.replace(/\{\{name\}\}/g, '[Recipient Name]');
+        html = html.replace(/\{\{email\}\}/g, 'recipient@example.com');
+        html = html.replace(/\{\{company\}\}/g, '[Company]');
+        html = html.replace(/\{\{location\}\}/g, '[Location]');
+        area.innerHTML = html;
         area.style.display = 'block';
       });
 
-      // ----- CAMPAIGNS -----
+      // ============================================================
+      //  COMPOSE SCHEDULE (UI only)
+      // ============================================================
+      document.getElementById('composeScheduleBtn').addEventListener('click', function() {
+        const date = prompt('Schedule date (YYYY-MM-DD HH:MM):');
+        if (!date) return;
+        alert('📅 Campaign scheduled for ' + date + ' (UI demo)');
+        state.campaigns.push({
+          name: 'Scheduled Campaign ' + (state.campaigns.length + 1),
+          subject: document.getElementById('composeSubject').value || 'Scheduled',
+          status: 'scheduled',
+          recipients: 0,
+          date: new Date().toISOString()
+        });
+        persist();
+        renderCampaigns();
+        renderDashboard();
+      });
+
+      // ============================================================
+      //  CAMPAIGNS
+      // ============================================================
       document.getElementById('newCampaignBtn').addEventListener('click', function() {
         const name = prompt('Campaign name:');
         if (!name) return;
@@ -1354,19 +1484,28 @@ X-Priority: 3</textarea></div>
         document.querySelector('.sidebar nav a[data-page="contacts"]').click();
       });
 
-      // ----- TEMPLATES -----
-      document.querySelectorAll('#templateGallery .template-card').forEach(card => {
-        card.addEventListener('click', function() {
-          document.getElementById('templateEditor').value = this.dataset.html;
-          document.getElementById('templatePreview').innerHTML = this.dataset.html;
+      // ============================================================
+      //  TEMPLATES
+      // ============================================================
+      // Tab filter
+      document.querySelectorAll('.tab-bar[data-tpl]').forEach(tab => {
+        // handled by the tab-bar in the templates section
+      });
+      document.querySelectorAll('#page-templates .tab-bar button').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('#page-templates .tab-bar button').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          renderTemplates();
         });
       });
 
       document.getElementById('saveTemplateBtn').addEventListener('click', function() {
         const html = document.getElementById('templateEditor').value.trim();
+        const name = document.getElementById('templateName').value.trim() || 'Custom Template';
         if (!html) return alert('Enter template HTML.');
-        state.templates.push(html);
+        state.templates.push({ name, html });
         persist();
+        renderTemplates();
         alert('✅ Template saved!');
       });
 
@@ -1375,49 +1514,63 @@ X-Priority: 3</textarea></div>
       });
 
       document.getElementById('newTemplateBtn').addEventListener('click', function() {
-        document.getElementById('templateEditor').value = '<h1>New Template</h1><p>Edit me.</p>';
+        document.getElementById('templateName').value = 'My Template';
+        document.getElementById('templateEditor').value = '<h1>Hello {{name}},</h1><p>Your custom template.</p>';
         document.getElementById('templatePreview').innerHTML = '';
       });
 
-      // ----- CONTACTS -----
+      // ============================================================
+      //  CONTACTS
+      // ============================================================
       document.getElementById('addContactBtn').addEventListener('click', function() {
         const name = prompt('Full name:');
         if (!name) return;
         const email = prompt('Email:');
         if (!email || !email.includes('@')) return alert('Invalid email.');
         const company = prompt('Company (optional):') || '';
-        state.contacts.push({ name, email, company });
+        const group = prompt('Group (customers, leads, farmers) or leave blank:') || 'unlabeled';
+        const location = prompt('Location (optional):') || '';
+        state.contacts.push({ name, email, company, group, location });
         persist();
-        renderContacts(document.getElementById('contactSearch').value.toLowerCase());
+        renderContacts(document.getElementById('contactSearch').value.toLowerCase(), document.getElementById('contactGroupFilter').value);
         renderDashboard();
       });
 
       document.getElementById('contactSearch').addEventListener('input', function() {
-        renderContacts(this.value.toLowerCase());
+        renderContacts(this.value.toLowerCase(), document.getElementById('contactGroupFilter').value);
+      });
+      document.getElementById('contactGroupFilter').addEventListener('change', function() {
+        renderContacts(document.getElementById('contactSearch').value.toLowerCase(), this.value);
       });
 
       document.getElementById('importCsvBtn').addEventListener('click', function() {
-        const raw = prompt('Paste CSV (name,email,company):\nAlice,alice@ex.com,Acme');
+        const raw = prompt('Paste CSV (name,email,company,group,location):\nAlice,alice@ex.com,Acme,customers,NY');
         if (!raw) return;
         const lines = raw.split('\n');
         let count = 0;
         lines.forEach(line => {
           const parts = line.split(',').map(s => s.trim());
           if (parts.length >= 2 && parts[1].includes('@')) {
-            state.contacts.push({ name: parts[0], email: parts[1], company: parts[2] || '' });
+            state.contacts.push({
+              name: parts[0],
+              email: parts[1],
+              company: parts[2] || '',
+              group: parts[3] || 'unlabeled',
+              location: parts[4] || ''
+            });
             count++;
           }
         });
         persist();
-        renderContacts('');
+        renderContacts('', document.getElementById('contactGroupFilter').value);
         renderDashboard();
         alert(`✅ Imported ${count} contacts.`);
       });
 
       document.getElementById('exportContactsBtn').addEventListener('click', function() {
         if (state.contacts.length === 0) return alert('No contacts.');
-        let csv = 'name,email,company\n';
-        state.contacts.forEach(c => csv += `"${c.name}","${c.email}","${c.company || ''}"\n`);
+        let csv = 'name,email,company,group,location\n';
+        state.contacts.forEach(c => csv += `"${c.name}","${c.email}","${c.company || ''}","${c.group || ''}","${c.location || ''}"\n`);
         const blob = new Blob([csv], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -1428,19 +1581,24 @@ X-Priority: 3</textarea></div>
       });
 
       document.getElementById('dropZone').addEventListener('click', function() {
-        alert('Upload CSV or Excel file. (Mock - paste CSV in import)');
+        document.getElementById('importCsvBtn').click();
       });
 
-      // ----- INIT -----
+      // ============================================================
+      //  INIT
+      // ============================================================
       loadSettingsUI();
       renderDashboard();
-      renderContacts('');
+      renderContacts('', 'all');
       renderCampaigns();
-      if (document.getElementById('templateEditor').value.trim()) {
-        document.getElementById('templatePreview').innerHTML = document.getElementById('templateEditor').value;
+      renderTemplates();
+
+      // Set default template in editor
+      if (document.getElementById('templateEditor').value.trim() === '') {
+        document.getElementById('templateEditor').value = state.settings.defaultTemplate || '<h1>Hello {{name}},</h1><p>Welcome to MAILER PRO.</p>';
       }
 
-      console.log('🍃 LeafMailer Pro with full settings ready.');
+      console.log('🚀 MAILER PRO initialized. All settings configurable.');
     })();
   </script>
 
