@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LeafMailer Pro · Email Marketing Platform</title>
+  <title>LeafMailer Pro · Configurable Email Platform</title>
   <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <!-- Google Font Inter -->
@@ -269,6 +269,8 @@
     .btn-sm { padding: 6px 16px; font-size: 13px; }
     .btn-success { background: var(--success); color: #fff; }
     .btn-success:hover { opacity: 0.9; transform: translateY(-2px); }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-danger:hover { opacity: 0.9; transform: translateY(-2px); }
 
     /* ----- CARDS & GRID ----- */
     .grid-4 {
@@ -546,6 +548,37 @@
     }
     .drop-zone:hover { border-color: var(--primary); background: var(--primary-light); }
     .drop-zone i { font-size: 36px; color: var(--text-secondary); margin-bottom: 6px; }
+
+    /* Settings section tabs */
+    .settings-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--bg);
+      border-radius: 40px;
+      padding: 4px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .settings-tabs button {
+      background: transparent;
+      border: 0;
+      padding: 8px 22px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text-secondary);
+      transition: var(--transition);
+      font-size: 14px;
+    }
+    .settings-tabs button.active {
+      background: var(--card);
+      color: var(--text);
+      box-shadow: var(--shadow-sm);
+    }
+    .settings-tabs button:hover { color: var(--text); }
+    .settings-panel { display: none; animation: fadeSlide 0.3s ease; }
+    .settings-panel.active { display: block; }
   </style>
 </head>
 <body>
@@ -569,8 +602,8 @@
       <div class="profile">
         <div class="avatar-sm">JD</div>
         <div class="info">
-          <div class="name">John Doe</div>
-          <div class="workspace">Acme Corp</div>
+          <div class="name" id="sidebarUserName">John Doe</div>
+          <div class="workspace" id="sidebarWorkspace">Acme Corp</div>
         </div>
       </div>
       <nav>
@@ -627,14 +660,14 @@
           </div>
         </div>
 
-        <!-- Instruction Well (LeafMailer style) -->
+        <!-- Instruction Well -->
         <div class="card mt-16">
           <div class="card-header"><h3><i class="fas fa-info-circle"></i> Email Personalization</h3></div>
           <div class="well">
             <h4>Available Variables</h4>
             <ul>
               <li><b>[-email-]</b> : Recipient Email</li>
-              <li><b>[-time-]</b> : Date &amp; Time (<?php echo date("m/d/Y h:i:s a", time()); ?>)</li>
+              <li><b>[-time-]</b> : Date &amp; Time</li>
               <li><b>[-emailuser-]</b> : Email User (user@domain)</li>
               <li><b>[-randomstring-]</b> : Random alphanumeric string</li>
               <li><b>[-randomnumber-]</b> : Random number</li>
@@ -659,8 +692,8 @@
           <div class="card-header"><h3><i class="fas fa-edit"></i> Email Builder</h3></div>
           <form id="composeForm">
             <div class="form-row">
-              <div class="form-group"><label>From Email</label><input type="email" id="composeFromEmail" value="sender@example.com" /></div>
-              <div class="form-group"><label>Sender Name</label><input type="text" id="composeFromName" value="Acme Corp" /></div>
+              <div class="form-group"><label>From Email</label><input type="email" id="composeFromEmail" placeholder="sender@example.com" /></div>
+              <div class="form-group"><label>Sender Name</label><input type="text" id="composeFromName" placeholder="Your Business" /></div>
             </div>
             <div class="form-row">
               <div class="form-group"><label>Reply-To</label><input type="email" id="composeReplyTo" placeholder="reply@example.com" /></div>
@@ -776,29 +809,151 @@ user3@example.com</textarea></div>
         </div>
       </section>
 
-      <!-- ==================== SETTINGS ==================== -->
+      <!-- ==================== SETTINGS (Fully Configurable) ==================== -->
       <section id="page-settings" class="page-section">
         <div class="page-header"><h1><i class="fas fa-sliders-h"></i> Settings</h1></div>
-        <div class="card">
-          <div class="card-header"><h3><i class="fas fa-cog"></i> SMTP / Email Configuration</h3></div>
-          <div class="form-row">
-            <div class="form-group"><label>SMTP Host</label><input type="text" id="settingsSmtpHost" value="smtp.example.com" /></div>
-            <div class="form-group"><label>SMTP Port</label><input type="text" id="settingsSmtpPort" value="587" /></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>Username</label><input type="text" id="settingsSmtpUser" value="user@example.com" /></div>
-            <div class="form-group"><label>Password</label><input type="password" id="settingsSmtpPass" value="••••••••" /></div>
-          </div>
-          <button class="btn btn-primary" id="saveSettingsBtn"><i class="fas fa-save"></i> Save Settings</button>
+
+        <!-- Settings Tabs -->
+        <div class="settings-tabs">
+          <button class="active" data-settings="general">General</button>
+          <button data-settings="smtp">SMTP</button>
+          <button data-settings="sender">Sender</button>
+          <button data-settings="branding">Branding</button>
+          <button data-settings="advanced">Advanced</button>
         </div>
-        <div class="card mt-16">
-          <div class="card-header"><h3><i class="fas fa-building"></i> Business Info</h3></div>
-          <div class="form-row">
-            <div class="form-group"><label>Business Name</label><input type="text" id="bizName" value="Acme Corp" /></div>
-            <div class="form-group"><label>Sender Email</label><input type="email" id="bizEmail" value="hello@acme.com" /></div>
+
+        <!-- GENERAL SETTINGS -->
+        <div class="settings-panel active" id="settings-general">
+          <div class="card">
+            <div class="card-header"><h3><i class="fas fa-cog"></i> General Settings</h3></div>
+            <div class="form-row">
+              <div class="form-group"><label>Application Name</label><input type="text" id="settingsAppName" value="LeafMailer Pro" /></div>
+              <div class="form-group"><label>Default Language</label>
+                <select id="settingsLanguage">
+                  <option value="en">English</option>
+                  <option value="es">Spanish</option>
+                  <option value="fr">French</option>
+                  <option value="de">German</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Time Zone</label>
+                <select id="settingsTimezone">
+                  <option value="UTC">UTC</option>
+                  <option value="America/New_York">America/New_York</option>
+                  <option value="Europe/London">Europe/London</option>
+                  <option value="Asia/Dubai">Asia/Dubai</option>
+                  <option value="Australia/Sydney">Australia/Sydney</option>
+                </select>
+              </div>
+              <div class="form-group"><label>Date Format</label>
+                <select id="settingsDateFormat">
+                  <option value="m/d/Y">MM/DD/YYYY</option>
+                  <option value="d/m/Y">DD/MM/YYYY</option>
+                  <option value="Y-m-d">YYYY-MM-DD</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-primary" data-save="general"><i class="fas fa-save"></i> Save General Settings</button>
           </div>
-          <button class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
         </div>
+
+        <!-- SMTP SETTINGS -->
+        <div class="settings-panel" id="settings-smtp">
+          <div class="card">
+            <div class="card-header"><h3><i class="fas fa-server"></i> SMTP Configuration</h3></div>
+            <div class="form-row">
+              <div class="form-group"><label>SMTP Host</label><input type="text" id="settingsSmtpHost" value="smtp.gmail.com" /></div>
+              <div class="form-group"><label>SMTP Port</label><input type="text" id="settingsSmtpPort" value="587" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>SMTP Username</label><input type="text" id="settingsSmtpUser" value="user@example.com" /></div>
+              <div class="form-group"><label>SMTP Password</label><input type="password" id="settingsSmtpPass" value="••••••••" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Encryption</label>
+                <select id="settingsSmtpEncryption">
+                  <option value="tls">TLS</option>
+                  <option value="ssl">SSL</option>
+                  <option value="none">None</option>
+                </select>
+              </div>
+              <div class="form-group"><label>SMTP Auth</label>
+                <select id="settingsSmtpAuth">
+                  <option value="1">Enabled</option>
+                  <option value="0">Disabled</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group"><label>SMTP Timeout (seconds)</label><input type="number" id="settingsSmtpTimeout" value="30" /></div>
+            <button class="btn btn-primary" data-save="smtp"><i class="fas fa-save"></i> Save SMTP Settings</button>
+          </div>
+        </div>
+
+        <!-- SENDER SETTINGS -->
+        <div class="settings-panel" id="settings-sender">
+          <div class="card">
+            <div class="card-header"><h3><i class="fas fa-user-tie"></i> Sender Information</h3></div>
+            <div class="form-row">
+              <div class="form-group"><label>From Name</label><input type="text" id="settingsFromName" value="John Doe" /></div>
+              <div class="form-group"><label>From Email</label><input type="email" id="settingsFromEmail" value="john@acme.com" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Reply-To Email</label><input type="email" id="settingsReplyTo" value="reply@acme.com" /></div>
+              <div class="form-group"><label>Return Path</label><input type="email" id="settingsReturnPath" value="bounce@acme.com" /></div>
+            </div>
+            <div class="form-group"><label>Sender Signature (HTML)</label><textarea id="settingsSignature" rows="3">-- <br>John Doe<br>Acme Corp<br>john@acme.com</textarea></div>
+            <button class="btn btn-primary" data-save="sender"><i class="fas fa-save"></i> Save Sender Settings</button>
+          </div>
+        </div>
+
+        <!-- BRANDING SETTINGS -->
+        <div class="settings-panel" id="settings-branding">
+          <div class="card">
+            <div class="card-header"><h3><i class="fas fa-paint-brush"></i> Branding</h3></div>
+            <div class="form-row">
+              <div class="form-group"><label>Company Name</label><input type="text" id="settingsCompanyName" value="Acme Corp" /></div>
+              <div class="form-group"><label>Company Website</label><input type="text" id="settingsCompanyWebsite" value="https://acme.com" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Primary Color</label><input type="color" id="settingsPrimaryColor" value="#1a5cff" /></div>
+              <div class="form-group"><label>Logo URL</label><input type="text" id="settingsLogoUrl" placeholder="https://example.com/logo.png" /></div>
+            </div>
+            <div class="form-group"><label>Company Address</label><textarea id="settingsCompanyAddress" rows="2">123 Main St, City, State 12345</textarea></div>
+            <button class="btn btn-primary" data-save="branding"><i class="fas fa-save"></i> Save Branding Settings</button>
+          </div>
+        </div>
+
+        <!-- ADVANCED SETTINGS -->
+        <div class="settings-panel" id="settings-advanced">
+          <div class="card">
+            <div class="card-header"><h3><i class="fas fa-code"></i> Advanced Settings</h3></div>
+            <div class="form-row">
+              <div class="form-group"><label>Mailer Type</label>
+                <select id="settingsMailerType">
+                  <option value="mail">PHP mail()</option>
+                  <option value="smtp" selected>SMTP</option>
+                  <option value="sendmail">Sendmail</option>
+                  <option value="qmail">Qmail</option>
+                </select>
+              </div>
+              <div class="form-group"><label>Sendmail Path</label><input type="text" id="settingsSendmailPath" value="/usr/sbin/sendmail" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Max Emails Per Batch</label><input type="number" id="settingsBatchSize" value="100" /></div>
+              <div class="form-group"><label>Delay Between Emails (ms)</label><input type="number" id="settingsDelay" value="200" /></div>
+            </div>
+            <div class="form-group"><label>Custom Headers (one per line)</label><textarea id="settingsCustomHeaders" rows="3">X-Mailer: LeafMailer Pro
+X-Priority: 3</textarea></div>
+            <div class="form-group">
+              <label><input type="checkbox" id="settingsDebugMode" /> Enable Debug Mode</label>
+            </div>
+            <button class="btn btn-primary" data-save="advanced"><i class="fas fa-save"></i> Save Advanced Settings</button>
+            <button class="btn btn-danger" id="resetSettingsBtn" style="margin-left:12px;"><i class="fas fa-undo"></i> Reset All Settings</button>
+          </div>
+        </div>
+
       </section>
 
     </main>
@@ -819,7 +974,41 @@ user3@example.com</textarea></div>
         templates: JSON.parse(localStorage.getItem('lm_templates')) || [],
         drafts: JSON.parse(localStorage.getItem('lm_drafts')) || [],
         sentCount: parseInt(localStorage.getItem('lm_sent')) || 0,
-        failedCount: parseInt(localStorage.getItem('lm_failed')) || 0
+        failedCount: parseInt(localStorage.getItem('lm_failed')) || 0,
+        settings: JSON.parse(localStorage.getItem('lm_settings')) || {
+          // General
+          appName: 'LeafMailer Pro',
+          language: 'en',
+          timezone: 'UTC',
+          dateFormat: 'm/d/Y',
+          // SMTP
+          smtpHost: 'smtp.gmail.com',
+          smtpPort: '587',
+          smtpUser: 'user@example.com',
+          smtpPass: '••••••••',
+          smtpEncryption: 'tls',
+          smtpAuth: '1',
+          smtpTimeout: '30',
+          // Sender
+          fromName: 'John Doe',
+          fromEmail: 'john@acme.com',
+          replyTo: 'reply@acme.com',
+          returnPath: 'bounce@acme.com',
+          signature: '-- \nJohn Doe\nAcme Corp\njohn@acme.com',
+          // Branding
+          companyName: 'Acme Corp',
+          companyWebsite: 'https://acme.com',
+          primaryColor: '#1a5cff',
+          logoUrl: '',
+          companyAddress: '123 Main St, City, State 12345',
+          // Advanced
+          mailerType: 'smtp',
+          sendmailPath: '/usr/sbin/sendmail',
+          batchSize: '100',
+          delay: '200',
+          customHeaders: 'X-Mailer: LeafMailer Pro\nX-Priority: 3',
+          debugMode: false
+        }
       };
 
       function persist() {
@@ -829,6 +1018,7 @@ user3@example.com</textarea></div>
         localStorage.setItem('lm_drafts', JSON.stringify(state.drafts));
         localStorage.setItem('lm_sent', String(state.sentCount));
         localStorage.setItem('lm_failed', String(state.failedCount));
+        localStorage.setItem('lm_settings', JSON.stringify(state.settings));
       }
 
       // ----- RENDER FUNCTIONS -----
@@ -921,6 +1111,97 @@ user3@example.com</textarea></div>
         });
       }
 
+      // ----- LOAD SETTINGS INTO UI -----
+      function loadSettingsUI() {
+        const s = state.settings;
+        // General
+        document.getElementById('settingsAppName').value = s.appName || 'LeafMailer Pro';
+        document.getElementById('settingsLanguage').value = s.language || 'en';
+        document.getElementById('settingsTimezone').value = s.timezone || 'UTC';
+        document.getElementById('settingsDateFormat').value = s.dateFormat || 'm/d/Y';
+        // SMTP
+        document.getElementById('settingsSmtpHost').value = s.smtpHost || 'smtp.gmail.com';
+        document.getElementById('settingsSmtpPort').value = s.smtpPort || '587';
+        document.getElementById('settingsSmtpUser').value = s.smtpUser || 'user@example.com';
+        document.getElementById('settingsSmtpPass').value = s.smtpPass || '••••••••';
+        document.getElementById('settingsSmtpEncryption').value = s.smtpEncryption || 'tls';
+        document.getElementById('settingsSmtpAuth').value = s.smtpAuth || '1';
+        document.getElementById('settingsSmtpTimeout').value = s.smtpTimeout || '30';
+        // Sender
+        document.getElementById('settingsFromName').value = s.fromName || 'John Doe';
+        document.getElementById('settingsFromEmail').value = s.fromEmail || 'john@acme.com';
+        document.getElementById('settingsReplyTo').value = s.replyTo || 'reply@acme.com';
+        document.getElementById('settingsReturnPath').value = s.returnPath || 'bounce@acme.com';
+        document.getElementById('settingsSignature').value = s.signature || '-- \nJohn Doe\nAcme Corp\njohn@acme.com';
+        // Branding
+        document.getElementById('settingsCompanyName').value = s.companyName || 'Acme Corp';
+        document.getElementById('settingsCompanyWebsite').value = s.companyWebsite || 'https://acme.com';
+        document.getElementById('settingsPrimaryColor').value = s.primaryColor || '#1a5cff';
+        document.getElementById('settingsLogoUrl').value = s.logoUrl || '';
+        document.getElementById('settingsCompanyAddress').value = s.companyAddress || '123 Main St, City, State 12345';
+        // Advanced
+        document.getElementById('settingsMailerType').value = s.mailerType || 'smtp';
+        document.getElementById('settingsSendmailPath').value = s.sendmailPath || '/usr/sbin/sendmail';
+        document.getElementById('settingsBatchSize').value = s.batchSize || '100';
+        document.getElementById('settingsDelay').value = s.delay || '200';
+        document.getElementById('settingsCustomHeaders').value = s.customHeaders || 'X-Mailer: LeafMailer Pro\nX-Priority: 3';
+        document.getElementById('settingsDebugMode').checked = s.debugMode || false;
+
+        // Update sidebar
+        document.getElementById('sidebarUserName').textContent = s.fromName || 'John Doe';
+        document.getElementById('sidebarWorkspace').textContent = s.companyName || 'Acme Corp';
+      }
+
+      // ----- SAVE SETTINGS -----
+      function saveSettings(section) {
+        const s = state.settings;
+        // General
+        if (section === 'general' || !section) {
+          s.appName = document.getElementById('settingsAppName').value;
+          s.language = document.getElementById('settingsLanguage').value;
+          s.timezone = document.getElementById('settingsTimezone').value;
+          s.dateFormat = document.getElementById('settingsDateFormat').value;
+        }
+        // SMTP
+        if (section === 'smtp' || !section) {
+          s.smtpHost = document.getElementById('settingsSmtpHost').value;
+          s.smtpPort = document.getElementById('settingsSmtpPort').value;
+          s.smtpUser = document.getElementById('settingsSmtpUser').value;
+          s.smtpPass = document.getElementById('settingsSmtpPass').value;
+          s.smtpEncryption = document.getElementById('settingsSmtpEncryption').value;
+          s.smtpAuth = document.getElementById('settingsSmtpAuth').value;
+          s.smtpTimeout = document.getElementById('settingsSmtpTimeout').value;
+        }
+        // Sender
+        if (section === 'sender' || !section) {
+          s.fromName = document.getElementById('settingsFromName').value;
+          s.fromEmail = document.getElementById('settingsFromEmail').value;
+          s.replyTo = document.getElementById('settingsReplyTo').value;
+          s.returnPath = document.getElementById('settingsReturnPath').value;
+          s.signature = document.getElementById('settingsSignature').value;
+        }
+        // Branding
+        if (section === 'branding' || !section) {
+          s.companyName = document.getElementById('settingsCompanyName').value;
+          s.companyWebsite = document.getElementById('settingsCompanyWebsite').value;
+          s.primaryColor = document.getElementById('settingsPrimaryColor').value;
+          s.logoUrl = document.getElementById('settingsLogoUrl').value;
+          s.companyAddress = document.getElementById('settingsCompanyAddress').value;
+        }
+        // Advanced
+        if (section === 'advanced' || !section) {
+          s.mailerType = document.getElementById('settingsMailerType').value;
+          s.sendmailPath = document.getElementById('settingsSendmailPath').value;
+          s.batchSize = document.getElementById('settingsBatchSize').value;
+          s.delay = document.getElementById('settingsDelay').value;
+          s.customHeaders = document.getElementById('settingsCustomHeaders').value;
+          s.debugMode = document.getElementById('settingsDebugMode').checked;
+        }
+        persist();
+        loadSettingsUI();
+        alert('✅ Settings saved successfully!');
+      }
+
       // ----- NAVIGATION -----
       document.querySelectorAll('.sidebar nav a').forEach(link => {
         link.addEventListener('click', function(e) {
@@ -947,6 +1228,62 @@ user3@example.com</textarea></div>
         icon.className = document.body.classList.contains('dark') ? 'fas fa-sun' : 'fas fa-moon';
       });
 
+      // ----- SETTINGS TABS -----
+      document.querySelectorAll('.settings-tabs button').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.settings-tabs button').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          const panel = this.dataset.settings;
+          document.querySelectorAll('.settings-panel').forEach(p => p.classList.remove('active'));
+          document.getElementById('settings-' + panel).classList.add('active');
+        });
+      });
+
+      // ----- SAVE SETTINGS BUTTONS -----
+      document.querySelectorAll('[data-save]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const section = this.dataset.save;
+          saveSettings(section);
+        });
+      });
+
+      // ----- RESET SETTINGS -----
+      document.getElementById('resetSettingsBtn').addEventListener('click', function() {
+        if (!confirm('⚠️ This will reset all settings to defaults. Continue?')) return;
+        state.settings = {
+          appName: 'LeafMailer Pro',
+          language: 'en',
+          timezone: 'UTC',
+          dateFormat: 'm/d/Y',
+          smtpHost: 'smtp.gmail.com',
+          smtpPort: '587',
+          smtpUser: 'user@example.com',
+          smtpPass: '••••••••',
+          smtpEncryption: 'tls',
+          smtpAuth: '1',
+          smtpTimeout: '30',
+          fromName: 'John Doe',
+          fromEmail: 'john@acme.com',
+          replyTo: 'reply@acme.com',
+          returnPath: 'bounce@acme.com',
+          signature: '-- \nJohn Doe\nAcme Corp\njohn@acme.com',
+          companyName: 'Acme Corp',
+          companyWebsite: 'https://acme.com',
+          primaryColor: '#1a5cff',
+          logoUrl: '',
+          companyAddress: '123 Main St, City, State 12345',
+          mailerType: 'smtp',
+          sendmailPath: '/usr/sbin/sendmail',
+          batchSize: '100',
+          delay: '200',
+          customHeaders: 'X-Mailer: LeafMailer Pro\nX-Priority: 3',
+          debugMode: false
+        };
+        persist();
+        loadSettingsUI();
+        alert('✅ All settings reset to defaults.');
+      });
+
       // ----- QUICK SEND (simulated) -----
       document.getElementById('quickSendBtn').addEventListener('click', function() {
         const to = document.getElementById('quickEmail').value.trim();
@@ -956,7 +1293,7 @@ user3@example.com</textarea></div>
         state.sentCount += 1;
         persist();
         renderDashboard();
-        alert('✅ Email sent to ' + to + ' (simulated)');
+        alert('✅ Email sent to ' + to + ' (simulated using ' + state.settings.mailerType + ')');
         document.getElementById('quickEmail').value = '';
         document.getElementById('quickSubject').value = '';
         document.getElementById('quickMessage').value = '';
@@ -978,7 +1315,7 @@ user3@example.com</textarea></div>
         persist();
         renderCampaigns();
         renderDashboard();
-        alert('✅ Sent to ' + list.length + ' recipients (simulated)');
+        alert('✅ Sent to ' + list.length + ' recipients (simulated using ' + state.settings.mailerType + ')');
       });
 
       document.getElementById('composeSaveDraft').addEventListener('click', function() {
@@ -1094,12 +1431,8 @@ user3@example.com</textarea></div>
         alert('Upload CSV or Excel file. (Mock - paste CSV in import)');
       });
 
-      // ----- SETTINGS -----
-      document.getElementById('saveSettingsBtn').addEventListener('click', function() {
-        alert('✅ Settings saved! (simulated)');
-      });
-
       // ----- INIT -----
+      loadSettingsUI();
       renderDashboard();
       renderContacts('');
       renderCampaigns();
@@ -1107,7 +1440,7 @@ user3@example.com</textarea></div>
         document.getElementById('templatePreview').innerHTML = document.getElementById('templateEditor').value;
       }
 
-      console.log('🍃 LeafMailer Pro ready.');
+      console.log('🍃 LeafMailer Pro with full settings ready.');
     })();
   </script>
 
