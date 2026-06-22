@@ -3,29 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MailCraft · Premium Email Platform</title>
-  <!-- Font & Icons -->
+  <title>LeafMailer Pro · Email Marketing Platform</title>
+  <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <!-- EmailJS -->
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
-  </script>
+  <!-- Google Font Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
   <style>
     /* ----- RESET & VARIABLES (Premium SaaS) ----- */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
     :root {
-      --bg: #f1f5f9;
+      --bg: #f2f6fc;
       --card: #ffffff;
-      --text: #0b1a33;
-      --text-secondary: #4b5e77;
-      --border: #e2eaf2;
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --primary-light: #dbeafe;
+      --text: #0a1a2f;
+      --text-secondary: #4a5f7a;
+      --border: #e3eaf2;
+      --primary: #1a5cff;
+      --primary-dark: #0a45cc;
+      --primary-light: #e8efff;
       --success: #22c55e;
       --warning: #eab308;
       --danger: #ef4444;
@@ -45,9 +44,6 @@
       --primary: #3b82f6;
       --primary-dark: #2563eb;
       --primary-light: #1e2f4a;
-      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-      --shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-      --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.5);
     }
     body {
       background: var(--bg);
@@ -56,24 +52,16 @@
       line-height: 1.6;
       min-height: 100vh;
     }
-    ::-webkit-scrollbar {
-      width: 5px;
-      height: 5px;
-    }
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: var(--primary);
-      border-radius: 20px;
-    }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 20px; }
 
     /* ----- TOP NAV ----- */
     .top-nav {
       background: var(--card);
       border-bottom: 1px solid var(--border);
       padding: 0 32px;
-      height: 68px;
+      height: 70px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -81,40 +69,36 @@
       top: 0;
       z-index: 100;
       backdrop-filter: blur(12px);
-      background: rgba(255, 255, 255, 0.75);
+      background: rgba(255, 255, 255, 0.78);
       transition: var(--transition);
     }
     .dark .top-nav {
-      background: rgba(22, 32, 53, 0.8);
+      background: rgba(22, 32, 53, 0.85);
     }
-    .top-nav .left {
+    .top-nav .brand {
       display: flex;
       align-items: center;
-      gap: 20px;
-    }
-    .top-nav .left .logo {
+      gap: 10px;
       font-size: 22px;
       font-weight: 700;
       color: var(--primary);
       letter-spacing: -0.5px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
-    .top-nav .left .logo small {
+    .top-nav .brand i { font-size: 26px; }
+    .top-nav .brand small {
       font-weight: 400;
-      font-size: 12px;
+      font-size: 13px;
       color: var(--text-secondary);
       letter-spacing: 0.3px;
     }
     .top-nav .right {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 18px;
     }
     .top-nav .right .avatar {
-      width: 38px;
-      height: 38px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       background: var(--primary-light);
       color: var(--primary);
@@ -126,9 +110,7 @@
       cursor: pointer;
       transition: var(--transition);
     }
-    .top-nav .right .avatar:hover {
-      transform: scale(1.05);
-    }
+    .top-nav .right .avatar:hover { transform: scale(1.05); }
     .hamburger {
       display: none;
       background: none;
@@ -139,21 +121,18 @@
       padding: 4px;
     }
 
-    /* ----- LAYOUT (Sidebar + Main) ----- */
-    .app {
-      display: flex;
-      min-height: calc(100vh - 68px);
-    }
+    /* ----- LAYOUT ----- */
+    .app { display: flex; min-height: calc(100vh - 70px); }
     .sidebar {
-      width: 240px;
+      width: 250px;
       background: var(--card);
       border-right: 1px solid var(--border);
       padding: 20px 16px;
       display: flex;
       flex-direction: column;
       position: sticky;
-      top: 68px;
-      height: calc(100vh - 68px);
+      top: 70px;
+      height: calc(100vh - 70px);
       overflow-y: auto;
       transition: var(--transition);
       flex-shrink: 0;
@@ -164,11 +143,11 @@
       margin-bottom: 16px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
     .sidebar .profile .avatar-sm {
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       background: var(--primary);
       color: #fff;
@@ -178,14 +157,8 @@
       font-weight: 600;
       font-size: 16px;
     }
-    .sidebar .profile .info .name {
-      font-weight: 600;
-      font-size: 15px;
-    }
-    .sidebar .profile .info .workspace {
-      font-size: 12px;
-      color: var(--text-secondary);
-    }
+    .sidebar .profile .info .name { font-weight: 600; font-size: 15px; }
+    .sidebar .profile .info .workspace { font-size: 12px; color: var(--text-secondary); }
     .sidebar nav {
       display: flex;
       flex-direction: column;
@@ -203,28 +176,13 @@
       font-weight: 500;
       font-size: 14px;
       transition: var(--transition);
-      position: relative;
     }
-    .sidebar nav a i {
-      width: 20px;
-      text-align: center;
-      font-size: 16px;
-    }
-    .sidebar nav a:hover {
-      background: var(--bg);
-      color: var(--text);
-    }
+    .sidebar nav a i { width: 20px; text-align: center; font-size: 16px; }
+    .sidebar nav a:hover { background: var(--bg); color: var(--text); }
     .sidebar nav a.active {
       background: var(--primary-light);
       color: var(--primary);
       font-weight: 600;
-    }
-    .sidebar nav a .badge-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--danger);
-      border-radius: 50%;
-      margin-left: auto;
     }
     .sidebar .footer-links {
       border-top: 1px solid var(--border);
@@ -245,10 +203,7 @@
       font-size: 13px;
       transition: var(--transition);
     }
-    .sidebar .footer-links a:hover {
-      background: var(--bg);
-      color: var(--text);
-    }
+    .sidebar .footer-links a:hover { background: var(--bg); color: var(--text); }
 
     .main {
       flex: 1;
@@ -275,18 +230,11 @@
       align-items: center;
       gap: 10px;
     }
-    .page-header h1 i {
-      color: var(--primary);
-    }
-    .page-header .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    .page-header h1 i { color: var(--primary); }
 
     /* ----- BUTTONS ----- */
     .btn {
-      padding: 10px 22px;
+      padding: 10px 24px;
       border-radius: 40px;
       font-weight: 600;
       font-size: 14px;
@@ -301,12 +249,12 @@
     .btn-primary {
       background: var(--primary);
       color: #fff;
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+      box-shadow: 0 4px 14px rgba(26, 92, 255, 0.25);
     }
     .btn-primary:hover {
       background: var(--primary-dark);
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+      box-shadow: 0 8px 24px rgba(26, 92, 255, 0.35);
     }
     .btn-outline {
       background: transparent;
@@ -318,18 +266,9 @@
       border-color: var(--primary);
       color: var(--primary);
     }
-    .btn-sm {
-      padding: 6px 16px;
-      font-size: 13px;
-    }
-    .btn-success {
-      background: var(--success);
-      color: #fff;
-    }
-    .btn-success:hover {
-      opacity: 0.9;
-      transform: translateY(-2px);
-    }
+    .btn-sm { padding: 6px 16px; font-size: 13px; }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-success:hover { opacity: 0.9; transform: translateY(-2px); }
 
     /* ----- CARDS & GRID ----- */
     .grid-4 {
@@ -352,32 +291,10 @@
       transform: translateY(-4px);
       box-shadow: var(--shadow);
     }
-    .stat-card .label {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      margin-bottom: 4px;
-    }
-    .stat-card .value {
-      font-size: 32px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-    .stat-card .sub {
-      font-size: 13px;
-      color: var(--text-secondary);
-      margin-top: 6px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .stat-card .icon-bg {
-      position: absolute;
-      right: 16px;
-      top: 16px;
-      font-size: 28px;
-      opacity: 0.06;
-    }
+    .stat-card .label { font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bottom: 4px; }
+    .stat-card .value { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; }
+    .stat-card .sub { font-size: 13px; color: var(--text-secondary); margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+    .stat-card .icon-bg { position: absolute; right: 16px; top: 16px; font-size: 28px; opacity: 0.06; }
 
     .row-2 {
       display: grid;
@@ -385,11 +302,7 @@
       gap: 24px;
       margin-bottom: 28px;
     }
-    @media (max-width: 1000px) {
-      .row-2 {
-        grid-template-columns: 1fr;
-      }
-    }
+    @media (max-width: 1000px) { .row-2 { grid-template-columns: 1fr; } }
 
     .card {
       background: var(--card);
@@ -399,9 +312,7 @@
       box-shadow: var(--shadow-sm);
       transition: var(--transition);
     }
-    .card:hover {
-      box-shadow: var(--shadow);
-    }
+    .card:hover { box-shadow: var(--shadow); }
     .card .card-header {
       display: flex;
       justify-content: space-between;
@@ -415,19 +326,11 @@
       align-items: center;
       gap: 8px;
     }
-    .card .card-header h3 i {
-      color: var(--primary);
-    }
+    .card .card-header h3 i { color: var(--primary); }
 
-    /* ----- TABLES / LISTS (Premium) ----- */
-    .table-wrap {
-      overflow-x: auto;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-    }
+    /* ----- TABLES ----- */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
     table th {
       text-align: left;
       padding: 12px 8px 12px 0;
@@ -438,14 +341,8 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    table td {
-      padding: 14px 8px 14px 0;
-      border-bottom: 1px solid var(--border);
-      vertical-align: middle;
-    }
-    table tr:last-child td {
-      border-bottom: none;
-    }
+    table td { padding: 14px 8px 14px 0; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    table tr:last-child td { border-bottom: none; }
     .badge {
       padding: 3px 14px;
       border-radius: 40px;
@@ -454,27 +351,13 @@
       letter-spacing: 0.3px;
       display: inline-block;
     }
-    .badge-draft {
-      background: var(--border);
-      color: var(--text-secondary);
-    }
-    .badge-sent {
-      background: var(--success);
-      color: #fff;
-    }
-    .badge-failed {
-      background: var(--danger);
-      color: #fff;
-    }
-    .badge-sending {
-      background: var(--warning);
-      color: #fff;
-    }
+    .badge-draft { background: var(--border); color: var(--text-secondary); }
+    .badge-sent { background: var(--success); color: #fff; }
+    .badge-failed { background: var(--danger); color: #fff; }
+    .badge-sending { background: var(--warning); color: #fff; }
 
-    /* ----- FORMS (Premium) ----- */
-    .form-group {
-      margin-bottom: 18px;
-    }
+    /* ----- FORMS ----- */
+    .form-group { margin-bottom: 18px; }
     .form-group label {
       font-weight: 600;
       display: block;
@@ -500,20 +383,20 @@
       outline-offset: 1px;
       border-color: transparent;
     }
-    .form-group textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
+    .form-group textarea { min-height: 100px; resize: vertical; }
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 18px;
     }
-    @media (max-width: 600px) {
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-    }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+
+    .flex { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .text-muted { color: var(--text-secondary); }
+    .text-center { text-align: center; }
+    .mt-16 { margin-top: 16px; }
+    .mb-16 { margin-bottom: 16px; }
+    .w-full { width: 100%; }
 
     /* ----- TABS ----- */
     .tab-bar {
@@ -542,9 +425,7 @@
       color: var(--text);
       box-shadow: var(--shadow-sm);
     }
-    .tab-bar button:hover {
-      color: var(--text);
-    }
+    .tab-bar button:hover { color: var(--text); }
 
     /* ----- TEMPLATE GALLERY ----- */
     .template-grid {
@@ -567,40 +448,14 @@
       transform: translateY(-3px);
       box-shadow: var(--shadow);
     }
-    .template-card i {
-      font-size: 32px;
-      color: var(--primary);
-      margin-bottom: 6px;
-    }
-    .template-card .name {
-      font-weight: 600;
-      font-size: 14px;
-    }
+    .template-card i { font-size: 32px; color: var(--primary); margin-bottom: 6px; }
+    .template-card .name { font-weight: 600; font-size: 14px; }
 
-    /* ----- PAGES (sections) ----- */
-    .page-section {
-      display: none;
-      animation: fadeSlide 0.3s ease;
-    }
-    .page-section.active {
-      display: block;
-    }
-    @keyframes fadeSlide {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* ----- DOMAIN SETUP CARDS ----- */
+    /* ----- DOMAIN CARDS ----- */
     .domain-card {
       background: var(--card);
       border-radius: var(--radius);
-      padding: 20px 24px;
+      padding: 18px 24px;
       border: 1px solid var(--border);
       display: flex;
       align-items: center;
@@ -608,74 +463,55 @@
       margin-bottom: 14px;
       transition: var(--transition);
     }
-    .domain-card:hover {
-      box-shadow: var(--shadow-sm);
-    }
-    .domain-card .left {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
+    .domain-card:hover { box-shadow: var(--shadow-sm); }
+    .domain-card .left { display: flex; align-items: center; gap: 16px; }
     .domain-card .left i {
-      font-size: 22px;
+      font-size: 20px;
       color: var(--primary);
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       background: var(--primary-light);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .domain-card .status {
-      font-weight: 600;
-      font-size: 13px;
+    .domain-card .status.verified { color: var(--success); font-weight: 600; }
+    .domain-card .status.pending { color: var(--warning); font-weight: 600; }
+
+    /* ----- HELP / INSTRUCTION WELL ----- */
+    .well {
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      padding: 20px 24px;
+      border-left: 4px solid var(--primary);
     }
-    .domain-card .status.verified {
-      color: var(--success);
-    }
-    .domain-card .status.pending {
-      color: var(--warning);
+    .well h4 { margin-top: 12px; margin-bottom: 6px; font-weight: 600; }
+    .well ul { padding-left: 20px; margin-bottom: 8px; }
+    .well ul li { margin-bottom: 4px; font-size: 14px; }
+
+    /* ----- PAGES (sections) ----- */
+    .page-section { display: none; animation: fadeSlide 0.3s ease; }
+    .page-section.active { display: block; }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* ----- RESPONSIVE ----- */
     @media (max-width: 1024px) {
-      .sidebar {
-        width: 72px;
-        padding: 16px 8px;
-      }
-      .sidebar .profile .info {
-        display: none;
-      }
-      .sidebar .profile .avatar-sm {
-        margin: 0 auto;
-      }
-      .sidebar nav a span {
-        display: none;
-      }
-      .sidebar nav a {
-        justify-content: center;
-        padding: 12px;
-      }
-      .sidebar .footer-links a span {
-        display: none;
-      }
-      .sidebar .footer-links a {
-        justify-content: center;
-        padding: 10px;
-      }
-      .main {
-        padding: 20px;
-      }
+      .sidebar { width: 72px; padding: 16px 8px; }
+      .sidebar .profile .info { display: none; }
+      .sidebar .profile .avatar-sm { margin: 0 auto; }
+      .sidebar nav a span { display: none; }
+      .sidebar nav a { justify-content: center; padding: 12px; }
+      .sidebar .footer-links a span { display: none; }
+      .sidebar .footer-links a { justify-content: center; padding: 10px; }
+      .main { padding: 20px; }
     }
     @media (max-width: 768px) {
-      .top-nav {
-        padding: 0 16px;
-        height: 60px;
-      }
-      .hamburger {
-        display: block;
-      }
+      .top-nav { padding: 0 16px; height: 60px; }
+      .hamburger { display: block; }
       .sidebar {
         position: fixed;
         top: 60px;
@@ -686,103 +522,39 @@
         transition: left 0.3s ease;
         box-shadow: var(--shadow-lg);
       }
-      .sidebar.open {
-        left: 0;
-      }
-      .sidebar .profile .info {
-        display: block;
-      }
-      .sidebar nav a span {
-        display: inline;
-      }
-      .sidebar .footer-links a span {
-        display: inline;
-      }
-      .main {
-        padding: 16px;
-      }
-      .grid-4 {
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
-      }
-      .page-header h1 {
-        font-size: 20px;
-      }
+      .sidebar.open { left: 0; }
+      .sidebar .profile .info { display: block; }
+      .sidebar nav a span { display: inline; }
+      .sidebar .footer-links a span { display: inline; }
+      .main { padding: 16px; }
+      .grid-4 { grid-template-columns: 1fr 1fr; gap: 14px; }
+      .page-header h1 { font-size: 20px; }
     }
     @media (max-width: 480px) {
-      .grid-4 {
-        grid-template-columns: 1fr;
-      }
-      .top-nav .left .logo small {
-        display: none;
-      }
+      .grid-4 { grid-template-columns: 1fr; }
+      .top-nav .brand small { display: none; }
     }
 
-    /* ----- UTILITY ----- */
-    .flex {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .mt-16 {
-      margin-top: 16px;
-    }
-    .mb-16 {
-      margin-bottom: 16px;
-    }
-    .text-center {
-      text-align: center;
-    }
-    .text-muted {
-      color: var(--text-secondary);
-    }
-    .gap-8 {
-      gap: 8px;
-    }
-    .items-center {
-      align-items: center;
-    }
-    .w-full {
-      width: 100%;
-    }
-    .justify-between {
-      justify-content: space-between;
-    }
-    .truncate {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 200px;
-    }
-
-    /* drag & drop */
+    /* Drop zone */
     .drop-zone {
       border: 2px dashed var(--border);
       border-radius: var(--radius-sm);
-      padding: 40px 20px;
+      padding: 36px 20px;
       text-align: center;
       transition: var(--transition);
       cursor: pointer;
     }
-    .drop-zone:hover {
-      border-color: var(--primary);
-      background: var(--primary-light);
-    }
-    .drop-zone i {
-      font-size: 40px;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
-    }
+    .drop-zone:hover { border-color: var(--primary); background: var(--primary-light); }
+    .drop-zone i { font-size: 36px; color: var(--text-secondary); margin-bottom: 6px; }
   </style>
 </head>
 <body>
 
   <!-- TOP NAV -->
   <header class="top-nav">
-    <div class="left">
+    <div class="brand">
       <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
-      <div class="logo">✉ MailCraft <small>· SaaS</small></div>
+      <i class="fas fa-leaf" style="color:var(--primary);"></i> LeafMailer <small>· Pro</small>
     </div>
     <div class="right">
       <button class="btn btn-outline btn-sm" id="themeToggle"><i class="fas fa-moon"></i></button>
@@ -798,7 +570,7 @@
         <div class="avatar-sm">JD</div>
         <div class="info">
           <div class="name">John Doe</div>
-          <div class="workspace">Acme Inc.</div>
+          <div class="workspace">Acme Corp</div>
         </div>
       </div>
       <nav>
@@ -807,8 +579,6 @@
         <a href="#" data-page="compose"><i class="fas fa-pen-fancy"></i><span>Compose</span></a>
         <a href="#" data-page="templates"><i class="fas fa-paste"></i><span>Templates</span></a>
         <a href="#" data-page="contacts"><i class="fas fa-address-book"></i><span>Contacts</span></a>
-        <a href="#" data-page="automation"><i class="fas fa-robot"></i><span>Automation</span></a>
-        <a href="#" data-page="analytics"><i class="fas fa-chart-line"></i><span>Analytics</span></a>
         <a href="#" data-page="domain"><i class="fas fa-globe"></i><span>Domain Setup</span></a>
         <a href="#" data-page="settings"><i class="fas fa-sliders-h"></i><span>Settings</span></a>
       </nav>
@@ -825,7 +595,7 @@
       <section id="page-dashboard" class="page-section active">
         <div class="page-header">
           <h1><i class="fas fa-th-large"></i> Dashboard</h1>
-          <div class="actions">
+          <div class="flex">
             <button class="btn btn-primary" id="dashNewCampaign"><i class="fas fa-plus"></i> New Campaign</button>
             <button class="btn btn-outline" id="dashImport"><i class="fas fa-file-import"></i> Import</button>
           </div>
@@ -856,6 +626,30 @@
             <button class="btn btn-primary w-full" id="quickSendBtn" style="justify-content:center;"><i class="fas fa-paper-plane"></i> Send</button>
           </div>
         </div>
+
+        <!-- Instruction Well (LeafMailer style) -->
+        <div class="card mt-16">
+          <div class="card-header"><h3><i class="fas fa-info-circle"></i> Email Personalization</h3></div>
+          <div class="well">
+            <h4>Available Variables</h4>
+            <ul>
+              <li><b>[-email-]</b> : Recipient Email</li>
+              <li><b>[-time-]</b> : Date &amp; Time (<?php echo date("m/d/Y h:i:s a", time()); ?>)</li>
+              <li><b>[-emailuser-]</b> : Email User (user@domain)</li>
+              <li><b>[-randomstring-]</b> : Random alphanumeric string</li>
+              <li><b>[-randomnumber-]</b> : Random number</li>
+              <li><b>[-randomletters-]</b> : Random letters</li>
+              <li><b>[-randommd5-]</b> : Random MD5 hash</li>
+            </ul>
+            <h4>Example</h4>
+            <p>Recipient: <b>user@domain.com</b></p>
+            <ul>
+              <li><code>hello [-emailuser-]</code> → <b>hello user</b></li>
+              <li><code>your code is [-randommd5-]</code> → <b>e10adc3949ba59abbe56e057f20f883e</b></li>
+            </ul>
+            <p class="text-muted" style="margin-top:8px;"><i class="fas fa-leaf" style="color:var(--primary);"></i> LeafMailer v2.7 · <a href="#" style="color:var(--primary);">leafmailer.pw</a></p>
+          </div>
+        </div>
       </section>
 
       <!-- ==================== COMPOSE ==================== -->
@@ -863,24 +657,42 @@
         <div class="page-header"><h1><i class="fas fa-pen-fancy"></i> Compose</h1></div>
         <div class="card">
           <div class="card-header"><h3><i class="fas fa-edit"></i> Email Builder</h3></div>
-          <div class="form-row">
-            <div class="form-group"><label>From Name</label><input type="text" id="composeFromName" value="Acme Inc." /></div>
-            <div class="form-group"><label>Reply-To</label><input type="email" id="composeReplyTo" placeholder="reply@example.com" /></div>
-          </div>
-          <div class="form-group"><label>To (comma separated)</label><input type="text" id="composeTo" placeholder="one@example.com, two@example.com" /></div>
-          <div class="form-row">
-            <div class="form-group"><label>CC</label><input type="text" id="composeCc" placeholder="cc@example.com" /></div>
-            <div class="form-group"><label>BCC</label><input type="text" id="composeBcc" placeholder="bcc@example.com" /></div>
-          </div>
-          <div class="form-group"><label>Subject</label><input type="text" id="composeSubject" placeholder="Amazing offer inside" /></div>
-          <div class="form-group"><label>HTML Content <span class="text-muted">(supports {{name}}, {{company}})</span></label><textarea id="composeHtml" rows="6">&lt;h1&gt;Hello {{name}},&lt;/h1&gt;&lt;p&gt;Welcome to MailCraft — your professional email platform.&lt;/p&gt;&lt;a href=&quot;#&quot; style=&quot;background:#2563eb;color:#fff;padding:10px 24px;border-radius:40px;text-decoration:none;&quot;&gt;Get Started&lt;/a&gt;</textarea></div>
-          <div class="form-group"><label>Plain Text Fallback</label><textarea id="composePlain" rows="3">Hello {{name}}, welcome to MailCraft.</textarea></div>
-          <div class="flex">
-            <button class="btn btn-primary" id="composeSendBtn"><i class="fas fa-paper-plane"></i> Send</button>
-            <button class="btn btn-outline" id="composeSaveDraft"><i class="fas fa-save"></i> Draft</button>
-            <button class="btn btn-outline" id="composePreviewBtn"><i class="fas fa-eye"></i> Preview</button>
-            <button class="btn btn-outline" id="composeTestBtn"><i class="fas fa-envelope"></i> Test</button>
-          </div>
+          <form id="composeForm">
+            <div class="form-row">
+              <div class="form-group"><label>From Email</label><input type="email" id="composeFromEmail" value="sender@example.com" /></div>
+              <div class="form-group"><label>Sender Name</label><input type="text" id="composeFromName" value="Acme Corp" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Reply-To</label><input type="email" id="composeReplyTo" placeholder="reply@example.com" /></div>
+              <div class="form-group"><label>Attachments <small>(multiple)</small></label><input type="file" id="composeAttachment" multiple /></div>
+            </div>
+            <div class="form-group"><label>Subject</label><input type="text" id="composeSubject" placeholder="Amazing offer inside" /></div>
+            <div class="form-row">
+              <div class="form-group"><label>Message HTML</label><textarea id="composeHtml" rows="6">&lt;h1&gt;Hello [-emailuser-],&lt;/h1&gt;&lt;p&gt;Welcome to LeafMailer Pro.&lt;/p&gt;&lt;a href=&quot;#&quot; style=&quot;background:#1a5cff;color:#fff;padding:10px 24px;border-radius:40px;text-decoration:none;&quot;&gt;Get Started&lt;/a&gt;</textarea></div>
+              <div class="form-group"><label>Email List (one per line)</label><textarea id="composeEmailList" rows="6">user1@example.com
+user2@example.com
+user3@example.com</textarea></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Message Type</label>
+                <div style="display:flex; gap:20px; padding-top:6px;">
+                  <label><input type="radio" name="messageType" value="1" checked /> HTML</label>
+                  <label><input type="radio" name="messageType" value="2" /> Plain</label>
+                </div>
+              </div>
+              <div class="form-group"><label>Encoding</label>
+                <select class="form-control" id="composeEncoding">
+                  <option value="UTF-8">UTF-8</option>
+                  <option value="ISO-8859-1">ISO-8859-1</option>
+                </select>
+              </div>
+            </div>
+            <div class="flex">
+              <button type="button" class="btn btn-primary" id="composeSendBtn"><i class="fas fa-paper-plane"></i> Send</button>
+              <button type="button" class="btn btn-outline" id="composeSaveDraft"><i class="fas fa-save"></i> Draft</button>
+              <button type="button" class="btn btn-outline" id="composePreviewBtn"><i class="fas fa-eye"></i> Preview</button>
+            </div>
+          </form>
           <div id="composePreviewArea" style="margin-top:18px; padding:18px; background:var(--bg); border-radius:var(--radius-sm); display:none;"></div>
         </div>
       </section>
@@ -908,18 +720,16 @@
           <button data-tpl="marketing">Marketing</button>
           <button data-tpl="newsletter">Newsletter</button>
           <button data-tpl="welcome">Welcome</button>
-          <button data-tpl="ecommerce">Ecommerce</button>
         </div>
         <div class="template-grid" id="templateGallery">
-          <div class="template-card" data-html="<h1 style='color:#2563eb;'>Special Offer</h1><p>Get 20% off today</p><a href='#' style='background:#2563eb;color:#fff;padding:8px 20px;border-radius:40px;text-decoration:none;'>Shop Now</a>"><i class="fas fa-tag"></i><div class="name">Promo</div></div>
+          <div class="template-card" data-html="<h1 style='color:#1a5cff;'>Special Offer</h1><p>Get 20% off today</p><a href='#' style='background:#1a5cff;color:#fff;padding:8px 20px;border-radius:40px;text-decoration:none;'>Shop Now</a>"><i class="fas fa-tag"></i><div class="name">Promo</div></div>
           <div class="template-card" data-html="<h2>📰 Newsletter</h2><p>Latest updates for you.</p><a href='#'>Read more →</a>"><i class="fas fa-newspaper"></i><div class="name">News</div></div>
-          <div class="template-card" data-html="<h1>Welcome {{name}}!</h1><p>We're thrilled to have you.</p><a href='#' style='background:#2563eb;color:#fff;padding:8px 20px;border-radius:40px;text-decoration:none;'>Get Started</a>"><i class="fas fa-hand-peace"></i><div class="name">Welcome</div></div>
-          <div class="template-card" data-html="<h2>🛒 Ecommerce</h2><p>Check our new products.</p><a href='#'>Shop now</a>"><i class="fas fa-shopping-cart"></i><div class="name">Ecommerce</div></div>
-          <div class="template-card" data-html="<h2>📢 Announcement</h2><p>Important update for you.</p><a href='#'>Learn more</a>"><i class="fas fa-bullhorn"></i><div class="name">Announce</div></div>
+          <div class="template-card" data-html="<h1>Welcome [-emailuser-]!</h1><p>We're thrilled to have you.</p><a href='#' style='background:#1a5cff;color:#fff;padding:8px 20px;border-radius:40px;text-decoration:none;'>Get Started</a>"><i class="fas fa-hand-peace"></i><div class="name">Welcome</div></div>
+          <div class="template-card" data-html="<h2>🚀 Product Launch</h2><p>Check our new features.</p><a href='#'>Learn more</a>"><i class="fas fa-rocket"></i><div class="name">Launch</div></div>
         </div>
         <div class="card">
           <div class="card-header"><h3><i class="fas fa-edit"></i> Template Editor</h3></div>
-          <div class="form-group"><label>HTML</label><textarea id="templateEditor" rows="5">&lt;h1&gt;Hello {{name}}&lt;/h1&gt;&lt;p&gt;Your template here.&lt;/p&gt;</textarea></div>
+          <div class="form-group"><label>HTML</label><textarea id="templateEditor" rows="5">&lt;h1&gt;Hello [-emailuser-]&lt;/h1&gt;&lt;p&gt;Your template here.&lt;/p&gt;</textarea></div>
           <div class="flex">
             <button class="btn btn-primary" id="saveTemplateBtn"><i class="fas fa-save"></i> Save</button>
             <button class="btn btn-outline" id="previewTemplateBtn"><i class="fas fa-eye"></i> Preview</button>
@@ -931,7 +741,7 @@
       <!-- ==================== CONTACTS ==================== -->
       <section id="page-contacts" class="page-section">
         <div class="page-header"><h1><i class="fas fa-address-book"></i> Contacts</h1>
-          <div class="actions">
+          <div class="flex">
             <button class="btn btn-primary" id="addContactBtn"><i class="fas fa-user-plus"></i> Add</button>
             <button class="btn btn-outline" id="importCsvBtn"><i class="fas fa-file-import"></i> Import</button>
             <button class="btn btn-outline" id="exportContactsBtn"><i class="fas fa-file-export"></i> Export</button>
@@ -951,33 +761,15 @@
         </div>
       </section>
 
-      <!-- ==================== AUTOMATION ==================== -->
-      <section id="page-automation" class="page-section">
-        <div class="page-header"><h1><i class="fas fa-robot"></i> Automation</h1><button class="btn btn-primary"><i class="fas fa-plus"></i> New Workflow</button></div>
-        <div class="card"><div class="text-muted text-center" style="padding:40px 0;">Automation workflows will appear here. Build email sequences and triggers.</div></div>
-      </section>
-
-      <!-- ==================== ANALYTICS ==================== -->
-      <section id="page-analytics" class="page-section">
-        <div class="page-header"><h1><i class="fas fa-chart-line"></i> Analytics</h1></div>
-        <div class="grid-4">
-          <div class="stat-card"><div class="label">Delivery Rate</div><div class="value">98%</div><div class="sub">+2% vs last month</div></div>
-          <div class="stat-card"><div class="label">Open Rate</div><div class="value">64%</div><div class="sub">industry avg 42%</div></div>
-          <div class="stat-card"><div class="label">Click Rate</div><div class="value">12%</div><div class="sub">+1.4%</div></div>
-          <div class="stat-card"><div class="label">Bounce Rate</div><div class="value">0.8%</div><div class="sub">healthy</div></div>
-        </div>
-        <div class="card"><div class="card-header"><h3><i class="fas fa-chart-bar"></i> Campaign Performance</h3></div><div class="text-muted text-center" style="padding:30px 0;">Detailed analytics will appear after sending campaigns.</div></div>
-      </section>
-
       <!-- ==================== DOMAIN SETUP ==================== -->
       <section id="page-domain" class="page-section">
         <div class="page-header"><h1><i class="fas fa-globe"></i> Domain Setup</h1></div>
         <div class="card">
           <div class="card-header"><h3><i class="fas fa-shield-alt"></i> Deliverability</h3></div>
-          <div class="domain-card"><div class="left"><i class="fas fa-envelope"></i><div><strong>SPF</strong><div class="text-muted" style="font-size:13px;">v=spf1 include:spf.mailcraft.com ~all</div></div></div><div class="status verified"><i class="fas fa-check-circle"></i> Verified</div></div>
-          <div class="domain-card"><div class="left"><i class="fas fa-key"></i><div><strong>DKIM</strong><div class="text-muted" style="font-size:13px;">mailcraft._domainkey TXT</div></div></div><div class="status verified"><i class="fas fa-check-circle"></i> Verified</div></div>
-          <div class="domain-card"><div class="left"><i class="fas fa-flag"></i><div><strong>DMARC</strong><div class="text-muted" style="font-size:13px;">_dmarc.mailcraft.com TXT</div></div></div><div class="status pending"><i class="fas fa-clock"></i> Pending</div></div>
-          <div class="help-text" style="margin-top:16px; background:var(--bg); padding:16px 20px; border-radius:var(--radius-sm); border-left:4px solid var(--primary);">
+          <div class="domain-card"><div class="left"><i class="fas fa-envelope"></i><div><strong>SPF</strong><div class="text-muted" style="font-size:13px;">v=spf1 include:spf.leafmailer.pw ~all</div></div></div><div class="status verified"><i class="fas fa-check-circle"></i> Verified</div></div>
+          <div class="domain-card"><div class="left"><i class="fas fa-key"></i><div><strong>DKIM</strong><div class="text-muted" style="font-size:13px;">mail._domainkey TXT</div></div></div><div class="status verified"><i class="fas fa-check-circle"></i> Verified</div></div>
+          <div class="domain-card"><div class="left"><i class="fas fa-flag"></i><div><strong>DMARC</strong><div class="text-muted" style="font-size:13px;">_dmarc.leafmailer.pw TXT</div></div></div><div class="status pending"><i class="fas fa-clock"></i> Pending</div></div>
+          <div class="well mt-16">
             <strong>📘 DNS Setup Instructions</strong><br />
             Add these records to your domain's DNS provider. Verification may take up to 48 hours.
           </div>
@@ -988,18 +780,21 @@
       <section id="page-settings" class="page-section">
         <div class="page-header"><h1><i class="fas fa-sliders-h"></i> Settings</h1></div>
         <div class="card">
-          <div class="card-header"><h3><i class="fas fa-cog"></i> EmailJS Integration</h3></div>
+          <div class="card-header"><h3><i class="fas fa-cog"></i> SMTP / Email Configuration</h3></div>
           <div class="form-row">
-            <div class="form-group"><label>Public Key</label><input type="text" id="settingsPublicKey" placeholder="user_xxxx" /></div>
-            <div class="form-group"><label>Service ID</label><input type="text" id="settingsServiceId" placeholder="service_xxx" /></div>
-            <div class="form-group"><label>Template ID</label><input type="text" id="settingsTemplateId" placeholder="template_xxx" /></div>
+            <div class="form-group"><label>SMTP Host</label><input type="text" id="settingsSmtpHost" value="smtp.example.com" /></div>
+            <div class="form-group"><label>SMTP Port</label><input type="text" id="settingsSmtpPort" value="587" /></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Username</label><input type="text" id="settingsSmtpUser" value="user@example.com" /></div>
+            <div class="form-group"><label>Password</label><input type="password" id="settingsSmtpPass" value="••••••••" /></div>
           </div>
           <button class="btn btn-primary" id="saveSettingsBtn"><i class="fas fa-save"></i> Save Settings</button>
         </div>
         <div class="card mt-16">
           <div class="card-header"><h3><i class="fas fa-building"></i> Business Info</h3></div>
           <div class="form-row">
-            <div class="form-group"><label>Business Name</label><input type="text" id="bizName" value="Acme Inc." /></div>
+            <div class="form-group"><label>Business Name</label><input type="text" id="bizName" value="Acme Corp" /></div>
             <div class="form-group"><label>Sender Email</label><input type="email" id="bizEmail" value="hello@acme.com" /></div>
           </div>
           <button class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
@@ -1015,61 +810,25 @@
 
       // ----- STATE (persisted) -----
       let state = {
-        contacts: JSON.parse(localStorage.getItem('mc_contacts')) || [
+        contacts: JSON.parse(localStorage.getItem('lm_contacts')) || [
           { name: 'Alice Johnson', email: 'alice@example.com', company: 'Acme Corp' },
           { name: 'Bob Smith', email: 'bob@example.com', company: 'Beta Inc' },
           { name: 'Carol White', email: 'carol@example.com', company: 'Gamma LLC' }
         ],
-        campaigns: JSON.parse(localStorage.getItem('mc_campaigns')) || [],
-        templates: JSON.parse(localStorage.getItem('mc_templates')) || [],
-        drafts: JSON.parse(localStorage.getItem('mc_drafts')) || [],
-        settings: JSON.parse(localStorage.getItem('mc_settings')) || { publicKey: '', serviceId: '', templateId: '' },
-        sentCount: parseInt(localStorage.getItem('mc_sent')) || 0,
-        failedCount: parseInt(localStorage.getItem('mc_failed')) || 0
+        campaigns: JSON.parse(localStorage.getItem('lm_campaigns')) || [],
+        templates: JSON.parse(localStorage.getItem('lm_templates')) || [],
+        drafts: JSON.parse(localStorage.getItem('lm_drafts')) || [],
+        sentCount: parseInt(localStorage.getItem('lm_sent')) || 0,
+        failedCount: parseInt(localStorage.getItem('lm_failed')) || 0
       };
 
       function persist() {
-        localStorage.setItem('mc_contacts', JSON.stringify(state.contacts));
-        localStorage.setItem('mc_campaigns', JSON.stringify(state.campaigns));
-        localStorage.setItem('mc_templates', JSON.stringify(state.templates));
-        localStorage.setItem('mc_drafts', JSON.stringify(state.drafts));
-        localStorage.setItem('mc_settings', JSON.stringify(state.settings));
-        localStorage.setItem('mc_sent', String(state.sentCount));
-        localStorage.setItem('mc_failed', String(state.failedCount));
-      }
-
-      // ----- HELPERS -----
-      function sendEmail(to, subject, html, plain, fromName, replyTo, cc = '', bcc = '') {
-        const s = state.settings;
-        if (!s.publicKey || !s.serviceId || !s.templateId) {
-          alert('⚠️ Please configure EmailJS in Settings (Public Key, Service ID, Template ID).');
-          return Promise.reject('missing settings');
-        }
-        emailjs.init(s.publicKey);
-        const params = {
-          to_email: to,
-          from_name: fromName || 'MailCraft',
-          subject: subject,
-          message_html: html,
-          message_plain: plain || '',
-          reply_to: replyTo || '',
-          cc: cc,
-          bcc: bcc
-        };
-        return emailjs.send(s.serviceId, s.templateId, params)
-          .then(res => {
-            state.sentCount += 1;
-            persist();
-            renderDashboard();
-            return res;
-          })
-          .catch(err => {
-            state.failedCount += 1;
-            persist();
-            renderDashboard();
-            console.error('EmailJS error:', err);
-            throw err;
-          });
+        localStorage.setItem('lm_contacts', JSON.stringify(state.contacts));
+        localStorage.setItem('lm_campaigns', JSON.stringify(state.campaigns));
+        localStorage.setItem('lm_templates', JSON.stringify(state.templates));
+        localStorage.setItem('lm_drafts', JSON.stringify(state.drafts));
+        localStorage.setItem('lm_sent', String(state.sentCount));
+        localStorage.setItem('lm_failed', String(state.failedCount));
       }
 
       // ----- RENDER FUNCTIONS -----
@@ -1079,15 +838,14 @@
         document.getElementById('statSent').innerText = state.sentCount;
         document.getElementById('statFailed').innerText = state.failedCount;
 
-        // recent campaigns table
         const tbody = document.getElementById('recentCampaignsTable');
         if (state.campaigns.length === 0) {
           tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center">No campaigns yet</td></tr>';
         } else {
           let html = '';
           state.campaigns.slice(-4).reverse().forEach(c => {
-            const statusClass = c.status === 'sent' ? 'badge-sent' : c.status === 'failed' ? 'badge-failed' : c.status === 'sending' ? 'badge-sending' : 'badge-draft';
-            html += `<tr><td><strong>${c.name}</strong></td><td><span class="badge ${statusClass}">${c.status || 'draft'}</span></td><td>${c.recipients || 0}</td><td>${new Date(c.date).toLocaleDateString()}</td></tr>`;
+            const cls = c.status === 'sent' ? 'badge-sent' : c.status === 'failed' ? 'badge-failed' : c.status === 'sending' ? 'badge-sending' : 'badge-draft';
+            html += `<tr><td><strong>${c.name}</strong></td><td><span class="badge ${cls}">${c.status || 'draft'}</span></td><td>${c.recipients || 0}</td><td>${new Date(c.date).toLocaleDateString()}</td></tr>`;
           });
           tbody.innerHTML = html;
         }
@@ -1129,11 +887,11 @@
         }
         let html = '';
         state.campaigns.forEach((c, i) => {
-          const statusClass = c.status === 'sent' ? 'badge-sent' : c.status === 'failed' ? 'badge-failed' : c.status === 'sending' ? 'badge-sending' : 'badge-draft';
+          const cls = c.status === 'sent' ? 'badge-sent' : c.status === 'failed' ? 'badge-failed' : c.status === 'sending' ? 'badge-sending' : 'badge-draft';
           html += `<tr>
             <td><strong>${c.name}</strong></td>
             <td>${c.subject}</td>
-            <td><span class="badge ${statusClass}">${c.status || 'draft'}</span></td>
+            <td><span class="badge ${cls}">${c.status || 'draft'}</span></td>
             <td>${c.recipients || 0}</td>
             <td>${new Date(c.date).toLocaleDateString()}</td>
             <td>
@@ -1173,7 +931,6 @@
           document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
           const target = document.getElementById('page-' + page);
           if (target) target.classList.add('active');
-          // close sidebar on mobile
           document.getElementById('sidebar').classList.remove('open');
         });
       });
@@ -1190,35 +947,46 @@
         icon.className = document.body.classList.contains('dark') ? 'fas fa-sun' : 'fas fa-moon';
       });
 
-      // ----- QUICK SEND -----
+      // ----- QUICK SEND (simulated) -----
       document.getElementById('quickSendBtn').addEventListener('click', function() {
         const to = document.getElementById('quickEmail').value.trim();
         const subject = document.getElementById('quickSubject').value.trim();
         const msg = document.getElementById('quickMessage').value.trim();
         if (!to || !subject || !msg) return alert('Please fill in all fields.');
-        sendEmail(to, subject, `<p>${msg}</p>`, msg, 'MailCraft', '')
-          .then(() => { alert('✅ Sent!'); document.getElementById('quickEmail').value = ''; document.getElementById('quickSubject').value = ''; document.getElementById('quickMessage').value = ''; })
-          .catch(() => alert('❌ Failed. Check EmailJS.'));
+        state.sentCount += 1;
+        persist();
+        renderDashboard();
+        alert('✅ Email sent to ' + to + ' (simulated)');
+        document.getElementById('quickEmail').value = '';
+        document.getElementById('quickSubject').value = '';
+        document.getElementById('quickMessage').value = '';
       });
 
-      // ----- COMPOSE -----
+      // ----- COMPOSE SEND (simulated) -----
       document.getElementById('composeSendBtn').addEventListener('click', function() {
-        const to = document.getElementById('composeTo').value.trim();
-        const subject = document.getElementById('composeSubject').value.trim();
-        const html = document.getElementById('composeHtml').value;
-        const plain = document.getElementById('composePlain').value;
-        const from = document.getElementById('composeFromName').value.trim() || 'MailCraft';
-        const reply = document.getElementById('composeReplyTo').value.trim();
-        const cc = document.getElementById('composeCc').value.trim();
-        const bcc = document.getElementById('composeBcc').value.trim();
-        if (!to || !subject) return alert('To and Subject are required.');
-        sendEmail(to, subject, html, plain, from, reply, cc, bcc)
-          .then(() => alert('✅ Sent!'))
-          .catch(() => alert('❌ Failed.'));
+        const list = document.getElementById('composeEmailList').value.split('\n').filter(e => e.trim());
+        if (list.length === 0) return alert('Add at least one recipient.');
+        const subject = document.getElementById('composeSubject').value || 'No subject';
+        state.sentCount += list.length;
+        state.campaigns.push({
+          name: 'Campaign ' + (state.campaigns.length + 1),
+          subject: subject,
+          status: 'sent',
+          recipients: list.length,
+          date: new Date().toISOString()
+        });
+        persist();
+        renderCampaigns();
+        renderDashboard();
+        alert('✅ Sent to ' + list.length + ' recipients (simulated)');
       });
 
       document.getElementById('composeSaveDraft').addEventListener('click', function() {
-        state.drafts.push({ to: document.getElementById('composeTo').value, subject: document.getElementById('composeSubject').value, html: document.getElementById('composeHtml').value });
+        state.drafts.push({
+          subject: document.getElementById('composeSubject').value,
+          html: document.getElementById('composeHtml').value,
+          list: document.getElementById('composeEmailList').value
+        });
         persist();
         alert('📝 Draft saved!');
       });
@@ -1227,17 +995,6 @@
         const area = document.getElementById('composePreviewArea');
         area.innerHTML = document.getElementById('composeHtml').value || '<i>Empty</i>';
         area.style.display = 'block';
-      });
-
-      document.getElementById('composeTestBtn').addEventListener('click', function() {
-        const to = prompt('Enter test email address:');
-        if (!to) return;
-        const subject = document.getElementById('composeSubject').value || 'Test';
-        const html = document.getElementById('composeHtml').value;
-        const plain = document.getElementById('composePlain').value;
-        sendEmail(to, subject, html, plain, document.getElementById('composeFromName').value || 'MailCraft', '')
-          .then(() => alert('✅ Test sent to ' + to))
-          .catch(() => alert('❌ Test failed.'));
       });
 
       // ----- CAMPAIGNS -----
@@ -1252,7 +1009,6 @@
         renderDashboard();
       });
 
-      // Dashboard quick actions
       document.getElementById('dashNewCampaign').addEventListener('click', function() {
         document.querySelector('.sidebar nav a[data-page="campaigns"]').click();
         setTimeout(() => document.getElementById('newCampaignBtn').click(), 100);
@@ -1284,7 +1040,6 @@
       document.getElementById('newTemplateBtn').addEventListener('click', function() {
         document.getElementById('templateEditor').value = '<h1>New Template</h1><p>Edit me.</p>';
         document.getElementById('templatePreview').innerHTML = '';
-        alert('Start editing your template above.');
       });
 
       // ----- CONTACTS -----
@@ -1335,38 +1090,26 @@
         URL.revokeObjectURL(url);
       });
 
-      // Drop zone (mock)
       document.getElementById('dropZone').addEventListener('click', function() {
         alert('Upload CSV or Excel file. (Mock - paste CSV in import)');
       });
 
       // ----- SETTINGS -----
-      function loadSettingsUI() {
-        document.getElementById('settingsPublicKey').value = state.settings.publicKey || '';
-        document.getElementById('settingsServiceId').value = state.settings.serviceId || '';
-        document.getElementById('settingsTemplateId').value = state.settings.templateId || '';
-      }
       document.getElementById('saveSettingsBtn').addEventListener('click', function() {
-        state.settings.publicKey = document.getElementById('settingsPublicKey').value.trim();
-        state.settings.serviceId = document.getElementById('settingsServiceId').value.trim();
-        state.settings.templateId = document.getElementById('settingsTemplateId').value.trim();
-        persist();
-        alert('✅ Settings saved!');
+        alert('✅ Settings saved! (simulated)');
       });
 
       // ----- INIT -----
-      loadSettingsUI();
       renderDashboard();
       renderContacts('');
       renderCampaigns();
-
-      // Default template preview
       if (document.getElementById('templateEditor').value.trim()) {
         document.getElementById('templatePreview').innerHTML = document.getElementById('templateEditor').value;
       }
 
-      console.log('🚀 MailCraft Premium ready.');
+      console.log('🍃 LeafMailer Pro ready.');
     })();
   </script>
+
 </body>
 </html>
