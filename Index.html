@@ -3,621 +3,685 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Classic USD · Professional Dashboard</title>
-  <!-- Font & icons -->
+  <title>Classic · $2M Dashboard</title>
+  <!-- Font Awesome (free) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
+
     body {
-      background: #f0f4fa;
+      background: #f4f7fc;
       min-height: 100vh;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       padding: 20px;
     }
+
+    /* MAIN CARD – classic dashboard */
     .dashboard {
-      max-width: 1100px;
+      max-width: 1200px;
       width: 100%;
       background: #ffffff;
-      border-radius: 40px;
-      box-shadow: 0 25px 50px -10px rgba(0,20,50,0.25);
-      padding: 30px 35px 40px;
-      transition: all 0.2s ease;
+      border-radius: 36px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      transition: all 0.2s;
     }
+
     /* header */
     .header {
+      padding: 28px 36px;
+      background: #ffffff;
+      border-bottom: 1px solid #eef2f6;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      margin-bottom: 30px;
     }
-    .logo-area h1 {
-      font-size: 26px;
-      font-weight: 600;
-      color: #0b1a33;
-      letter-spacing: -0.3px;
-    }
-    .logo-area span {
-      color: #3b7cff;
-      font-weight: 500;
-    }
-    .user-badge {
-      background: #eef3fc;
-      padding: 10px 20px;
-      border-radius: 60px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 500;
-      color: #1e2f4a;
-    }
-    .user-badge i {
+
+    .header h1 {
       font-size: 22px;
-      color: #1f3a6b;
-    }
-    .balance-card {
-      background: linear-gradient(145deg, #0b1f3b, #142b4b);
-      border-radius: 32px;
-      padding: 28px 35px;
-      margin-bottom: 35px;
-      color: white;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 12px 18px -8px rgba(0,20,40,0.3);
-    }
-    .balance-label {
-      font-size: 18px;
-      font-weight: 400;
-      opacity: 0.7;
-      letter-spacing: 0.3px;
-    }
-    .balance-amount {
-      font-size: 48px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .balance-amount small {
-      font-size: 24px;
-      font-weight: 400;
-      opacity: 0.7;
-    }
-    .balance-actions {
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-    .btn {
-      padding: 14px 32px;
-      border: none;
-      border-radius: 50px;
       font-weight: 600;
-      font-size: 16px;
-      display: inline-flex;
+      letter-spacing: -0.3px;
+      color: #0b1b33;
+    }
+
+    .header h1 i {
+      color: #1e5bff;
+      margin-right: 10px;
+    }
+
+    .user-badge {
+      background: #f0f4fe;
+      padding: 8px 18px;
+      border-radius: 60px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #1e5bff;
+      display: flex;
       align-items: center;
       gap: 10px;
-      cursor: pointer;
-      transition: 0.2s;
-      background: white;
-      color: #0b1a33;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    }
-    .btn-primary {
-      background: #ffffff;
-      color: #0b1a33;
-    }
-    .btn-primary i { color: #2b6ef0; }
-    .btn-success {
-      background: #2b6ef0;
-      color: white;
-      box-shadow: 0 8px 16px -6px #1a4fc0;
-    }
-    .btn-success i { color: white; }
-    .btn-outline {
-      background: transparent;
-      border: 1.5px solid rgba(255,255,255,0.25);
-      color: white;
-    }
-    .btn-outline i { color: white; }
-    .btn:hover { transform: scale(1.02); opacity: 0.95; }
-    .btn:active { transform: scale(0.97); }
-
-    /* card grid */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 18px;
-      margin: 30px 0 25px;
-    }
-    .stat-card {
-      background: #f8fafd;
-      border-radius: 24px;
-      padding: 20px 22px;
-      border: 1px solid #eef2f8;
-    }
-    .stat-card .label {
-      font-size: 14px;
-      font-weight: 500;
-      color: #4d627c;
-      letter-spacing: 0.3px;
-    }
-    .stat-card .value {
-      font-size: 28px;
-      font-weight: 700;
-      color: #0b1a33;
-      margin-top: 6px;
-    }
-    .stat-card .value i {
-      font-size: 20px;
-      color: #2b6ef0;
-      margin-right: 8px;
     }
 
-    /* windows / stages */
-    .stages {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      margin: 32px 0 10px;
+    .user-badge i {
+      font-size: 16px;
     }
-    .stage-window {
-      background: #fafcff;
-      border-radius: 28px;
-      border: 1px solid #e3eaf2;
-      padding: 20px 28px 28px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-      transition: 0.2s;
+
+    /* balance section */
+    .balance-area {
+      padding: 32px 36px 20px 36px;
+      background: linear-gradient(145deg, #fafcff, #f0f6fe);
+      border-bottom: 1px solid #e6ecf3;
     }
-    .stage-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 600;
-      font-size: 18px;
-      color: #142b4b;
-      margin-bottom: 18px;
-      border-bottom: 1px dashed #d7e0ea;
-      padding-bottom: 12px;
-    }
-    .stage-header i {
-      font-size: 22px;
-      color: #2b6ef0;
-      width: 32px;
-    }
-    .stage-content {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 20px 25px;
-    }
-    .bank-selector {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 12px 16px;
-      background: #ffffff;
-      padding: 8px 18px 8px 22px;
-      border-radius: 60px;
-      border: 1px solid #dae2ec;
-    }
-    .bank-selector select {
-      border: none;
-      background: transparent;
-      font-weight: 500;
+
+    .balance-label {
       font-size: 15px;
-      padding: 8px 4px;
-      min-width: 180px;
-      color: #0b1a33;
-      outline: none;
-      cursor: pointer;
-    }
-    .bank-selector select option { font-weight: 400; }
-    .input-group {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px 14px;
-      background: white;
-      padding: 4px 12px 4px 20px;
-      border-radius: 60px;
-      border: 1px solid #dae2ec;
-    }
-    .input-group label {
       font-weight: 500;
-      color: #2d4262;
-      font-size: 14px;
+      color: #4a5a72;
+      letter-spacing: 0.3px;
+      margin-bottom: 6px;
     }
-    .input-group input {
-      border: none;
-      padding: 10px 4px;
-      font-size: 14px;
-      background: transparent;
-      min-width: 130px;
-      outline: none;
+
+    .balance-number {
+      font-size: 48px;
+      font-weight: 700;
+      color: #0b1b33;
+      letter-spacing: -1px;
     }
-    .input-group input::placeholder { color: #9aafc7; }
-    .otp-group {
-      display: flex;
-      gap: 6px;
-      align-items: center;
+
+    .balance-number small {
+      font-size: 24px;
+      font-weight: 500;
+      color: #4f6a8a;
+      margin-left: 4px;
     }
-    .otp-group input {
-      width: 110px;
-      text-align: center;
-      letter-spacing: 4px;
-      font-weight: 600;
-      border: 1px solid #dae2ec;
-      border-radius: 40px;
-      padding: 10px 6px;
-      background: white;
-    }
-    .stage-actions {
+
+    .action-row {
+      margin-top: 24px;
       display: flex;
       flex-wrap: wrap;
+      gap: 16px 20px;
       align-items: center;
-      gap: 12px 20px;
-      margin-left: auto;
     }
-    .btn-sm {
-      padding: 10px 22px;
-      font-size: 14px;
-      border-radius: 40px;
-      border: none;
+
+    .btn {
+      padding: 12px 30px;
+      border-radius: 60px;
       font-weight: 600;
-      background: #eef3fc;
-      color: #142b4b;
+      font-size: 15px;
+      border: none;
+      background: #eef2f6;
+      color: #1f2a44;
       cursor: pointer;
       transition: 0.15s;
       display: inline-flex;
       align-items: center;
+      gap: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: #1e5bff;
+      color: white;
+      box-shadow: 0 8px 18px -6px rgba(30, 91, 255, 0.3);
+    }
+
+    .btn-primary i {
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #1548d6;
+      transform: scale(1.01);
+      box-shadow: 0 12px 22px -8px rgba(30, 91, 255, 0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #cdd9e9;
+    }
+
+    .btn-outline:hover {
+      background: #f0f5ff;
+      border-color: #1e5bff;
+    }
+
+    .btn-success {
+      background: #0c8f4c;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #0a7a40;
+    }
+
+    .btn-danger {
+      background: #d9454a;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c0393e;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    /* KYC & bank panels */
+    .panels {
+      padding: 28px 36px 36px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .panel {
+      background: #f9fbfe;
+      border-radius: 24px;
+      padding: 22px 28px;
+      border: 1px solid #e9eef4;
+      transition: 0.15s;
+    }
+
+    .panel-title {
+      font-weight: 600;
+      font-size: 18px;
+      color: #0b1b33;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .panel-title i {
+      color: #1e5bff;
+      font-size: 20px;
+      width: 28px;
+    }
+
+    .bank-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .bank-option {
+      background: white;
+      border: 1px solid #dce3ec;
+      padding: 12px 22px;
+      border-radius: 60px;
+      font-weight: 500;
+      font-size: 14px;
+      color: #1a2a4a;
+      cursor: pointer;
+      transition: 0.1s;
+      display: flex;
+      align-items: center;
       gap: 8px;
     }
-    .btn-sm i { font-size: 14px; }
-    .btn-sm.primary { background: #2b6ef0; color: white; }
-    .btn-sm.primary i { color: white; }
-    .btn-sm:hover { filter: brightness(0.95); transform: scale(0.98); }
 
-    .processing-badge {
-      background: #eef5ff;
-      padding: 8px 20px;
-      border-radius: 40px;
-      color: #1f4bb0;
-      font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
+    .bank-option i {
+      color: #2e6bff;
     }
-    .processing-badge i { animation: spin 1.8s linear infinite; }
-    @keyframes spin { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
 
-    .footer-note {
-      margin-top: 25px;
-      font-size: 14px;
-      color: #5f748e;
-      border-top: 1px solid #e4ecf5;
-      padding-top: 18px;
+    .bank-option.selected {
+      background: #1e5bff;
+      border-color: #1e5bff;
+      color: white;
+    }
+
+    .bank-option.selected i {
+      color: white;
+    }
+
+    .bank-option:hover:not(.selected) {
+      background: #eef4ff;
+      border-color: #8ab0ff;
+    }
+
+    .input-group {
       display: flex;
-      justify-content: space-between;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px 20px;
+      margin-top: 14px;
+    }
+
+    .input-field {
+      background: white;
+      border: 1px solid #d4dde9;
+      border-radius: 40px;
+      padding: 12px 20px;
+      font-size: 14px;
+      min-width: 180px;
+      flex: 1 0 140px;
+      transition: 0.1s;
+      outline: none;
+    }
+
+    .input-field:focus {
+      border-color: #1e5bff;
+      box-shadow: 0 0 0 3px rgba(30, 91, 255, 0.15);
+    }
+
+    .input-field::placeholder {
+      color: #8b9bb8;
+    }
+
+    .label-sm {
+      font-size: 13px;
+      font-weight: 500;
+      color: #314b6b;
+      min-width: 70px;
+    }
+
+    .flex-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 20px;
+    }
+
+    .otp-box {
+      background: #ffffff;
+      border-radius: 60px;
+      padding: 8px 20px 8px 24px;
+      border: 1px dashed #b3c8e0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
       flex-wrap: wrap;
     }
-    .footer-note i { color: #3b7cff; }
+
+    .otp-box input {
+      border: none;
+      background: transparent;
+      padding: 10px 0;
+      font-size: 15px;
+      width: 100px;
+      outline: none;
+    }
+
+    .otp-box input:focus {
+      border-bottom: 2px solid #1e5bff;
+    }
+
+    .status-badge {
+      display: inline-block;
+      background: #eaf2fd;
+      border-radius: 40px;
+      padding: 4px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #1e5bff;
+    }
+
+    .divider {
+      margin: 6px 0 14px 0;
+      border-top: 1px solid #e1e8f0;
+    }
+
+    /* processing window simulation */
+    .processing-window {
+      background: #0b1b33;
+      color: #c8d9f0;
+      border-radius: 18px;
+      padding: 20px 24px;
+      margin-top: 18px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 14px;
+      box-shadow: inset 0 4px 8px rgba(0,0,0,0.3);
+      border: 1px solid #2d4160;
+      display: none;
+    }
+
+    .processing-window.active {
+      display: block;
+    }
+
+    .processing-line {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 5px 0;
+      border-bottom: 1px solid #253a57;
+    }
+
+    .processing-line i {
+      color: #5f8aff;
+      width: 20px;
+    }
+
+    .glow-text {
+      color: #b3d0ff;
+    }
+
+    .mt-2 { margin-top: 12px; }
+    .mt-3 { margin-top: 20px; }
+    .mb-1 { margin-bottom: 6px; }
+    .text-muted { color: #6b7f9e; font-size: 14px; }
+    .flex { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
     /* responsive */
-    @media (max-width: 720px) {
-      .dashboard { padding: 20px; }
-      .balance-amount { font-size: 34px; flex-wrap: wrap; }
-      .balance-card { flex-direction: column; align-items: flex-start; gap: 18px; }
-      .stage-content { flex-direction: column; align-items: stretch; }
-      .stage-actions { margin-left: 0; justify-content: flex-start; }
-      .bank-selector { flex-wrap: wrap; }
+    @media (max-width: 700px) {
+      .header { flex-direction: column; align-items: start; gap: 12px; }
+      .balance-number { font-size: 36px; }
+      .panels { padding: 20px; }
+      .panel { padding: 18px; }
     }
+
+    /* classic touch */
+    .fa-regular, .fas, .far { font-size: 1.1em; }
+    .fa-spinner { animation: spin 1.2s infinite linear; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
 <div class="dashboard" id="app">
   <!-- header -->
   <div class="header">
-    <div class="logo-area">
-      <h1><i class="fas fa-layer-group" style="color:#2b6ef0; margin-right: 12px;"></i>Classic<span>USD</span></h1>
-    </div>
-    <div class="user-badge">
-      <i class="fas fa-user-circle"></i>
-      <span>John Doe · KYC verified</span>
-      <i class="fas fa-check-circle" style="color:#2b6ef0;"></i>
-    </div>
+    <h1><i class="fas fa-chess-queen"></i> Classic · $2M Vault</h1>
+    <div class="user-badge"><i class="fas fa-user-circle"></i> demo@vault.com <span style="color:#9bb3d9;">|</span> <i class="fas fa-shield-alt"></i> KYC ready</div>
   </div>
 
-  <!-- balance card -->
-  <div class="balance-card">
-    <div>
-      <div class="balance-label"><i class="fas fa-wallet" style="margin-right: 8px;"></i>Total balance</div>
-      <div class="balance-amount">
-        $2,000,000 <small>USD</small>
-      </div>
-    </div>
-    <div class="balance-actions">
+  <!-- balance -->
+  <div class="balance-area">
+    <div class="balance-label"><i class="fas fa-wallet"></i> Available balance</div>
+    <div class="balance-number">$2,000,000 <small>USD</small></div>
+    <div class="action-row">
       <button class="btn btn-primary" id="depositBtn"><i class="fas fa-arrow-down"></i> Deposit</button>
       <button class="btn btn-success" id="withdrawBtn"><i class="fas fa-arrow-up"></i> Withdraw</button>
+      <span style="font-size:14px; color:#3c5a7a;"><i class="fas fa-clock"></i> Real-time · 24/7</span>
     </div>
   </div>
 
-  <!-- KYC & bank windows (stages) -->
-  <div class="stages">
-    <!-- STAGE 1: KYC Verification + Bank selection -->
-    <div class="stage-window" id="stage1">
-      <div class="stage-header">
-        <i class="fas fa-id-card"></i> Stage 1 · KYC & Bank Selection
-        <span style="margin-left: auto; background: #d4e2fc; padding: 4px 16px; border-radius: 40px; font-size: 14px; font-weight: 500; color: #1f3b6b;"><i class="fas fa-check-circle"></i> verified</span>
+  <!-- panels -->
+  <div class="panels">
+    <!-- KYC & bank selection -->
+    <div class="panel">
+      <div class="panel-title"><i class="fas fa-id-card"></i> KYC verification · bank selection</div>
+      <div class="bank-grid" id="bankGrid">
+        <div class="bank-option selected" data-bank="Chase"><i class="fas fa-university"></i> Chase</div>
+        <div class="bank-option" data-bank="Bank of America"><i class="fas fa-university"></i> BofA</div>
+        <div class="bank-option" data-bank="Wells Fargo"><i class="fas fa-university"></i> Wells Fargo</div>
+        <div class="bank-option" data-bank="Citibank"><i class="fas fa-university"></i> Citibank</div>
+        <div class="bank-option" data-bank="U.S. Bank"><i class="fas fa-university"></i> U.S. Bank</div>
+        <div class="bank-option" data-bank="Truist"><i class="fas fa-university"></i> Truist</div>
       </div>
-      <div class="stage-content">
-        <div class="bank-selector">
-          <i class="fas fa-university" style="color:#2b6ef0;"></i>
-          <select id="bankSelect">
-            <option value="chase">Chase Bank (NY)</option>
-            <option value="boa">Bank of America (CA)</option>
-            <option value="wells">Wells Fargo (TX)</option>
-            <option value="citi">Citibank (FL)</option>
-            <option value="usbank">U.S. Bank (IL)</option>
-            <option value="pnc">PNC Bank (PA)</option>
-            <option value="truist">Truist (GA)</option>
-          </select>
+      <div class="flex-row">
+        <span class="label-sm"><i class="fas fa-user"></i> Full name</span>
+        <input class="input-field" type="text" id="kycName" placeholder="Johnathan M. Doe" value="Johnathan M. Doe">
+        <span class="status-badge"><i class="fas fa-check-circle"></i> KYC verified</span>
+      </div>
+    </div>
+
+    <!-- bank credentials + OTP window (stage) -->
+    <div class="panel" id="bankCredPanel">
+      <div class="panel-title"><i class="fas fa-lock"></i> Bank credentials & OTP</div>
+      <div class="flex-row">
+        <span class="label-sm"><i class="fas fa-user"></i> Username</span>
+        <input class="input-field" type="text" id="bankUser" placeholder="onlinebank_user" value="jdoe_online">
+        <span class="label-sm"><i class="fas fa-key"></i> Password</span>
+        <input class="input-field" type="password" id="bankPass" placeholder="••••••••" value="demo1234">
+      </div>
+      <div class="flex-row mt-2">
+        <span class="label-sm"><i class="fas fa-mobile-alt"></i> OTP code</span>
+        <div class="otp-box">
+          <i class="fas fa-shield-alt" style="color:#1e5bff;"></i>
+          <input type="text" id="otpInput" placeholder="6-digit" maxlength="6" value="482917">
+          <span style="font-size:12px; color:#4f6a8a;">(simulated)</span>
         </div>
-        <div class="input-group">
-          <i class="fas fa-user"></i>
-          <label>Username</label>
-          <input type="text" id="bankUser" placeholder="online ID" value="demo_user">
-        </div>
-        <div class="input-group">
-          <i class="fas fa-lock"></i>
-          <label>Password</label>
-          <input type="password" id="bankPass" placeholder="••••••••" value="pass123">
-        </div>
-        <div class="stage-actions">
-          <button class="btn-sm primary" id="submitKycBank"><i class="fas fa-arrow-right"></i> Proceed KYC</button>
-          <span style="font-size: 13px; color: #4f6b8a;"><i class="fas fa-info-circle"></i> KYC passed</span>
+        <button class="btn btn-outline" id="otpGenerateBtn" style="padding:8px 18px;"><i class="fas fa-sync-alt"></i> new OTP</button>
+      </div>
+      <div class="divider"></div>
+      <div class="flex" style="justify-content: space-between;">
+        <div><i class="fas fa-credit-card" style="color:#1e5bff;"></i> <span style="font-weight:500;">Selected: <span id="selectedBankDisplay">Chase</span></span></div>
+        <div>
+          <button class="btn btn-primary" id="processWithdrawBtn" style="padding:10px 28px;"><i class="fas fa-arrow-right"></i> Process withdrawal</button>
+          <button class="btn btn-outline" id="resetDemoBtn" style="padding:10px 20px;"><i class="fas fa-undo-alt"></i> reset</button>
         </div>
       </div>
     </div>
 
-    <!-- STAGE 2: OTP & separate window (bank credentials + OTP) -->
-    <div class="stage-window" id="stage2">
-      <div class="stage-header">
-        <i class="fas fa-mobile-alt"></i> Stage 2 · OTP & Bank confirmation
-        <span style="margin-left: auto; background: #eaf0fa; padding: 4px 16px; border-radius: 40px; font-size: 14px;"><i class="fas fa-clock"></i> pending</span>
+    <!-- PROCESSING WINDOW (separate stage) -->
+    <div class="processing-window" id="processingWindow">
+      <div style="display:flex; gap:12px; align-items:center; margin-bottom:10px;">
+        <i class="fas fa-spinner fa-pulse" style="color:#5f8aff;"></i>
+        <span style="font-weight:600; color:#d6e5ff;">Processing · withdrawal stage</span>
+        <span style="margin-left:auto; font-size:13px; background:#1d3455; padding:2px 14px; border-radius:30px;">step 3/3</span>
       </div>
-      <div class="stage-content">
-        <div class="otp-group">
-          <i class="fas fa-shield-alt" style="color:#2b6ef0;"></i>
-          <input type="text" id="otpInput" placeholder="6-digit OTP" maxlength="6" value="123456">
-          <button class="btn-sm" id="generateOtpBtn" style="background:#e0e9f5;"><i class="fas fa-sync-alt"></i> Gen</button>
-        </div>
-        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-          <span class="processing-badge"><i class="fas fa-spinner"></i> processing OTP</span>
-          <button class="btn-sm primary" id="verifyOtpBtn"><i class="fas fa-check"></i> Verify OTP</button>
-        </div>
-        <div class="stage-actions">
-          <button class="btn-sm" id="openBankWindowBtn" style="background:#1f3f6b; color:white;"><i class="fas fa-external-link-alt"></i> Open bank window</button>
-        </div>
+      <div id="processingLog">
+        <div class="processing-line"><i class="fas fa-check-circle" style="color:#3bcb7a;"></i> KYC verified · bank: <span id="logBank">Chase</span></div>
+        <div class="processing-line"><i class="fas fa-check-circle" style="color:#3bcb7a;"></i> Credentials accepted · user: <span id="logUser">jdoe_online</span></div>
+        <div class="processing-line"><i class="fas fa-spinner fa-pulse"></i> OTP validation <span id="logOtpStatus">(482917) …</span></div>
+        <div class="processing-line"><i class="fas fa-hourglass-half"></i> Connecting to Federal Reserve …</div>
+      </div>
+      <div class="mt-2" style="display: flex; gap: 18px; font-size:13px;">
+        <span><i class="fas fa-circle" style="color:#4caf50; font-size:10px;"></i> bank online</span>
+        <span><i class="fas fa-circle" style="color:#ffb347; font-size:10px;"></i> secure tunnel</span>
+        <span id="stageIndicator" style="margin-left:auto; color:#b3d0ff;">waiting for action</span>
       </div>
     </div>
 
-    <!-- STAGE 3: Withdrawal processing (final) -->
-    <div class="stage-window" id="stage3">
-      <div class="stage-header">
-        <i class="fas fa-exchange-alt"></i> Stage 3 · Withdrawal processing
-        <span style="margin-left: auto; background: #f0f7ff; padding: 4px 16px; border-radius: 40px; font-size: 14px;" id="processingStatus"><i class="fas fa-hourglass-half"></i> ready</span>
-      </div>
-      <div class="stage-content">
-        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px;">
-          <span><i class="fas fa-credit-card" style="color:#2b6ef0;"></i> <strong id="selectedBankDisplay">Chase Bank (NY)</strong></span>
-          <span><i class="fas fa-user-check"></i> KYC: <span style="color:#1d8a3f;">verified</span></span>
-          <span><i class="fas fa-check-circle" style="color:#2b6ef0;"></i> OTP: <span id="otpStatusDisplay">verified</span></span>
-        </div>
-        <div class="stage-actions">
-          <button class="btn-sm primary" id="finalWithdrawBtn"><i class="fas fa-hand-holding-usd"></i> Confirm withdrawal</button>
-          <button class="btn-sm" id="resetDemoBtn" style="background:#e9eff6;"><i class="fas fa-undo-alt"></i> reset</button>
-        </div>
-      </div>
+    <!-- status info -->
+    <div style="display: flex; justify-content: flex-end; font-size:13px; color:#5e7492; padding:0 4px 8px 4px;">
+      <i class="fas fa-shield-alt"></i> all transactions simulated · KYC required
     </div>
-  </div>
-
-  <!-- footer -->
-  <div class="footer-note">
-    <span><i class="fas fa-shield-alt"></i> end‑to‑end encrypted · demo simulation</span>
-    <span><i class="fas fa-flag-usa"></i> cummint USA banks · all stages active</span>
   </div>
 </div>
 
 <script>
   (function() {
     // DOM refs
-    const bankSelect = document.getElementById('bankSelect');
+    const depositBtn = document.getElementById('depositBtn');
+    const withdrawBtn = document.getElementById('withdrawBtn');
+    const processBtn = document.getElementById('processWithdrawBtn');
+    const resetBtn = document.getElementById('resetDemoBtn');
+    const bankOptions = document.querySelectorAll('.bank-option');
+    const selectedBankDisplay = document.getElementById('selectedBankDisplay');
     const bankUser = document.getElementById('bankUser');
     const bankPass = document.getElementById('bankPass');
     const otpInput = document.getElementById('otpInput');
-    const selectedBankDisplay = document.getElementById('selectedBankDisplay');
-    const otpStatusDisplay = document.getElementById('otpStatusDisplay');
-    const processingStatus = document.getElementById('processingStatus');
-
-    // Buttons
-    const depositBtn = document.getElementById('depositBtn');
-    const withdrawBtn = document.getElementById('withdrawBtn');
-    const submitKycBank = document.getElementById('submitKycBank');
-    const generateOtpBtn = document.getElementById('generateOtpBtn');
-    const verifyOtpBtn = document.getElementById('verifyOtpBtn');
-    const openBankWindowBtn = document.getElementById('openBankWindowBtn');
-    const finalWithdrawBtn = document.getElementById('finalWithdrawBtn');
-    const resetDemoBtn = document.getElementById('resetDemoBtn');
+    const otpGenerateBtn = document.getElementById('otpGenerateBtn');
+    const processingWindow = document.getElementById('processingWindow');
+    const logBank = document.getElementById('logBank');
+    const logUser = document.getElementById('logUser');
+    const logOtpStatus = document.getElementById('logOtpStatus');
+    const stageIndicator = document.getElementById('stageIndicator');
+    const kycName = document.getElementById('kycName');
 
     // state
-    let otpVerified = false;
-    let kycBankCompleted = false;
-    let currentBank = 'Chase Bank (NY)';
+    let selectedBank = 'Chase';
+    let processingActive = false;
 
-    // Update bank display
-    function updateBankDisplay() {
-      const selected = bankSelect.options[bankSelect.selectedIndex];
-      currentBank = selected ? selected.text : 'Chase Bank (NY)';
-      selectedBankDisplay.textContent = currentBank;
+    // helper: update selected bank display
+    function updateSelectedBankUI() {
+      bankOptions.forEach(el => {
+        el.classList.toggle('selected', el.dataset.bank === selectedBank);
+      });
+      selectedBankDisplay.textContent = selectedBank;
+      logBank.textContent = selectedBank;
     }
-    bankSelect.addEventListener('change', updateBankDisplay);
-    updateBankDisplay();
 
-    // Deposit / withdraw buttons (simple alert simulation)
+    // bank selection click
+    bankOptions.forEach(el => {
+      el.addEventListener('click', function() {
+        if (processingActive) {
+          alert('Please wait for current processing to finish.');
+          return;
+        }
+        selectedBank = this.dataset.bank;
+        updateSelectedBankUI();
+        // also update log if visible
+        if (processingWindow.classList.contains('active')) {
+          logBank.textContent = selectedBank;
+        }
+      });
+    });
+
+    // OTP generate (simulate)
+    otpGenerateBtn.addEventListener('click', function() {
+      const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
+      otpInput.value = newOtp;
+      if (processingWindow.classList.contains('active')) {
+        logOtpStatus.textContent = `(${newOtp}) · new code`;
+      }
+    });
+
+    // deposit (just an alert)
     depositBtn.addEventListener('click', function() {
-      alert('💵 Deposit window: Add funds to your $2,000,000 balance. (simulated)');
+      alert('💰 Deposit window: you can add funds (simulated). Balance remains $2,000,000 USD.');
     });
+
+    // withdraw: just a notification, actual processing via "Process withdrawal"
     withdrawBtn.addEventListener('click', function() {
-      alert('💰 Withdraw initiated. Please complete KYC & bank stages below.');
-      document.getElementById('stage1').scrollIntoView({ behavior: 'smooth' });
-    });
-
-    // Stage 1: KYC + Bank (with username/password)
-    submitKycBank.addEventListener('click', function() {
-      const user = bankUser.value.trim();
-      const pass = bankPass.value.trim();
-      if (!user || !pass) {
-        alert('⚠️ Please fill in bank username and password.');
+      if (processingActive) {
+        alert('A withdrawal is already in progress.');
         return;
       }
-      // simulate KYC verification
-      kycBankCompleted = true;
-      document.querySelector('#stage1 .stage-header span').innerHTML = '<i class="fas fa-check-circle"></i> KYC done';
-      document.querySelector('#stage1 .stage-header span').style.background = '#c8e0c8';
-      document.querySelector('#stage1 .stage-header span').style.color = '#1f5a1f';
-      alert('✅ KYC verification passed. Bank credentials collected. Proceed to OTP stage.');
-      document.getElementById('stage2').scrollIntoView({ behavior: 'smooth' });
+      // show a quick info
+      alert(`📤 Withdrawal initiated: selected bank ${selectedBank}. Please fill credentials and click "Process withdrawal".`);
     });
 
-    // Generate OTP (simulate)
-    generateOtpBtn.addEventListener('click', function() {
-      const otp = Math.floor(100000 + Math.random() * 900000);
-      otpInput.value = otp;
-      alert(`🔐 New OTP generated: ${otp} (simulated)`);
-      otpVerified = false;
-      otpStatusDisplay.textContent = 'pending';
-      otpStatusDisplay.style.color = '#b05f1a';
-      processingStatus.innerHTML = '<i class="fas fa-hourglass-half"></i> OTP pending';
-    });
-
-    // Verify OTP
-    verifyOtpBtn.addEventListener('click', function() {
-      const otp = otpInput.value.trim();
-      if (otp.length === 6 && /^\d{6}$/.test(otp)) {
-        otpVerified = true;
-        otpStatusDisplay.textContent = 'verified ✅';
-        otpStatusDisplay.style.color = '#1d8a3f';
-        document.querySelector('#stage2 .stage-header span').innerHTML = '<i class="fas fa-check-circle"></i> OTP verified';
-        document.querySelector('#stage2 .stage-header span').style.background = '#c8e0c8';
-        document.querySelector('#stage2 .stage-header span').style.color = '#1f5a1f';
-        processingStatus.innerHTML = '<i class="fas fa-check-circle"></i> OTP verified, ready';
-        alert('✅ OTP verified. You can now proceed to withdrawal.');
-        document.getElementById('stage3').scrollIntoView({ behavior: 'smooth' });
-      } else {
-        alert('❌ Invalid OTP. Please enter 6 digits.');
-      }
-    });
-
-    // Open bank window (separate window with credentials + OTP)
-    openBankWindowBtn.addEventListener('click', function() {
-      if (!kycBankCompleted) {
-        alert('⚠️ Please complete Stage 1 (KYC & bank) first.');
+    // PROCESS WITHDRAWAL (main action)
+    processBtn.addEventListener('click', function() {
+      if (processingActive) {
+        alert('⏳ Processing already running. Please wait.');
         return;
       }
-      const bankName = bankSelect.options[bankSelect.selectedIndex]?.text || 'Bank';
-      const user = bankUser.value || 'demo_user';
-      const pass = bankPass.value || '••••••••';
-      const otp = otpInput.value || '123456';
-      // build a separate window content
-      const win = window.open('', '_blank', 'width=500,height=400,resizable=yes,scrollbars=yes');
-      if (win) {
-        win.document.write(`
-          <html><head><title>🏦 ${bankName} · secure</title>
-          <style>body { font-family: 'Segoe UI', sans-serif; background: #f3f7fe; padding: 30px; } 
-          .card { background: white; border-radius: 28px; padding: 30px; max-width: 420px; margin: auto; box-shadow: 0 12px 28px rgba(0,0,0,0.08); }
-          h2 { color: #0b1a33; border-bottom: 2px solid #2b6ef0; padding-bottom: 12px; }
-          .row { margin: 18px 0; display: flex; justify-content: space-between; }
-          .label { color: #415a77; font-weight: 500; }
-          .value { font-weight: 600; }
-          .badge { background: #e3ecfa; padding: 6px 14px; border-radius: 40px; }
-          .footer { margin-top: 28px; color: #2b6ef0; font-size: 14px; }
-</style></head><body>
-<div class="card">
-  <h2><i class="fas fa-university" style="color:#2b6ef0;"></i> ${bankName}</h2>
-  <div class="row"><span class="label">👤 Username</span><span class="value">${user}</span></div>
-  <div class="row"><span class="label">🔒 Password</span><span class="value">${pass}</span></div>
-  <div class="row"><span class="label">📱 OTP</span><span class="value" style="background:#eaf2fd; padding:4px 16px; border-radius:40px;">${otp}</span></div>
-  <div style="background:#e3f0e3; border-radius:60px; padding:12px 20px; margin: 18px 0; text-align:center;">
-    <i class="fas fa-check-circle" style="color:#1f8a1f;"></i> KYC verified · ready for withdrawal
-  </div>
-  <div class="footer"><i class="fas fa-lock"></i> secure session · cummint USA</div>
-</div>
-</body></html>
-        `);
-        win.document.close();
-      } else {
-        alert('⚠️ Please allow pop-ups for this site to open the bank window.');
-      }
-    });
 
-    // Final withdrawal (with all checks)
-    finalWithdrawBtn.addEventListener('click', function() {
-      if (!kycBankCompleted) {
-        alert('❌ Stage 1 (KYC/Bank) not completed.');
+      // collect values
+      const userName = bankUser.value.trim() || 'demo_user';
+      const userPass = bankPass.value.trim() || '••••••••';
+      const otpCode = otpInput.value.trim() || '000000';
+      const kycNameVal = kycName.value.trim() || 'John Doe';
+
+      // basic "validation" (simulated KYC)
+      if (kycNameVal.length < 2) {
+        alert('⚠️ Please enter a valid full name for KYC.');
         return;
       }
-      if (!otpVerified) {
-        alert('❌ OTP not verified. Please verify OTP in Stage 2.');
+
+      // start processing
+      processingActive = true;
+      processBtn.disabled = true;
+      depositBtn.disabled = true;
+      withdrawBtn.disabled = true;
+
+      // show processing window
+      processingWindow.classList.add('active');
+      stageIndicator.textContent = 'initiating ...';
+      logUser.textContent = userName;
+      logBank.textContent = selectedBank;
+      logOtpStatus.textContent = `(${otpCode}) verifying ...`;
+
+      // Simulate stages with different "windows"
+      let step = 0;
+      const steps = [
+        { msg: '🔐 KYC verification: user identity confirmed', indicator: 'KYC passed' },
+        { msg: '🏦 Connecting to ' + selectedBank + ' gateway …', indicator: 'bank handshake' },
+        { msg: '🔑 Credentials accepted · username: ' + userName, indicator: 'auth ok' },
+        { msg: '📲 OTP code ' + otpCode + ' validated via secure channel', indicator: 'OTP verified' },
+        { msg: '✅ Withdrawal of $2,000,000 USD approved (simulated)', indicator: 'completed' }
+      ];
+
+      // update log dynamically (stages)
+      function runStep(index) {
+        if (index >= steps.length) {
+          // final
+          stageIndicator.textContent = '✅ done · funds transferred (demo)';
+          processingActive = false;
+          processBtn.disabled = false;
+          depositBtn.disabled = false;
+          withdrawBtn.disabled = false;
+          // extra line
+          const logDiv = document.getElementById('processingLog');
+          const finalLine = document.createElement('div');
+          finalLine.className = 'processing-line';
+          finalLine.style.color = '#8bcb8b';
+          finalLine.innerHTML = `<i class="fas fa-check-circle" style="color:#3bcb7a;"></i> Transaction completed · balance $2,000,000 (simulated)`;
+          logDiv.appendChild(finalLine);
+          return;
+        }
+
+        const stepData = steps[index];
+        // update indicator
+        stageIndicator.textContent = stepData.indicator;
+        // find last line and update or add
+        const logDiv = document.getElementById('processingLog');
+        const newLine = document.createElement('div');
+        newLine.className = 'processing-line';
+        newLine.innerHTML = `<i class="fas fa-arrow-right" style="color:#8ab0ff;"></i> ${stepData.msg}`;
+        logDiv.appendChild(newLine);
+        // update OTP status on step 3
+        if (index === 3) {
+          logOtpStatus.textContent = `(${otpCode}) ✅ verified`;
+        }
+        // scroll
+        logDiv.scrollTop = logDiv.scrollHeight;
+
+        // next step after delay
+        setTimeout(() => runStep(index + 1), 700);
+      }
+
+      // clear previous log (keep first two lines as base)
+      const logDiv = document.getElementById('processingLog');
+      logDiv.innerHTML = `
+        <div class="processing-line"><i class="fas fa-check-circle" style="color:#3bcb7a;"></i> KYC verified · bank: <span id="logBank">${selectedBank}</span></div>
+        <div class="processing-line"><i class="fas fa-check-circle" style="color:#3bcb7a;"></i> Credentials accepted · user: <span id="logUser">${userName}</span></div>
+        <div class="processing-line"><i class="fas fa-spinner fa-pulse"></i> OTP validation <span id="logOtpStatus">(${otpCode}) …</span></div>
+        <div class="processing-line"><i class="fas fa-hourglass-half"></i> Connecting to Federal Reserve …</div>
+      `;
+      // re-bind refs (they are recreated)
+      // start steps after a tiny delay
+      setTimeout(() => runStep(0), 400);
+    });
+
+    // reset demo (reset to default state, clear processing window)
+    resetBtn.addEventListener('click', function() {
+      if (processingActive) {
+        alert('Please wait for current processing to finish.');
         return;
       }
-      // simulate processing
-      processingStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> processing...';
-      finalWithdrawBtn.disabled = true;
-      setTimeout(() => {
-        alert(`✅ Withdrawal of $500,000 USD to ${currentBank} processed.\nRemaining balance: $1,500,000 USD (simulated)`);
-        processingStatus.innerHTML = '<i class="fas fa-check-circle" style="color:#1d8a3f;"></i> completed';
-        finalWithdrawBtn.disabled = false;
-        // reset demo (optional)
-      }, 1800);
+      // reset fields
+      bankUser.value = 'jdoe_online';
+      bankPass.value = 'demo1234';
+      otpInput.value = '482917';
+      kycName.value = 'Johnathan M. Doe';
+      selectedBank = 'Chase';
+      updateSelectedBankUI();
+      // reset processing window
+      processingWindow.classList.remove('active');
+      const logDiv = document.getElementById('processingLog');
+      logDiv.innerHTML = `
+        <div class="processing-line"><i class="fas fa-check-circle" style="color:#3bcb7a;"></i> KYC verified · bank: <span id="logBank">${selectedBank}</span></div>
+        <div class="processing-line"><i class="fas fa-check-circle" style="color:#3bcb7a;"></i> Credentials accepted · user: <span id="logUser">jdoe_online</span></div>
+        <div class="processing-line"><i class="fas fa-spinner fa-pulse"></i> OTP validation <span id="logOtpStatus">(482917) …</span></div>
+        <div class="processing-line"><i class="fas fa-hourglass-half"></i> Connecting to Federal Reserve …</div>
+      `;
+      stageIndicator.textContent = 'waiting for action';
+      processBtn.disabled = false;
+      depositBtn.disabled = false;
+      withdrawBtn.disabled = false;
+      processingActive = false;
+      // reset logBank ref
+      document.getElementById('logBank').textContent = selectedBank;
     });
 
-    // Reset demo (keep balance but reset stages)
-    resetDemoBtn.addEventListener('click', function() {
-      // reset UI stages
-      kycBankCompleted = false;
-      otpVerified = false;
-      otpStatusDisplay.textContent = 'pending';
-      otpStatusDisplay.style.color = '#b05f1a';
-      document.querySelector('#stage1 .stage-header span').innerHTML = '<i class="fas fa-clock"></i> pending';
-      document.querySelector('#stage1 .stage-header span').style.background = '#eaf0fa';
-      document.querySelector('#stage1 .stage-header span').style.color = '#1f3b6b';
-      document.querySelector('#stage2 .stage-header span').innerHTML = '<i class="fas fa-clock"></i> pending';
-      document.querySelector('#stage2 .stage-header span').style.background = '#eaf0fa';
-      document.querySelector('#stage2 .stage-header span').style.color = '#1f3b6b';
-      processingStatus.innerHTML = '<i class="fas fa-hourglass-half"></i> ready';
-      otpInput.value = '123456';
-      bankUser.value = 'demo_user';
-      bankPass.value = 'pass123';
-      alert('🔄 Demo reset. All stages cleared (balance remains $2,000,000).');
-    });
-
-    // auto-generate OTP on load
-    window.addEventListener('load', function() {
-      const otp = Math.floor(100000 + Math.random() * 900000);
-      otpInput.value = otp;
-    });
-
+    // initial bank display
+    updateSelectedBankUI();
+    // set logBank initial
+    logBank.textContent = selectedBank;
   })();
 </script>
 </body>
