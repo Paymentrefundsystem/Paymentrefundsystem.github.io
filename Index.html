@@ -1,688 +1,1475 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Classic · $2M Dashboard</title>
-  <!-- Font Awesome (free) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexus Bank — Executive Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      background: #f4f7fc;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0b0e14;
+            color: #e8edf5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
 
-    /* MAIN CARD – classic dashboard */
-    .dashboard {
-      max-width: 1200px;
-      width: 100%;
-      background: #ffffff;
-      border-radius: 36px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-      overflow: hidden;
-      transition: all 0.2s;
-    }
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #141a24;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f5b342;
+            border-radius: 8px;
+        }
 
-    /* header */
-    .header {
-      padding: 28px 36px;
-      background: #ffffff;
-      border-bottom: 1px solid #eef2f6;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-    }
+        /* ===== LOGIN SCREEN ===== */
+        #loginScreen {
+            width: 100%;
+            max-width: 420px;
+            padding: 24px;
+            animation: fadeUp 0.6s ease;
+        }
 
-    .header h1 {
-      font-size: 22px;
-      font-weight: 600;
-      letter-spacing: -0.3px;
-      color: #0b1b33;
-    }
+        .login-card {
+            background: #161e2b;
+            border-radius: 28px;
+            padding: 40px 32px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(245, 179, 66, 0.08);
+            border: 1px solid rgba(245, 179, 66, 0.12);
+        }
 
-    .header h1 i {
-      color: #1e5bff;
-      margin-right: 10px;
-    }
+        .login-card .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
 
-    .user-badge {
-      background: #f0f4fe;
-      padding: 8px 18px;
-      border-radius: 60px;
-      font-size: 14px;
-      font-weight: 500;
-      color: #1e5bff;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+        .login-card .logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #f5b342, #f7d875);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    .user-badge i {
-      font-size: 16px;
-    }
+        .login-card .logo span {
+            display: block;
+            font-size: 13px;
+            font-weight: 400;
+            color: #8895aa;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 4px;
+            -webkit-text-fill-color: #8895aa;
+        }
 
-    /* balance section */
-    .balance-area {
-      padding: 32px 36px 20px 36px;
-      background: linear-gradient(145deg, #fafcff, #f0f6fe);
-      border-bottom: 1px solid #e6ecf3;
-    }
+        .login-card .sub {
+            text-align: center;
+            color: #9aabbf;
+            font-size: 14px;
+            margin-bottom: 28px;
+            font-weight: 400;
+        }
 
-    .balance-label {
-      font-size: 15px;
-      font-weight: 500;
-      color: #4a5a72;
-      letter-spacing: 0.3px;
-      margin-bottom: 6px;
-    }
+        .form-group {
+            margin-bottom: 18px;
+        }
 
-    .balance-number {
-      font-size: 48px;
-      font-weight: 700;
-      color: #0b1b33;
-      letter-spacing: -1px;
-    }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #c8d6e8;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
 
-    .balance-number small {
-      font-size: 24px;
-      font-weight: 500;
-      color: #4f6a8a;
-      margin-left: 4px;
-    }
+        .form-group input {
+            width: 100%;
+            padding: 14px 18px;
+            background: #0f1620;
+            border: 1.5px solid #2a3548;
+            border-radius: 14px;
+            color: #e8edf5;
+            font-size: 15px;
+            font-weight: 400;
+            transition: all 0.25s;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
 
-    .action-row {
-      margin-top: 24px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px 20px;
-      align-items: center;
-    }
+        .form-group input:focus {
+            border-color: #f5b342;
+            box-shadow: 0 0 0 4px rgba(245, 179, 66, 0.12);
+            background: #121a26;
+        }
 
-    .btn {
-      padding: 12px 30px;
-      border-radius: 60px;
-      font-weight: 600;
-      font-size: 15px;
-      border: none;
-      background: #eef2f6;
-      color: #1f2a44;
-      cursor: pointer;
-      transition: 0.15s;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-      text-decoration: none;
-    }
+        .form-group input::placeholder {
+            color: #4f5f77;
+            font-weight: 300;
+        }
 
-    .btn-primary {
-      background: #1e5bff;
-      color: white;
-      box-shadow: 0 8px 18px -6px rgba(30, 91, 255, 0.3);
-    }
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #f5b342, #e8a032);
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #0b0e14;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+            margin-top: 6px;
+        }
 
-    .btn-primary i {
-      color: white;
-    }
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(245, 179, 66, 0.25);
+        }
 
-    .btn-primary:hover {
-      background: #1548d6;
-      transform: scale(1.01);
-      box-shadow: 0 12px 22px -8px rgba(30, 91, 255, 0.4);
-    }
+        .login-btn:active {
+            transform: scale(0.98);
+        }
 
-    .btn-outline {
-      background: transparent;
-      border: 1px solid #cdd9e9;
-    }
+        .login-error {
+            color: #f87171;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 14px;
+            font-weight: 500;
+            min-height: 22px;
+        }
 
-    .btn-outline:hover {
-      background: #f0f5ff;
-      border-color: #1e5bff;
-    }
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #4f5f77;
+        }
 
-    .btn-success {
-      background: #0c8f4c;
-      color: white;
-    }
+        .login-footer strong {
+            color: #f5b342;
+            font-weight: 600;
+        }
 
-    .btn-success:hover {
-      background: #0a7a40;
-    }
+        /* ===== DASHBOARD ===== */
+        #dashboardScreen {
+            width: 100%;
+            max-width: 1100px;
+            padding: 20px;
+            display: none;
+            animation: fadeUp 0.5s ease;
+        }
 
-    .btn-danger {
-      background: #d9454a;
-      color: white;
-    }
+        .dash-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0 24px 0;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
 
-    .btn-danger:hover {
-      background: #c0393e;
-    }
+        .dash-header .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    .btn:disabled {
-      opacity: 0.5;
-      pointer-events: none;
-    }
+        .dash-header .brand h2 {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f5b342, #f7d875);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    /* KYC & bank panels */
-    .panels {
-      padding: 28px 36px 36px 36px;
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-    }
+        .dash-header .brand small {
+            font-size: 13px;
+            color: #8895aa;
+            font-weight: 400;
+            -webkit-text-fill-color: #8895aa;
+        }
 
-    .panel {
-      background: #f9fbfe;
-      border-radius: 24px;
-      padding: 22px 28px;
-      border: 1px solid #e9eef4;
-      transition: 0.15s;
-    }
+        .dash-header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
 
-    .panel-title {
-      font-weight: 600;
-      font-size: 18px;
-      color: #0b1b33;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+        .dash-header .user-info .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f5b342, #d4892a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            color: #0b0e14;
+        }
 
-    .panel-title i {
-      color: #1e5bff;
-      font-size: 20px;
-      width: 28px;
-    }
+        .dash-header .user-info .email-badge {
+            font-size: 14px;
+            color: #c8d6e8;
+            font-weight: 500;
+        }
 
-    .bank-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-bottom: 18px;
-    }
+        .dash-header .user-info .logout-btn {
+            background: transparent;
+            border: 1.5px solid #2a3548;
+            color: #9aabbf;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-family: 'Inter', sans-serif;
+        }
 
-    .bank-option {
-      background: white;
-      border: 1px solid #dce3ec;
-      padding: 12px 22px;
-      border-radius: 60px;
-      font-weight: 500;
-      font-size: 14px;
-      color: #1a2a4a;
-      cursor: pointer;
-      transition: 0.1s;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+        .dash-header .user-info .logout-btn:hover {
+            border-color: #f5b342;
+            color: #f5b342;
+            background: rgba(245, 179, 66, 0.06);
+        }
 
-    .bank-option i {
-      color: #2e6bff;
-    }
+        /* Balance Card */
+        .balance-card {
+            background: linear-gradient(145deg, #161e2b, #1c2636);
+            border-radius: 28px;
+            padding: 36px 40px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(245, 179, 66, 0.08);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
 
-    .bank-option.selected {
-      background: #1e5bff;
-      border-color: #1e5bff;
-      color: white;
-    }
+        .balance-card .balance-left .label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #8895aa;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
 
-    .bank-option.selected i {
-      color: white;
-    }
+        .balance-card .balance-left .amount {
+            font-size: 48px;
+            font-weight: 700;
+            color: #f5b342;
+            letter-spacing: -1px;
+            margin-top: 4px;
+        }
 
-    .bank-option:hover:not(.selected) {
-      background: #eef4ff;
-      border-color: #8ab0ff;
-    }
+        .balance-card .balance-left .amount small {
+            font-size: 22px;
+            font-weight: 500;
+            color: #8895aa;
+        }
 
-    .input-group {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 16px 20px;
-      margin-top: 14px;
-    }
+        .balance-card .balance-right {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
 
-    .input-field {
-      background: white;
-      border: 1px solid #d4dde9;
-      border-radius: 40px;
-      padding: 12px 20px;
-      font-size: 14px;
-      min-width: 180px;
-      flex: 1 0 140px;
-      transition: 0.1s;
-      outline: none;
-    }
+        .balance-card .balance-right button {
+            padding: 14px 34px;
+            border: none;
+            border-radius: 40px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+        }
 
-    .input-field:focus {
-      border-color: #1e5bff;
-      box-shadow: 0 0 0 3px rgba(30, 91, 255, 0.15);
-    }
+        .btn-deposit {
+            background: linear-gradient(135deg, #2a7a4a, #1f9d5a);
+            color: #fff;
+        }
 
-    .input-field::placeholder {
-      color: #8b9bb8;
-    }
+        .btn-deposit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(31, 157, 90, 0.3);
+        }
 
-    .label-sm {
-      font-size: 13px;
-      font-weight: 500;
-      color: #314b6b;
-      min-width: 70px;
-    }
+        .btn-withdraw {
+            background: linear-gradient(135deg, #b33a3a, #d14a4a);
+            color: #fff;
+        }
 
-    .flex-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 12px 20px;
-    }
+        .btn-withdraw:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(209, 74, 74, 0.3);
+        }
 
-    .otp-box {
-      background: #ffffff;
-      border-radius: 60px;
-      padding: 8px 20px 8px 24px;
-      border: 1px dashed #b3c8e0;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
+        /* Quick Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
 
-    .otp-box input {
-      border: none;
-      background: transparent;
-      padding: 10px 0;
-      font-size: 15px;
-      width: 100px;
-      outline: none;
-    }
+        .stat-card {
+            background: #161e2b;
+            border-radius: 18px;
+            padding: 20px 24px;
+            border: 1px solid #212d3e;
+        }
 
-    .otp-box input:focus {
-      border-bottom: 2px solid #1e5bff;
-    }
+        .stat-card .stat-label {
+            font-size: 13px;
+            color: #8895aa;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
-    .status-badge {
-      display: inline-block;
-      background: #eaf2fd;
-      border-radius: 40px;
-      padding: 4px 16px;
-      font-size: 13px;
-      font-weight: 500;
-      color: #1e5bff;
-    }
+        .stat-card .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 4px;
+            color: #e8edf5;
+        }
 
-    .divider {
-      margin: 6px 0 14px 0;
-      border-top: 1px solid #e1e8f0;
-    }
+        .stat-card .stat-value.green {
+            color: #4ade80;
+        }
+        .stat-card .stat-value.gold {
+            color: #f5b342;
+        }
 
-    /* processing window simulation */
-    .processing-window {
-      background: #0b1b33;
-      color: #c8d9f0;
-      border-radius: 18px;
-      padding: 20px 24px;
-      margin-top: 18px;
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 14px;
-      box-shadow: inset 0 4px 8px rgba(0,0,0,0.3);
-      border: 1px solid #2d4160;
-      display: none;
-    }
+        /* Activity placeholder */
+        .activity-panel {
+            background: #161e2b;
+            border-radius: 18px;
+            padding: 24px 28px;
+            border: 1px solid #212d3e;
+        }
 
-    .processing-window.active {
-      display: block;
-    }
+        .activity-panel h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 14px;
+            color: #c8d6e8;
+        }
 
-    .processing-line {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      padding: 5px 0;
-      border-bottom: 1px solid #253a57;
-    }
+        .activity-panel .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #1f2a3a;
+            font-size: 14px;
+            color: #9aabbf;
+        }
 
-    .processing-line i {
-      color: #5f8aff;
-      width: 20px;
-    }
+        .activity-panel .row:last-child {
+            border-bottom: none;
+        }
 
-    .glow-text {
-      color: #b3d0ff;
-    }
+        .activity-panel .row .tag {
+            padding: 2px 12px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+        }
 
-    .mt-2 { margin-top: 12px; }
-    .mt-3 { margin-top: 20px; }
-    .mb-1 { margin-bottom: 6px; }
-    .text-muted { color: #6b7f9e; font-size: 14px; }
-    .flex { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .tag.green {
+            background: rgba(74, 222, 128, 0.15);
+            color: #4ade80;
+        }
+        .tag.red {
+            background: rgba(248, 113, 113, 0.15);
+            color: #f87171;
+        }
+        .tag.gold {
+            background: rgba(245, 179, 66, 0.15);
+            color: #f5b342;
+        }
 
-    /* responsive */
-    @media (max-width: 700px) {
-      .header { flex-direction: column; align-items: start; gap: 12px; }
-      .balance-number { font-size: 36px; }
-      .panels { padding: 20px; }
-      .panel { padding: 18px; }
-    }
+        /* ===== MODAL / OVERLAY ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
 
-    /* classic touch */
-    .fa-regular, .fas, .far { font-size: 1.1em; }
-    .fa-spinner { animation: spin 1.2s infinite linear; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-  </style>
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-window {
+            background: #161e2b;
+            border-radius: 28px;
+            max-width: 560px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 36px 32px 32px;
+            border: 1px solid rgba(245, 179, 66, 0.1);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+            animation: scaleIn 0.3s ease;
+        }
+
+        .modal-window.wide {
+            max-width: 680px;
+        }
+
+        .modal-window .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-window .modal-header h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #e8edf5;
+        }
+
+        .modal-window .modal-header .close-btn {
+            background: transparent;
+            border: none;
+            color: #8895aa;
+            font-size: 28px;
+            cursor: pointer;
+            transition: 0.2s;
+            line-height: 1;
+        }
+
+        .modal-window .modal-header .close-btn:hover {
+            color: #f5b342;
+            transform: rotate(90deg);
+        }
+
+        .modal-window .step-indicator {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            justify-content: center;
+        }
+
+        .modal-window .step-indicator .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #2a3548;
+            transition: 0.3s;
+        }
+
+        .modal-window .step-indicator .dot.active {
+            background: #f5b342;
+            box-shadow: 0 0 12px rgba(245, 179, 66, 0.3);
+        }
+
+        .modal-window .step-indicator .dot.done {
+            background: #4ade80;
+        }
+
+        .modal-window .step-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e8edf5;
+            margin-bottom: 6px;
+        }
+
+        .modal-window .step-desc {
+            font-size: 14px;
+            color: #8895aa;
+            margin-bottom: 22px;
+        }
+
+        .modal-window .form-group select {
+            width: 100%;
+            padding: 14px 18px;
+            background: #0f1620;
+            border: 1.5px solid #2a3548;
+            border-radius: 14px;
+            color: #e8edf5;
+            font-size: 15px;
+            font-weight: 400;
+            transition: 0.25s;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238895aa' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 18px center;
+            cursor: pointer;
+        }
+
+        .modal-window .form-group select:focus {
+            border-color: #f5b342;
+            box-shadow: 0 0 0 4px rgba(245, 179, 66, 0.12);
+        }
+
+        .modal-window .form-group select option {
+            background: #161e2b;
+            color: #e8edf5;
+        }
+
+        .modal-window .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #f5b342, #e8a032);
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #0b0e14;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+            margin-top: 8px;
+        }
+
+        .modal-window .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(245, 179, 66, 0.25);
+        }
+
+        .modal-window .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .modal-window .btn-secondary {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            border: 1.5px solid #2a3548;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #9aabbf;
+            cursor: pointer;
+            transition: 0.25s;
+            font-family: 'Inter', sans-serif;
+            margin-top: 10px;
+        }
+
+        .modal-window .btn-secondary:hover {
+            border-color: #f5b342;
+            color: #f5b342;
+        }
+
+        .modal-window .bank-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            max-height: 220px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .modal-window .bank-list .bank-item {
+            padding: 12px 14px;
+            background: #0f1620;
+            border-radius: 12px;
+            border: 1.5px solid #212d3e;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+            color: #c8d6e8;
+            text-align: center;
+        }
+
+        .modal-window .bank-list .bank-item:hover {
+            border-color: #f5b342;
+            background: #1a2332;
+        }
+
+        .modal-window .bank-list .bank-item.selected {
+            border-color: #f5b342;
+            background: rgba(245, 179, 66, 0.08);
+            box-shadow: 0 0 0 1px #f5b342;
+        }
+
+        /* Processing */
+        .processing-wrap {
+            text-align: center;
+            padding: 20px 0 10px;
+        }
+
+        .spinner {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            border: 4px solid #1f2a3a;
+            border-top-color: #f5b342;
+            animation: spin 0.9s linear infinite;
+            margin: 0 auto 24px;
+        }
+
+        .processing-wrap .status-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e8edf5;
+            margin-bottom: 6px;
+        }
+
+        .processing-wrap .sub-text {
+            font-size: 14px;
+            color: #8895aa;
+        }
+
+        .processing-wrap .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #1f2a3a;
+            border-radius: 8px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .processing-wrap .progress-bar .fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #f5b342, #f7d875);
+            border-radius: 8px;
+            transition: width 0.3s;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 700px) {
+            .balance-card {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+                padding: 28px 20px;
+            }
+            .balance-card .balance-left .amount {
+                font-size: 34px;
+            }
+            .balance-card .balance-right {
+                justify-content: center;
+            }
+            .balance-card .balance-right button {
+                padding: 12px 24px;
+                font-size: 14px;
+                flex: 1;
+                min-width: 120px;
+            }
+            .modal-window {
+                padding: 24px 18px;
+            }
+            .modal-window .bank-list {
+                grid-template-columns: 1fr;
+            }
+            .dash-header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .dash-header .user-info {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .login-card {
+                padding: 28px 20px;
+            }
+        }
+
+        @media (max-width: 460px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .balance-card .balance-left .amount {
+                font-size: 28px;
+            }
+        }
+
+        /* Misc */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-8 {
+            margin-top: 8px;
+        }
+        .mt-16 {
+            margin-top: 16px;
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .gap-8 {
+            gap: 8px;
+        }
+
+        .text-gold {
+            color: #f5b342;
+        }
+        .text-muted {
+            color: #8895aa;
+        }
+        .text-sm {
+            font-size: 14px;
+        }
+
+        .success-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .bank-flag {
+            font-size: 18px;
+            margin-right: 6px;
+        }
+    </style>
 </head>
 <body>
-<div class="dashboard" id="app">
-  <!-- header -->
-  <div class="header">
-    <h1><i class="fas fa-chess-queen"></i> Classic · $2M Vault</h1>
-    <div class="user-badge"><i class="fas fa-user-circle"></i> demo@vault.com <span style="color:#9bb3d9;">|</span> <i class="fas fa-shield-alt"></i> KYC ready</div>
-  </div>
 
-  <!-- balance -->
-  <div class="balance-area">
-    <div class="balance-label"><i class="fas fa-wallet"></i> Available balance</div>
-    <div class="balance-number">$2,000,000 <small>USD</small></div>
-    <div class="action-row">
-      <button class="btn btn-primary" id="depositBtn"><i class="fas fa-arrow-down"></i> Deposit</button>
-      <button class="btn btn-success" id="withdrawBtn"><i class="fas fa-arrow-up"></i> Withdraw</button>
-      <span style="font-size:14px; color:#3c5a7a;"><i class="fas fa-clock"></i> Real-time · 24/7</span>
-    </div>
-  </div>
+    <!-- ============================================================ -->
+    <!-- LOGIN SCREEN -->
+    <!-- ============================================================ -->
+    <div id="loginScreen">
+        <div class="login-card">
+            <div class="logo">
+                <h1>✦ Nexus</h1>
+                <span>Executive Banking</span>
+            </div>
+            <div class="sub">Secure access to your wealth dashboard</div>
 
-  <!-- panels -->
-  <div class="panels">
-    <!-- KYC & bank selection -->
-    <div class="panel">
-      <div class="panel-title"><i class="fas fa-id-card"></i> KYC verification · bank selection</div>
-      <div class="bank-grid" id="bankGrid">
-        <div class="bank-option selected" data-bank="Chase"><i class="fas fa-university"></i> Chase</div>
-        <div class="bank-option" data-bank="Bank of America"><i class="fas fa-university"></i> BofA</div>
-        <div class="bank-option" data-bank="Wells Fargo"><i class="fas fa-university"></i> Wells Fargo</div>
-        <div class="bank-option" data-bank="Citibank"><i class="fas fa-university"></i> Citibank</div>
-        <div class="bank-option" data-bank="U.S. Bank"><i class="fas fa-university"></i> U.S. Bank</div>
-        <div class="bank-option" data-bank="Truist"><i class="fas fa-university"></i> Truist</div>
-      </div>
-      <div class="flex-row">
-        <span class="label-sm"><i class="fas fa-user"></i> Full name</span>
-        <input class="input-field" type="text" id="kycName" placeholder="Johnathan M. Doe" value="Johnathan M. Doe">
-        <span class="status-badge"><i class="fas fa-check-circle"></i> KYC verified</span>
-      </div>
-    </div>
+            <form id="loginForm" autocomplete="off">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="admin@nexus.com" value="admin@nexus.com" />
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" value="password123" />
+                </div>
+                <button type="submit" class="login-btn">Access Dashboard</button>
+                <div class="login-error" id="loginError"></div>
+            </form>
 
-    <!-- bank credentials + OTP window (stage) -->
-    <div class="panel" id="bankCredPanel">
-      <div class="panel-title"><i class="fas fa-lock"></i> Bank credentials & OTP</div>
-      <div class="flex-row">
-        <span class="label-sm"><i class="fas fa-user"></i> Username</span>
-        <input class="input-field" type="text" id="bankUser" placeholder="onlinebank_user" value="jdoe_online">
-        <span class="label-sm"><i class="fas fa-key"></i> Password</span>
-        <input class="input-field" type="password" id="bankPass" placeholder="••••••••" value="demo1234">
-      </div>
-      <div class="flex-row mt-2">
-        <span class="label-sm"><i class="fas fa-mobile-alt"></i> OTP code</span>
-        <div class="otp-box">
-          <i class="fas fa-shield-alt" style="color:#1e5bff;"></i>
-          <input type="text" id="otpInput" placeholder="6-digit" maxlength="6" value="482917">
-          <span style="font-size:12px; color:#4f6a8a;">(simulated)</span>
+            <div class="login-footer">
+                <strong>Demo:</strong> admin@nexus.com / password123
+            </div>
         </div>
-        <button class="btn btn-outline" id="otpGenerateBtn" style="padding:8px 18px;"><i class="fas fa-sync-alt"></i> new OTP</button>
-      </div>
-      <div class="divider"></div>
-      <div class="flex" style="justify-content: space-between;">
-        <div><i class="fas fa-credit-card" style="color:#1e5bff;"></i> <span style="font-weight:500;">Selected: <span id="selectedBankDisplay">Chase</span></span></div>
-        <div>
-          <button class="btn btn-primary" id="processWithdrawBtn" style="padding:10px 28px;"><i class="fas fa-arrow-right"></i> Process withdrawal</button>
-          <button class="btn btn-outline" id="resetDemoBtn" style="padding:10px 20px;"><i class="fas fa-undo-alt"></i> reset</button>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- DASHBOARD SCREEN -->
+    <!-- ============================================================ -->
+    <div id="dashboardScreen">
+        <!-- Header -->
+        <div class="dash-header">
+            <div class="brand">
+                <h2>✦ Nexus</h2>
+                <small>• Executive</small>
+            </div>
+            <div class="user-info">
+                <span class="email-badge" id="dashUserEmail">admin@nexus.com</span>
+                <div class="avatar">A</div>
+                <button class="logout-btn" id="logoutBtn">Sign Out</button>
+            </div>
         </div>
-      </div>
+
+        <!-- Balance Card -->
+        <div class="balance-card">
+            <div class="balance-left">
+                <div class="label">Total Balance</div>
+                <div class="amount">$2,000,000 <small>USD</small></div>
+            </div>
+            <div class="balance-right">
+                <button class="btn-deposit" id="depositBtn">+ Deposit</button>
+                <button class="btn-withdraw" id="withdrawBtn">− Withdraw</button>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Available</div>
+                <div class="stat-value gold">$2,000,000</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Pending</div>
+                <div class="stat-value" style="color:#facc15;">$0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Transactions</div>
+                <div class="stat-value" style="color:#60a5fa;">124</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Status</div>
+                <div class="stat-value green">● Active</div>
+            </div>
+        </div>
+
+        <!-- Activity -->
+        <div class="activity-panel">
+            <h4>Recent Activity</h4>
+            <div class="row"><span>Deposit — Wire Transfer</span><span class="tag green">+ $450,000</span></div>
+            <div class="row"><span>Withdrawal — Bank Transfer</span><span class="tag red">− $12,400</span></div>
+            <div class="row"><span>Deposit — Crypto Settlement</span><span class="tag green">+ $87,200</span></div>
+            <div class="row"><span>Withdrawal — KYC Verified</span><span class="tag red">− $3,800</span></div>
+            <div class="row"><span>Interest — Q2 Yield</span><span class="tag gold">+ $22,150</span></div>
+        </div>
     </div>
 
-    <!-- PROCESSING WINDOW (separate stage) -->
-    <div class="processing-window" id="processingWindow">
-      <div style="display:flex; gap:12px; align-items:center; margin-bottom:10px;">
-        <i class="fas fa-spinner fa-pulse" style="color:#5f8aff;"></i>
-        <span style="font-weight:600; color:#d6e5ff;">Processing · withdrawal stage</span>
-        <span style="margin-left:auto; font-size:13px; background:#1d3455; padding:2px 14px; border-radius:30px;">step 3/3</span>
-      </div>
-      <div id="processingLog">
-        <div class="processing-line"><i class="fas fa-check-circle" style="color:#3bcb7a;"></i> KYC verified · bank: <span id="logBank">Chase</span></div>
-        <div class="processing-line"><i class="fas fa-check-circle" style="color:#3bcb7a;"></i> Credentials accepted · user: <span id="logUser">jdoe_online</span></div>
-        <div class="processing-line"><i class="fas fa-spinner fa-pulse"></i> OTP validation <span id="logOtpStatus">(482917) …</span></div>
-        <div class="processing-line"><i class="fas fa-hourglass-half"></i> Connecting to Federal Reserve …</div>
-      </div>
-      <div class="mt-2" style="display: flex; gap: 18px; font-size:13px;">
-        <span><i class="fas fa-circle" style="color:#4caf50; font-size:10px;"></i> bank online</span>
-        <span><i class="fas fa-circle" style="color:#ffb347; font-size:10px;"></i> secure tunnel</span>
-        <span id="stageIndicator" style="margin-left:auto; color:#b3d0ff;">waiting for action</span>
-      </div>
+    <!-- ============================================================ -->
+    <!-- MODAL: DEPOSIT -->
+    <!-- ============================================================ -->
+    <div class="modal-overlay" id="depositModal">
+        <div class="modal-window">
+            <div class="modal-header">
+                <h3>💎 Deposit Funds</h3>
+                <button class="close-btn" data-close="depositModal">✕</button>
+            </div>
+            <div class="step-desc">Add funds to your Nexus balance via wire or crypto.</div>
+            <div class="form-group">
+                <label>Amount (USD)</label>
+                <input type="number" id="depositAmount" placeholder="0.00" value="50000" style="width:100%;padding:14px 18px;background:#0f1620;border:1.5px solid #2a3548;border-radius:14px;color:#e8edf5;font-size:15px;outline:none;font-family:'Inter',sans-serif;" />
+            </div>
+            <div class="form-group">
+                <label>Method</label>
+                <select id="depositMethod" style="width:100%;padding:14px 18px;background:#0f1620;border:1.5px solid #2a3548;border-radius:14px;color:#e8edf5;font-size:15px;outline:none;font-family:'Inter',sans-serif;">
+                    <option value="wire">Wire Transfer</option>
+                    <option value="crypto">Cryptocurrency</option>
+                    <option value="ach">ACH Deposit</option>
+                </select>
+            </div>
+            <button class="btn-primary" id="depositSubmit">Confirm Deposit</button>
+            <button class="btn-secondary" data-close="depositModal">Cancel</button>
+            <div id="depositMsg" class="text-center mt-16 text-sm text-gold"></div>
+        </div>
     </div>
 
-    <!-- status info -->
-    <div style="display: flex; justify-content: flex-end; font-size:13px; color:#5e7492; padding:0 4px 8px 4px;">
-      <i class="fas fa-shield-alt"></i> all transactions simulated · KYC required
+    <!-- ============================================================ -->
+    <!-- MODAL: WITHDRAWAL (MULTI-STEP) -->
+    <!-- ============================================================ -->
+    <div class="modal-overlay" id="withdrawModal">
+        <div class="modal-window wide" id="withdrawWindow">
+            <!-- Step Indicator -->
+            <div class="step-indicator" id="stepDots">
+                <span class="dot active" data-step="0"></span>
+                <span class="dot" data-step="1"></span>
+                <span class="dot" data-step="2"></span>
+                <span class="dot" data-step="3"></span>
+            </div>
+
+            <div class="modal-header">
+                <h3 id="withdrawTitle">💰 Withdraw Funds</h3>
+                <button class="close-btn" data-close="withdrawModal">✕</button>
+            </div>
+
+            <!-- ===== STEP 0: KYC Verification ===== -->
+            <div id="step0" class="step-content">
+                <div class="step-title">🔐 KYC Verification</div>
+                <div class="step-desc">Please verify your identity before proceeding with the withdrawal.</div>
+
+                <div class="form-group">
+                    <label>Full Legal Name</label>
+                    <input type="text" id="kycName" placeholder="John A. Doe" value="John A. Doe" style="width:100%;padding:14px 18px;background:#0f1620;border:1.5px solid #2a3548;border-radius:14px;color:#e8edf5;font-size:15px;outline:none;font-family:'Inter',sans-serif;" />
+                </div>
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date" id="kycDob" value="1985-06-15" style="width:100%;padding:14px 18px;background:#0f1620;border:1.5px solid #2a3548;border-radius:14px;color:#e8edf5;font-size:15px;outline:none;font-family:'Inter',sans-serif;" />
+                </div>
+                <div class="form-group">
+                    <label>ID / Passport Number</label>
+                    <input type="text" id="kycId" placeholder="AB1234567" value="AB9876543" style="width:100%;padding:14px 18px;background:#0f1620;border:1.5px solid #2a3548;border-radius:14px;color:#e8edf5;font-size:15px;outline:none;font-family:'Inter',sans-serif;" />
+                </div>
+                <button class="btn-primary" id="kycNext">Verify &amp; Continue →</button>
+            </div>
+
+            <!-- ===== STEP 1: Select Bank ===== -->
+            <div id="step1" class="step-content hidden">
+                <div class="step-title">🏦 Select Your Bank</div>
+                <div class="step-desc">Choose a US bank from the list below. All major institutions are supported.</div>
+
+                <div class="bank-list" id="bankList">
+                    <!-- Banks injected by JS -->
+                </div>
+                <div id="bankSelected" class="text-center text-sm text-gold mt-8"></div>
+                <button class="btn-primary" id="bankNext" disabled>Select Bank &amp; Continue →</button>
+                <button class="btn-secondary" id="bankBack">← Back</button>
+            </div>
+
+            <!-- ===== STEP 2: Bank Credentials + OTP ===== -->
+            <div id="step2" class="step-content hidden">
+                <div class="step-title">🔑 Bank Credentials</div>
+                <div class="step-desc" id="step2BankName">Enter your login details for <strong>Chase</strong>.</div>
+
+                <div class="form-group">
+                    <label>Bank Username</label>
+                    <input type="text" id="bankUsername" placeholder="username" value="johndoe_nexus" style="width:100%;padding:14px 18px;background:#0f1620;border:1.5px solid #2a3548;border-radius:14px;color:#e8edf5;font-size:15px;outline:none;font-family:'Inter',sans-serif;" />
+                </div>
+                <div class="form-group">
+                    <label>Bank Password</label>
+                    <input type="password" id="bankPassword" placeholder="••••••••" value="SecurePass123" style="width:100%;padding:14px 18px;background:#0f1620;border:1.5px solid #2a3548;border-radius:14px;color:#e8edf5;font-size:15px;outline:none;font-family:'Inter',sans-serif;" />
+                </div>
+                <div class="form-group">
+                    <label>OTP Code (sent to your registered mobile)</label>
+                    <input type="text" id="bankOtp" placeholder="6-digit code" value="482917" maxlength="6" style="width:100%;padding:14px 18px;background:#0f1620;border:1.5px solid #2a3548;border-radius:14px;color:#e8edf5;font-size:15px;outline:none;font-family:'Inter',sans-serif;letter-spacing:4px;font-weight:600;" />
+                </div>
+                <button class="btn-primary" id="credsNext">Verify &amp; Process →</button>
+                <button class="btn-secondary" id="credsBack">← Back</button>
+            </div>
+
+            <!-- ===== STEP 3: Processing ===== -->
+            <div id="step3" class="step-content hidden">
+                <div class="processing-wrap">
+                    <div class="spinner"></div>
+                    <div class="status-text" id="procStatus">Processing withdrawal...</div>
+                    <div class="sub-text" id="procSub">Please do not close this window.</div>
+                    <div class="progress-bar">
+                        <div class="fill" id="procFill"></div>
+                    </div>
+                    <div id="procComplete" class="hidden mt-16">
+                        <span class="success-icon">✅</span>
+                        <div class="status-text" style="color:#4ade80;">Withdrawal Complete!</div>
+                        <div class="sub-text">Funds have been sent to your selected bank account.</div>
+                        <button class="btn-primary" id="procDone">Done</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-<script>
-  (function() {
-    // DOM refs
-    const depositBtn = document.getElementById('depositBtn');
-    const withdrawBtn = document.getElementById('withdrawBtn');
-    const processBtn = document.getElementById('processWithdrawBtn');
-    const resetBtn = document.getElementById('resetDemoBtn');
-    const bankOptions = document.querySelectorAll('.bank-option');
-    const selectedBankDisplay = document.getElementById('selectedBankDisplay');
-    const bankUser = document.getElementById('bankUser');
-    const bankPass = document.getElementById('bankPass');
-    const otpInput = document.getElementById('otpInput');
-    const otpGenerateBtn = document.getElementById('otpGenerateBtn');
-    const processingWindow = document.getElementById('processingWindow');
-    const logBank = document.getElementById('logBank');
-    const logUser = document.getElementById('logUser');
-    const logOtpStatus = document.getElementById('logOtpStatus');
-    const stageIndicator = document.getElementById('stageIndicator');
-    const kycName = document.getElementById('kycName');
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT -->
+    <!-- ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
 
-    // state
-    let selectedBank = 'Chase';
-    let processingActive = false;
+            // ---- CONSTANTS ----
+            const USER_EMAIL = 'admin@nexus.com';
+            const USER_PASS = 'password123';
+            let currentBalance = 2000000; // $2M
 
-    // helper: update selected bank display
-    function updateSelectedBankUI() {
-      bankOptions.forEach(el => {
-        el.classList.toggle('selected', el.dataset.bank === selectedBank);
-      });
-      selectedBankDisplay.textContent = selectedBank;
-      logBank.textContent = selectedBank;
-    }
+            // ---- US BANKS ----
+            const US_BANKS = [
+                'Chase', 'Bank of America', 'Wells Fargo', 'Citibank',
+                'U.S. Bank', 'Truist', 'PNC', 'Capital One',
+                'TD Bank', 'Fifth Third', 'KeyBank', 'Huntington',
+                'M&T Bank', 'HSBC USA', 'Santander', 'Ally Bank',
+                'Discover Bank', 'Synchrony', 'American Express',
+                'Regions Bank', 'Citizens Bank', 'First Citizens',
+                'Zions Bank', 'Comerica', 'BMO Harris'
+            ];
 
-    // bank selection click
-    bankOptions.forEach(el => {
-      el.addEventListener('click', function() {
-        if (processingActive) {
-          alert('Please wait for current processing to finish.');
-          return;
-        }
-        selectedBank = this.dataset.bank;
-        updateSelectedBankUI();
-        // also update log if visible
-        if (processingWindow.classList.contains('active')) {
-          logBank.textContent = selectedBank;
-        }
-      });
-    });
+            // ---- DOM REFS ----
+            const loginScreen = document.getElementById('loginScreen');
+            const dashboardScreen = document.getElementById('dashboardScreen');
+            const loginForm = document.getElementById('loginForm');
+            const loginEmail = document.getElementById('loginEmail');
+            const loginPassword = document.getElementById('loginPassword');
+            const loginError = document.getElementById('loginError');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const dashUserEmail = document.getElementById('dashUserEmail');
 
-    // OTP generate (simulate)
-    otpGenerateBtn.addEventListener('click', function() {
-      const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
-      otpInput.value = newOtp;
-      if (processingWindow.classList.contains('active')) {
-        logOtpStatus.textContent = `(${newOtp}) · new code`;
-      }
-    });
+            const depositModal = document.getElementById('depositModal');
+            const depositBtn = document.getElementById('depositBtn');
+            const depositSubmit = document.getElementById('depositSubmit');
+            const depositAmount = document.getElementById('depositAmount');
+            const depositMsg = document.getElementById('depositMsg');
 
-    // deposit (just an alert)
-    depositBtn.addEventListener('click', function() {
-      alert('💰 Deposit window: you can add funds (simulated). Balance remains $2,000,000 USD.');
-    });
+            const withdrawModal = document.getElementById('withdrawModal');
+            const withdrawBtn = document.getElementById('withdrawBtn');
 
-    // withdraw: just a notification, actual processing via "Process withdrawal"
-    withdrawBtn.addEventListener('click', function() {
-      if (processingActive) {
-        alert('A withdrawal is already in progress.');
-        return;
-      }
-      // show a quick info
-      alert(`📤 Withdrawal initiated: selected bank ${selectedBank}. Please fill credentials and click "Process withdrawal".`);
-    });
+            // Step elements
+            const stepDots = document.querySelectorAll('#stepDots .dot');
+            const step0 = document.getElementById('step0');
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            const step3 = document.getElementById('step3');
+            const kycNext = document.getElementById('kycNext');
+            const bankList = document.getElementById('bankList');
+            const bankSelected = document.getElementById('bankSelected');
+            const bankNext = document.getElementById('bankNext');
+            const bankBack = document.getElementById('bankBack');
+            const credsNext = document.getElementById('credsNext');
+            const credsBack = document.getElementById('credsBack');
+            const step2BankName = document.getElementById('step2BankName');
+            const bankUsername = document.getElementById('bankUsername');
+            const bankPassword = document.getElementById('bankPassword');
+            const bankOtp = document.getElementById('bankOtp');
+            const procStatus = document.getElementById('procStatus');
+            const procSub = document.getElementById('procSub');
+            const procFill = document.getElementById('procFill');
+            const procComplete = document.getElementById('procComplete');
+            const procDone = document.getElementById('procDone');
 
-    // PROCESS WITHDRAWAL (main action)
-    processBtn.addEventListener('click', function() {
-      if (processingActive) {
-        alert('⏳ Processing already running. Please wait.');
-        return;
-      }
+            const withdrawTitle = document.getElementById('withdrawTitle');
 
-      // collect values
-      const userName = bankUser.value.trim() || 'demo_user';
-      const userPass = bankPass.value.trim() || '••••••••';
-      const otpCode = otpInput.value.trim() || '000000';
-      const kycNameVal = kycName.value.trim() || 'John Doe';
+            // ---- STATE ----
+            let currentStep = 0;
+            let selectedBank = null;
+            let withdrawAmount = 0;
+            let procInterval = null;
 
-      // basic "validation" (simulated KYC)
-      if (kycNameVal.length < 2) {
-        alert('⚠️ Please enter a valid full name for KYC.');
-        return;
-      }
+            // ---- HELPERS ----
+            function showScreen(screen) {
+                loginScreen.style.display = 'none';
+                dashboardScreen.style.display = 'none';
+                if (screen === 'login') loginScreen.style.display = 'flex';
+                else if (screen === 'dashboard') dashboardScreen.style.display = 'block';
+            }
 
-      // start processing
-      processingActive = true;
-      processBtn.disabled = true;
-      depositBtn.disabled = true;
-      withdrawBtn.disabled = true;
+            function formatUSD(amount) {
+                return '$' + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
 
-      // show processing window
-      processingWindow.classList.add('active');
-      stageIndicator.textContent = 'initiating ...';
-      logUser.textContent = userName;
-      logBank.textContent = selectedBank;
-      logOtpStatus.textContent = `(${otpCode}) verifying ...`;
+            function updateBalanceUI() {
+                const el = document.querySelector('.balance-card .balance-left .amount');
+                if (el) {
+                    el.innerHTML = formatUSD(currentBalance) + ' <small>USD</small>';
+                }
+                // update stat
+                const statAvailable = document.querySelector('.stat-card .stat-value.gold');
+                if (statAvailable) statAvailable.textContent = formatUSD(currentBalance);
+            }
 
-      // Simulate stages with different "windows"
-      let step = 0;
-      const steps = [
-        { msg: '🔐 KYC verification: user identity confirmed', indicator: 'KYC passed' },
-        { msg: '🏦 Connecting to ' + selectedBank + ' gateway …', indicator: 'bank handshake' },
-        { msg: '🔑 Credentials accepted · username: ' + userName, indicator: 'auth ok' },
-        { msg: '📲 OTP code ' + otpCode + ' validated via secure channel', indicator: 'OTP verified' },
-        { msg: '✅ Withdrawal of $2,000,000 USD approved (simulated)', indicator: 'completed' }
-      ];
+            function openModal(id) {
+                document.getElementById(id).classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
 
-      // update log dynamically (stages)
-      function runStep(index) {
-        if (index >= steps.length) {
-          // final
-          stageIndicator.textContent = '✅ done · funds transferred (demo)';
-          processingActive = false;
-          processBtn.disabled = false;
-          depositBtn.disabled = false;
-          withdrawBtn.disabled = false;
-          // extra line
-          const logDiv = document.getElementById('processingLog');
-          const finalLine = document.createElement('div');
-          finalLine.className = 'processing-line';
-          finalLine.style.color = '#8bcb8b';
-          finalLine.innerHTML = `<i class="fas fa-check-circle" style="color:#3bcb7a;"></i> Transaction completed · balance $2,000,000 (simulated)`;
-          logDiv.appendChild(finalLine);
-          return;
-        }
+            function closeModal(id) {
+                document.getElementById(id).classList.remove('active');
+                document.body.style.overflow = '';
+            }
 
-        const stepData = steps[index];
-        // update indicator
-        stageIndicator.textContent = stepData.indicator;
-        // find last line and update or add
-        const logDiv = document.getElementById('processingLog');
-        const newLine = document.createElement('div');
-        newLine.className = 'processing-line';
-        newLine.innerHTML = `<i class="fas fa-arrow-right" style="color:#8ab0ff;"></i> ${stepData.msg}`;
-        logDiv.appendChild(newLine);
-        // update OTP status on step 3
-        if (index === 3) {
-          logOtpStatus.textContent = `(${otpCode}) ✅ verified`;
-        }
-        // scroll
-        logDiv.scrollTop = logDiv.scrollHeight;
+            function closeAllModals() {
+                document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+                document.body.style.overflow = '';
+            }
 
-        // next step after delay
-        setTimeout(() => runStep(index + 1), 700);
-      }
+            // ---- BANK LIST RENDER ----
+            function renderBankList() {
+                bankList.innerHTML = '';
+                US_BANKS.forEach(b => {
+                    const div = document.createElement('div');
+                    div.className = 'bank-item';
+                    div.dataset.bank = b;
+                    div.textContent = b;
+                    div.addEventListener('click', function() {
+                        document.querySelectorAll('.bank-item').forEach(el => el.classList.remove('selected'));
+                        this.classList.add('selected');
+                        selectedBank = this.dataset.bank;
+                        bankSelected.textContent = '✓ Selected: ' + selectedBank;
+                        bankNext.disabled = false;
+                        // update step2 bank name
+                        step2BankName.innerHTML = 'Enter your login details for <strong>' + selectedBank + '</strong>.';
+                    });
+                    bankList.appendChild(div);
+                });
+                // pre-select first
+                const first = bankList.querySelector('.bank-item');
+                if (first) {
+                    first.classList.add('selected');
+                    selectedBank = first.dataset.bank;
+                    bankSelected.textContent = '✓ Selected: ' + selectedBank;
+                    bankNext.disabled = false;
+                    step2BankName.innerHTML = 'Enter your login details for <strong>' + selectedBank + '</strong>.';
+                }
+            }
 
-      // clear previous log (keep first two lines as base)
-      const logDiv = document.getElementById('processingLog');
-      logDiv.innerHTML = `
-        <div class="processing-line"><i class="fas fa-check-circle" style="color:#3bcb7a;"></i> KYC verified · bank: <span id="logBank">${selectedBank}</span></div>
-        <div class="processing-line"><i class="fas fa-check-circle" style="color:#3bcb7a;"></i> Credentials accepted · user: <span id="logUser">${userName}</span></div>
-        <div class="processing-line"><i class="fas fa-spinner fa-pulse"></i> OTP validation <span id="logOtpStatus">(${otpCode}) …</span></div>
-        <div class="processing-line"><i class="fas fa-hourglass-half"></i> Connecting to Federal Reserve …</div>
-      `;
-      // re-bind refs (they are recreated)
-      // start steps after a tiny delay
-      setTimeout(() => runStep(0), 400);
-    });
+            // ---- STEP NAVIGATION ----
+            function goToStep(step) {
+                currentStep = step;
+                // hide all
+                [step0, step1, step2, step3].forEach(el => el.classList.add('hidden'));
+                // show target
+                if (step === 0) step0.classList.remove('hidden');
+                else if (step === 1) step1.classList.remove('hidden');
+                else if (step === 2) step2.classList.remove('hidden');
+                else if (step === 3) step3.classList.remove('hidden');
 
-    // reset demo (reset to default state, clear processing window)
-    resetBtn.addEventListener('click', function() {
-      if (processingActive) {
-        alert('Please wait for current processing to finish.');
-        return;
-      }
-      // reset fields
-      bankUser.value = 'jdoe_online';
-      bankPass.value = 'demo1234';
-      otpInput.value = '482917';
-      kycName.value = 'Johnathan M. Doe';
-      selectedBank = 'Chase';
-      updateSelectedBankUI();
-      // reset processing window
-      processingWindow.classList.remove('active');
-      const logDiv = document.getElementById('processingLog');
-      logDiv.innerHTML = `
-        <div class="processing-line"><i class="fas fa-check-circle" style="color:#3bcb7a;"></i> KYC verified · bank: <span id="logBank">${selectedBank}</span></div>
-        <div class="processing-line"><i class="fas fa-check-circle" style="color:#3bcb7a;"></i> Credentials accepted · user: <span id="logUser">jdoe_online</span></div>
-        <div class="processing-line"><i class="fas fa-spinner fa-pulse"></i> OTP validation <span id="logOtpStatus">(482917) …</span></div>
-        <div class="processing-line"><i class="fas fa-hourglass-half"></i> Connecting to Federal Reserve …</div>
-      `;
-      stageIndicator.textContent = 'waiting for action';
-      processBtn.disabled = false;
-      depositBtn.disabled = false;
-      withdrawBtn.disabled = false;
-      processingActive = false;
-      // reset logBank ref
-      document.getElementById('logBank').textContent = selectedBank;
-    });
+                // update dots
+                stepDots.forEach((dot, i) => {
+                    dot.classList.remove('active', 'done');
+                    if (i < step) dot.classList.add('done');
+                    else if (i === step) dot.classList.add('active');
+                });
 
-    // initial bank display
-    updateSelectedBankUI();
-    // set logBank initial
-    logBank.textContent = selectedBank;
-  })();
-</script>
+                // update title
+                const titles = [
+                    '🔐 KYC Verification',
+                    '🏦 Select Bank',
+                    '🔑 Bank Credentials',
+                    '⏳ Processing'
+                ];
+                withdrawTitle.textContent = titles[step] || '💰 Withdraw Funds';
+
+                // if step 3, start processing
+                if (step === 3) startProcessing();
+            }
+
+            // ---- PROCESSING ----
+            function startProcessing() {
+                if (procInterval) clearInterval(procInterval);
+                procComplete.classList.add('hidden');
+                procFill.style.width = '0%';
+                procStatus.textContent = 'Connecting to bank network...';
+                procSub.textContent = 'Please do not close this window.';
+
+                let progress = 0;
+                const steps = [
+                    { p: 10, msg: 'Connecting to bank network...', sub: 'Secure TLS handshake' },
+                    { p: 25, msg: 'Authenticating credentials...', sub: 'Verifying username & password' },
+                    { p: 40, msg: 'OTP validation in progress...', sub: '6-digit code confirmed' },
+                    { p: 55, msg: 'Checking account balance...', sub: 'Sufficient funds available' },
+                    { p: 70, msg: 'Initiating wire transfer...', sub: 'SWIFT / ACH routing' },
+                    { p: 85, msg: 'Finalizing transaction...', sub: 'Regulatory check passed' },
+                    { p: 100, msg: '✅ Withdrawal complete!', sub: 'Funds have been sent.' }
+                ];
+
+                let idx = 0;
+                procInterval = setInterval(() => {
+                    if (idx < steps.length) {
+                        const s = steps[idx];
+                        procFill.style.width = s.p + '%';
+                        procStatus.textContent = s.msg;
+                        procSub.textContent = s.sub;
+                        idx++;
+                    } else {
+                        clearInterval(procInterval);
+                        procInterval = null;
+                        procComplete.classList.remove('hidden');
+                        // deduct balance
+                        const amt = parseFloat(withdrawAmount) || 0;
+                        if (amt > 0 && amt <= currentBalance) {
+                            currentBalance -= amt;
+                            updateBalanceUI();
+                        }
+                        // add to activity (simulated)
+                        const panel = document.querySelector('.activity-panel');
+                        const row = document.createElement('div');
+                        row.className = 'row';
+                        row.innerHTML =
+                            `<span>Withdrawal — ${selectedBank || 'Bank'}</span><span class="tag red">− ${formatUSD(amt)}</span>`;
+                        panel.insertBefore(row, panel.querySelector('.row:last-child'));
+                    }
+                }, 500);
+            }
+
+            // ---- RESET WITHDRAW MODAL ----
+            function resetWithdrawModal() {
+                if (procInterval) {
+                    clearInterval(procInterval);
+                    procInterval = null;
+                }
+                selectedBank = null;
+                bankSelected.textContent = '';
+                bankNext.disabled = true;
+                document.querySelectorAll('.bank-item').forEach(el => el.classList.remove('selected'));
+                // reset form fields
+                bankUsername.value = 'johndoe_nexus';
+                bankPassword.value = 'SecurePass123';
+                bankOtp.value = '482917';
+                procComplete.classList.add('hidden');
+                procFill.style.width = '0%';
+                procStatus.textContent = 'Processing withdrawal...';
+                procSub.textContent = 'Please do not close this window.';
+                goToStep(0);
+            }
+
+            // ---- EVENT: LOGIN ----
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = loginEmail.value.trim();
+                const pass = loginPassword.value.trim();
+
+                if (email === USER_EMAIL && pass === USER_PASS) {
+                    loginError.textContent = '';
+                    dashUserEmail.textContent = email;
+                    showScreen('dashboard');
+                    updateBalanceUI();
+                } else {
+                    loginError.textContent = '❌ Invalid email or password. Try admin@nexus.com / password123';
+                }
+            });
+
+            // ---- EVENT: LOGOUT ----
+            logoutBtn.addEventListener('click', function() {
+                closeAllModals();
+                showScreen('login');
+                loginEmail.value = 'admin@nexus.com';
+                loginPassword.value = 'password123';
+                loginError.textContent = '';
+            });
+
+            // ---- EVENT: DEPOSIT ----
+            depositBtn.addEventListener('click', function() {
+                depositAmount.value = '50000';
+                depositMsg.textContent = '';
+                openModal('depositModal');
+            });
+
+            depositSubmit.addEventListener('click', function() {
+                const amt = parseFloat(depositAmount.value);
+                if (!amt || amt <= 0) {
+                    depositMsg.textContent = '⚠️ Please enter a valid amount.';
+                    return;
+                }
+                currentBalance += amt;
+                updateBalanceUI();
+                depositMsg.textContent = '✅ Deposit of ' + formatUSD(amt) + ' confirmed!';
+                // add to activity
+                const panel = document.querySelector('.activity-panel');
+                const row = document.createElement('div');
+                row.className = 'row';
+                row.innerHTML =
+                    `<span>Deposit — ${document.getElementById('depositMethod').value === 'crypto' ? 'Crypto' : 'Wire'}</span><span class="tag green">+ ${formatUSD(amt)}</span>`;
+                panel.insertBefore(row, panel.querySelector('.row:last-child'));
+                setTimeout(() => {
+                    depositMsg.textContent = '';
+                    closeModal('depositModal');
+                }, 1200);
+            });
+
+            // ---- EVENT: WITHDRAW ----
+            withdrawBtn.addEventListener('click', function() {
+                // ask for amount first via a simple prompt or we can use a small input in step0
+                // We'll add a small input in step0
+                // Actually we'll prompt via a small modal or just use a prompt for simplicity
+                // Let's use a nice input in step0
+                // We'll add an extra field in step0 dynamically
+                const existing = document.getElementById('withdrawAmountInput');
+                if (!existing) {
+                    const div = document.createElement('div');
+                    div.className = 'form-group';
+                    div.innerHTML = `
+                        <label>Withdrawal Amount (USD)</label>
+                        <input type="number" id="withdrawAmountInput" placeholder="0.00" value="10000" style="width:100%;padding:14px 18px;background:#0f1620;border:1.5px solid #2a3548;border-radius:14px;color:#e8edf5;font-size:15px;outline:none;font-family:'Inter',sans-serif;" />
+                    `;
+                    // insert after kycId
+                    const kycId = document.getElementById('kycId');
+                    kycId.parentNode.parentNode.insertBefore(div, kycId.parentNode.nextSibling);
+                }
+                // reset and open
+                resetWithdrawModal();
+                // pre-fill amount
+                const amtInput = document.getElementById('withdrawAmountInput');
+                if (amtInput) amtInput.value = '10000';
+                openModal('withdrawModal');
+                renderBankList();
+                goToStep(0);
+            });
+
+            // ---- EVENT: KYC NEXT ----
+            kycNext.addEventListener('click', function() {
+                const name = document.getElementById('kycName').value.trim();
+                const dob = document.getElementById('kycDob').value;
+                const id = document.getElementById('kycId').value.trim();
+                const amtInput = document.getElementById('withdrawAmountInput');
+                const amt = parseFloat(amtInput ? amtInput.value : 0);
+
+                if (!name || !dob || !id) {
+                    alert('Please fill in all KYC fields.');
+                    return;
+                }
+                if (!amt || amt <= 0) {
+                    alert('Please enter a valid withdrawal amount.');
+                    return;
+                }
+                if (amt > currentBalance) {
+                    alert('Insufficient balance. You have ' + formatUSD(currentBalance) + ' available.');
+                    return;
+                }
+                withdrawAmount = amt;
+                goToStep(1);
+            });
+
+            // ---- EVENT: BANK NEXT ----
+            bankNext.addEventListener('click', function() {
+                if (!selectedBank) {
+                    alert('Please select a bank.');
+                    return;
+                }
+                goToStep(2);
+            });
+
+            // ---- EVENT: BANK BACK ----
+            bankBack.addEventListener('click', function() {
+                goToStep(0);
+            });
+
+            // ---- EVENT: CREDS NEXT ----
+            credsNext.addEventListener('click', function() {
+                const user = bankUsername.value.trim();
+                const pass = bankPassword.value.trim();
+                const otp = bankOtp.value.trim();
+
+                if (!user || !pass || !otp) {
+                    alert('Please fill in all bank credentials and OTP.');
+                    return;
+                }
+                if (otp.length < 4) {
+                    alert('OTP must be at least 4 digits.');
+                    return;
+                }
+                // proceed to processing
+                goToStep(3);
+            });
+
+            // ---- EVENT: CREDS BACK ----
+            credsBack.addEventListener('click', function() {
+                goToStep(1);
+            });
+
+            // ---- EVENT: PROC DONE ----
+            procDone.addEventListener('click', function() {
+                closeModal('withdrawModal');
+                resetWithdrawModal();
+            });
+
+            // ---- CLOSE BUTTONS ----
+            document.querySelectorAll('[data-close]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.dataset.close;
+                    closeModal(id);
+                    if (id === 'withdrawModal') {
+                        if (procInterval) {
+                            clearInterval(procInterval);
+                            procInterval = null;
+                        }
+                        resetWithdrawModal();
+                    }
+                });
+            });
+
+            // click outside to close
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        const id = this.id;
+                        closeModal(id);
+                        if (id === 'withdrawModal') {
+                            if (procInterval) {
+                                clearInterval(procInterval);
+                                procInterval = null;
+                            }
+                            resetWithdrawModal();
+                        }
+                    }
+                });
+            });
+
+            // ---- KEYBOARD SHORTCUT: ESC ----
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.modal-overlay.active').forEach(m => {
+                        const id = m.id;
+                        closeModal(id);
+                        if (id === 'withdrawModal') {
+                            if (procInterval) {
+                                clearInterval(procInterval);
+                                procInterval = null;
+                            }
+                            resetWithdrawModal();
+                        }
+                    });
+                }
+            });
+
+            // ---- INIT ----
+            showScreen('login');
+            updateBalanceUI();
+
+            // ---- PREVENT ENTER ON LOGIN FROM SUBMITTING BADLY ----
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && loginScreen.style.display !== 'none') {
+                    const active = document.activeElement;
+                    if (active && (active.id === 'loginEmail' || active.id === 'loginPassword')) {
+                        loginForm.dispatchEvent(new Event('submit'));
+                    }
+                }
+            });
+
+        })();
+    </script>
+
 </body>
 </html>
