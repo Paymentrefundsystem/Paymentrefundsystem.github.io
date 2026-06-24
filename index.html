@@ -1,1606 +1,624 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MAILER PRO · Smart Email Marketing</title>
-  <!-- Font Awesome 6 -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <!-- Google Font Inter -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
-  <!-- EmailJS -->
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Classic USD · Professional Dashboard</title>
+  <!-- Font & icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    /* ----- RESET & VARIABLES (Premium SaaS) ----- */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-    :root {
-      --bg: #f4f7fc;
-      --card: #ffffff;
-      --text: #0a1a2f;
-      --text-secondary: #4a5f7a;
-      --border: #e3eaf2;
-      --primary: #1a5cff;
-      --primary-dark: #0a45cc;
-      --primary-light: #e8efff;
-      --success: #22c55e;
-      --warning: #eab308;
-      --danger: #ef4444;
-      --shadow-sm: 0 2px 8px rgba(0, 20, 50, 0.04);
-      --shadow: 0 8px 30px rgba(0, 20, 50, 0.08);
-      --shadow-lg: 0 20px 50px rgba(0, 20, 50, 0.12);
-      --radius: 16px;
-      --radius-sm: 10px;
-      --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      --sidebar-width: 260px;
-      --top-nav-height: 68px;
-      --accent: #1a5cff;
-    }
-    .dark {
-      --bg: #0b1428;
-      --card: #162035;
-      --text: #edf2f9;
-      --text-secondary: #94a9c9;
-      --border: #293d5c;
-      --primary: #3b82f6;
-      --primary-dark: #2563eb;
-      --primary-light: #1e2f4a;
-      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-      --shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-      --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.5);
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
     }
     body {
-      background: var(--bg);
-      color: var(--text);
-      transition: background var(--transition), color var(--transition);
-      line-height: 1.6;
+      background: #f0f4fa;
       min-height: 100vh;
-    }
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 20px; }
-
-    /* ----- TOP NAV ----- */
-    .top-nav {
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
-      padding: 0 28px;
-      height: var(--top-nav-height);
       display: flex;
+      justify-content: center;
       align-items: center;
+      padding: 20px;
+    }
+    .dashboard {
+      max-width: 1100px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 40px;
+      box-shadow: 0 25px 50px -10px rgba(0,20,50,0.25);
+      padding: 30px 35px 40px;
+      transition: all 0.2s ease;
+    }
+    /* header */
+    .header {
+      display: flex;
       justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(14px);
-      background: rgba(255, 255, 255, 0.82);
-      transition: var(--transition);
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
     }
-    .dark .top-nav {
-      background: rgba(22, 32, 53, 0.88);
+    .logo-area h1 {
+      font-size: 26px;
+      font-weight: 600;
+      color: #0b1a33;
+      letter-spacing: -0.3px;
     }
-    .top-nav .brand {
+    .logo-area span {
+      color: #3b7cff;
+      font-weight: 500;
+    }
+    .user-badge {
+      background: #eef3fc;
+      padding: 10px 20px;
+      border-radius: 60px;
       display: flex;
       align-items: center;
       gap: 12px;
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--primary);
-      letter-spacing: -0.5px;
-    }
-    .top-nav .brand i { font-size: 26px; }
-    .top-nav .brand small {
-      font-weight: 400;
-      font-size: 12px;
-      color: var(--text-secondary);
-      letter-spacing: 0.3px;
-      margin-left: 4px;
-    }
-    .top-nav .right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .top-nav .right .avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: var(--primary-light);
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 15px;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-    .top-nav .right .avatar:hover { transform: scale(1.05); }
-    .hamburger {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 22px;
-      color: var(--text);
-      cursor: pointer;
-      padding: 4px;
-    }
-
-    /* ----- SIDEBAR ----- */
-    .app { display: flex; min-height: calc(100vh - var(--top-nav-height)); }
-    .sidebar {
-      width: var(--sidebar-width);
-      background: var(--card);
-      border-right: 1px solid var(--border);
-      padding: 20px 14px;
-      display: flex;
-      flex-direction: column;
-      position: sticky;
-      top: var(--top-nav-height);
-      height: calc(100vh - var(--top-nav-height));
-      overflow-y: auto;
-      transition: var(--transition);
-      flex-shrink: 0;
-    }
-    .sidebar .profile {
-      padding: 12px 12px 20px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-    .sidebar .profile .avatar-sm {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: var(--primary);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 16px;
-      flex-shrink: 0;
-    }
-    .sidebar .profile .info .name { font-weight: 600; font-size: 15px; }
-    .sidebar .profile .info .workspace { font-size: 12px; color: var(--text-secondary); }
-    .sidebar nav {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      flex: 1;
-    }
-    .sidebar nav a {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 11px 14px;
-      border-radius: var(--radius-sm);
-      color: var(--text-secondary);
-      text-decoration: none;
       font-weight: 500;
-      font-size: 14px;
-      transition: var(--transition);
+      color: #1e2f4a;
     }
-    .sidebar nav a i { width: 20px; text-align: center; font-size: 16px; }
-    .sidebar nav a:hover { background: var(--bg); color: var(--text); }
-    .sidebar nav a.active {
-      background: var(--primary-light);
-      color: var(--primary);
-      font-weight: 600;
+    .user-badge i {
+      font-size: 22px;
+      color: #1f3a6b;
     }
-    .sidebar .footer-links {
-      border-top: 1px solid var(--border);
-      padding-top: 14px;
-      margin-top: 8px;
+    .balance-card {
+      background: linear-gradient(145deg, #0b1f3b, #142b4b);
+      border-radius: 32px;
+      padding: 28px 35px;
+      margin-bottom: 35px;
+      color: white;
       display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .sidebar .footer-links a {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 10px 14px;
-      border-radius: var(--radius-sm);
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 13px;
-      transition: var(--transition);
-    }
-    .sidebar .footer-links a:hover { background: var(--bg); color: var(--text); }
-
-    /* ----- MAIN CONTENT ----- */
-    .main {
-      flex: 1;
-      padding: 28px 36px;
-      max-width: 1440px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    /* ----- PAGE HEADER ----- */
-    .page-header {
-      display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 28px;
-      flex-wrap: wrap;
-      gap: 16px;
+      box-shadow: 0 12px 18px -8px rgba(0,20,40,0.3);
     }
-    .page-header h1 {
-      font-size: 26px;
+    .balance-label {
+      font-size: 18px;
+      font-weight: 400;
+      opacity: 0.7;
+      letter-spacing: 0.3px;
+    }
+    .balance-amount {
+      font-size: 48px;
       font-weight: 700;
-      letter-spacing: -0.3px;
+      letter-spacing: 1px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
-    .page-header h1 i { color: var(--primary); }
-
-    /* ----- BUTTONS ----- */
+    .balance-amount small {
+      font-size: 24px;
+      font-weight: 400;
+      opacity: 0.7;
+    }
+    .balance-actions {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
     .btn {
-      padding: 10px 24px;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 14px;
+      padding: 14px 32px;
       border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
       cursor: pointer;
-      transition: var(--transition);
+      transition: 0.2s;
+      background: white;
+      color: #0b1a33;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+    .btn-primary {
+      background: #ffffff;
+      color: #0b1a33;
+    }
+    .btn-primary i { color: #2b6ef0; }
+    .btn-success {
+      background: #2b6ef0;
+      color: white;
+      box-shadow: 0 8px 16px -6px #1a4fc0;
+    }
+    .btn-success i { color: white; }
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.25);
+      color: white;
+    }
+    .btn-outline i { color: white; }
+    .btn:hover { transform: scale(1.02); opacity: 0.95; }
+    .btn:active { transform: scale(0.97); }
+
+    /* card grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 18px;
+      margin: 30px 0 25px;
+    }
+    .stat-card {
+      background: #f8fafd;
+      border-radius: 24px;
+      padding: 20px 22px;
+      border: 1px solid #eef2f8;
+    }
+    .stat-card .label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #4d627c;
+      letter-spacing: 0.3px;
+    }
+    .stat-card .value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #0b1a33;
+      margin-top: 6px;
+    }
+    .stat-card .value i {
+      font-size: 20px;
+      color: #2b6ef0;
+      margin-right: 8px;
+    }
+
+    /* windows / stages */
+    .stages {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin: 32px 0 10px;
+    }
+    .stage-window {
+      background: #fafcff;
+      border-radius: 28px;
+      border: 1px solid #e3eaf2;
+      padding: 20px 28px 28px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+      transition: 0.2s;
+    }
+    .stage-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      font-size: 18px;
+      color: #142b4b;
+      margin-bottom: 18px;
+      border-bottom: 1px dashed #d7e0ea;
+      padding-bottom: 12px;
+    }
+    .stage-header i {
+      font-size: 22px;
+      color: #2b6ef0;
+      width: 32px;
+    }
+    .stage-content {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 20px 25px;
+    }
+    .bank-selector {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 16px;
+      background: #ffffff;
+      padding: 8px 18px 8px 22px;
+      border-radius: 60px;
+      border: 1px solid #dae2ec;
+    }
+    .bank-selector select {
+      border: none;
+      background: transparent;
+      font-weight: 500;
+      font-size: 15px;
+      padding: 8px 4px;
+      min-width: 180px;
+      color: #0b1a33;
+      outline: none;
+      cursor: pointer;
+    }
+    .bank-selector select option { font-weight: 400; }
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 14px;
+      background: white;
+      padding: 4px 12px 4px 20px;
+      border-radius: 60px;
+      border: 1px solid #dae2ec;
+    }
+    .input-group label {
+      font-weight: 500;
+      color: #2d4262;
+      font-size: 14px;
+    }
+    .input-group input {
+      border: none;
+      padding: 10px 4px;
+      font-size: 14px;
+      background: transparent;
+      min-width: 130px;
+      outline: none;
+    }
+    .input-group input::placeholder { color: #9aafc7; }
+    .otp-group {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .otp-group input {
+      width: 110px;
+      text-align: center;
+      letter-spacing: 4px;
+      font-weight: 600;
+      border: 1px solid #dae2ec;
+      border-radius: 40px;
+      padding: 10px 6px;
+      background: white;
+    }
+    .stage-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 20px;
+      margin-left: auto;
+    }
+    .btn-sm {
+      padding: 10px 22px;
+      font-size: 14px;
+      border-radius: 40px;
+      border: none;
+      font-weight: 600;
+      background: #eef3fc;
+      color: #142b4b;
+      cursor: pointer;
+      transition: 0.15s;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      text-decoration: none;
     }
-    .btn-primary {
-      background: var(--primary);
-      color: #fff;
-      box-shadow: 0 4px 14px rgba(26, 92, 255, 0.25);
-    }
-    .btn-primary:hover {
-      background: var(--primary-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(26, 92, 255, 0.35);
-    }
-    .btn-outline {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text);
-    }
-    .btn-outline:hover {
-      background: var(--bg);
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-    .btn-sm { padding: 6px 16px; font-size: 13px; }
-    .btn-success { background: var(--success); color: #fff; }
-    .btn-success:hover { opacity: 0.9; transform: translateY(-2px); }
-    .btn-danger { background: var(--danger); color: #fff; }
-    .btn-danger:hover { opacity: 0.9; transform: translateY(-2px); }
-    .w-full { width: 100%; }
+    .btn-sm i { font-size: 14px; }
+    .btn-sm.primary { background: #2b6ef0; color: white; }
+    .btn-sm.primary i { color: white; }
+    .btn-sm:hover { filter: brightness(0.95); transform: scale(0.98); }
 
-    /* ----- CARDS & GRID ----- */
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin-bottom: 28px;
+    .processing-badge {
+      background: #eef5ff;
+      padding: 8px 20px;
+      border-radius: 40px;
+      color: #1f4bb0;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
     }
-    .stat-card {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 22px 24px;
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border);
-      transition: var(--transition);
-      position: relative;
-      overflow: hidden;
-    }
-    .stat-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow);
-    }
-    .stat-card .label { font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bottom: 4px; }
-    .stat-card .value { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; }
-    .stat-card .sub { font-size: 13px; color: var(--text-secondary); margin-top: 6px; display: flex; align-items: center; gap: 4px; }
-    .stat-card .icon-bg { position: absolute; right: 16px; top: 16px; font-size: 28px; opacity: 0.06; }
+    .processing-badge i { animation: spin 1.8s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
 
-    .row-2 {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 24px;
-      margin-bottom: 28px;
-    }
-    @media (max-width: 1000px) { .row-2 { grid-template-columns: 1fr; } }
-
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 24px 28px;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-sm);
-      transition: var(--transition);
-    }
-    .card:hover { box-shadow: var(--shadow); }
-    .card .card-header {
+    .footer-note {
+      margin-top: 25px;
+      font-size: 14px;
+      color: #5f748e;
+      border-top: 1px solid #e4ecf5;
+      padding-top: 18px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 18px;
-    }
-    .card .card-header h3 {
-      font-weight: 600;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .card .card-header h3 i { color: var(--primary); }
-
-    /* ----- TABLES ----- */
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    table th {
-      text-align: left;
-      padding: 12px 8px 12px 0;
-      font-weight: 600;
-      color: var(--text-secondary);
-      border-bottom: 1px solid var(--border);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    table td { padding: 14px 8px 14px 0; border-bottom: 1px solid var(--border); vertical-align: middle; }
-    table tr:last-child td { border-bottom: none; }
-    .badge {
-      padding: 3px 14px;
-      border-radius: 40px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.3px;
-      display: inline-block;
-    }
-    .badge-draft { background: var(--border); color: var(--text-secondary); }
-    .badge-sent { background: var(--success); color: #fff; }
-    .badge-failed { background: var(--danger); color: #fff; }
-    .badge-sending { background: var(--warning); color: #fff; }
-    .badge-scheduled { background: var(--primary-light); color: var(--primary); }
-
-    /* ----- FORMS ----- */
-    .form-group { margin-bottom: 18px; }
-    .form-group label {
-      font-weight: 600;
-      display: block;
-      margin-bottom: 5px;
-      font-size: 14px;
-      color: var(--text-secondary);
-    }
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border);
-      background: var(--bg);
-      color: var(--text);
-      transition: var(--transition);
-      font-size: 15px;
-    }
-    .form-group input:focus,
-    .form-group textarea:focus {
-      outline: 2px solid var(--primary);
-      outline-offset: 1px;
-      border-color: transparent;
-    }
-    .form-group textarea { min-height: 100px; resize: vertical; }
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-    }
-    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
-
-    .flex { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-    .text-muted { color: var(--text-secondary); }
-    .text-center { text-align: center; }
-    .mt-16 { margin-top: 16px; }
-    .mb-16 { margin-bottom: 16px; }
-
-    /* ----- TABS ----- */
-    .tab-bar {
-      display: flex;
-      gap: 4px;
-      background: var(--bg);
-      border-radius: 40px;
-      padding: 4px;
-      margin-bottom: 24px;
-      border: 1px solid var(--border);
       flex-wrap: wrap;
     }
-    .tab-bar button {
-      background: transparent;
-      border: 0;
-      padding: 8px 22px;
-      border-radius: 30px;
-      cursor: pointer;
-      font-weight: 600;
-      color: var(--text-secondary);
-      transition: var(--transition);
-      font-size: 14px;
-    }
-    .tab-bar button.active {
-      background: var(--card);
-      color: var(--text);
-      box-shadow: var(--shadow-sm);
-    }
-    .tab-bar button:hover { color: var(--text); }
+    .footer-note i { color: #3b7cff; }
 
-    /* ----- TEMPLATE GALLERY ----- */
-    .template-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .template-card {
-      background: var(--bg);
-      border-radius: var(--radius-sm);
-      padding: 20px 12px;
-      text-align: center;
-      border: 2px solid transparent;
-      transition: var(--transition);
-      cursor: pointer;
-    }
-    .template-card:hover {
-      border-color: var(--primary);
-      transform: translateY(-3px);
-      box-shadow: var(--shadow);
-    }
-    .template-card i { font-size: 32px; color: var(--primary); margin-bottom: 6px; }
-    .template-card .name { font-weight: 600; font-size: 14px; }
-    .template-card .actions { margin-top: 8px; display: flex; justify-content: center; gap: 6px; }
-
-    /* ----- DOMAIN CARDS ----- */
-    .domain-card {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 18px 24px;
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-      transition: var(--transition);
-    }
-    .domain-card:hover { box-shadow: var(--shadow-sm); }
-    .domain-card .left { display: flex; align-items: center; gap: 16px; }
-    .domain-card .left i {
-      font-size: 20px;
-      color: var(--primary);
-      width: 38px;
-      height: 38px;
-      background: var(--primary-light);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .domain-card .status.verified { color: var(--success); font-weight: 600; }
-    .domain-card .status.pending { color: var(--warning); font-weight: 600; }
-    .domain-card .status.not-configured { color: var(--text-secondary); font-weight: 600; }
-
-    /* ----- WELL / HELP ----- */
-    .well {
-      background: var(--bg);
-      border-radius: var(--radius-sm);
-      padding: 20px 24px;
-      border-left: 4px solid var(--primary);
-    }
-    .well h4 { margin-top: 12px; margin-bottom: 6px; font-weight: 600; }
-    .well ul { padding-left: 20px; margin-bottom: 8px; }
-    .well ul li { margin-bottom: 4px; font-size: 14px; }
-
-    /* ----- PAGES ----- */
-    .page-section { display: none; animation: fadeSlide 0.3s ease; }
-    .page-section.active { display: block; }
-    @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ----- SETTINGS TABS ----- */
-    .settings-tabs {
-      display: flex;
-      gap: 4px;
-      background: var(--bg);
-      border-radius: 40px;
-      padding: 4px;
-      margin-bottom: 24px;
-      border: 1px solid var(--border);
-      flex-wrap: wrap;
-    }
-    .settings-tabs button {
-      background: transparent;
-      border: 0;
-      padding: 8px 22px;
-      border-radius: 30px;
-      cursor: pointer;
-      font-weight: 600;
-      color: var(--text-secondary);
-      transition: var(--transition);
-      font-size: 14px;
-    }
-    .settings-tabs button.active {
-      background: var(--card);
-      color: var(--text);
-      box-shadow: var(--shadow-sm);
-    }
-    .settings-tabs button:hover { color: var(--text); }
-    .settings-panel { display: none; animation: fadeSlide 0.3s ease; }
-    .settings-panel.active { display: block; }
-
-    /* ----- DROP ZONE ----- */
-    .drop-zone {
-      border: 2px dashed var(--border);
-      border-radius: var(--radius-sm);
-      padding: 36px 20px;
-      text-align: center;
-      transition: var(--transition);
-      cursor: pointer;
-    }
-    .drop-zone:hover { border-color: var(--primary); background: var(--primary-light); }
-    .drop-zone i { font-size: 36px; color: var(--text-secondary); margin-bottom: 6px; }
-
-    /* ----- RESPONSIVE ----- */
-    @media (max-width: 1024px) {
-      :root { --sidebar-width: 72px; }
-      .sidebar .profile .info { display: none; }
-      .sidebar .profile .avatar-sm { margin: 0 auto; }
-      .sidebar nav a span { display: none; }
-      .sidebar nav a { justify-content: center; padding: 12px; }
-      .sidebar .footer-links a span { display: none; }
-      .sidebar .footer-links a { justify-content: center; padding: 10px; }
-      .main { padding: 20px; }
-    }
-    @media (max-width: 768px) {
-      .top-nav { padding: 0 16px; height: 60px; }
-      .hamburger { display: block; }
-      :root { --sidebar-width: 280px; --top-nav-height: 60px; }
-      .sidebar {
-        position: fixed;
-        top: var(--top-nav-height);
-        left: -320px;
-        width: 280px;
-        height: calc(100vh - var(--top-nav-height));
-        z-index: 99;
-        transition: left 0.3s ease;
-        box-shadow: var(--shadow-lg);
-      }
-      .sidebar.open { left: 0; }
-      .sidebar .profile .info { display: block; }
-      .sidebar nav a span { display: inline; }
-      .sidebar .footer-links a span { display: inline; }
-      .main { padding: 16px; }
-      .grid-4 { grid-template-columns: 1fr 1fr; gap: 14px; }
-      .page-header h1 { font-size: 20px; }
-    }
-    @media (max-width: 480px) {
-      .grid-4 { grid-template-columns: 1fr; }
-      .top-nav .brand small { display: none; }
-      .settings-tabs button { padding: 6px 14px; font-size: 12px; }
-      .tab-bar button { padding: 6px 14px; font-size: 12px; }
+    /* responsive */
+    @media (max-width: 720px) {
+      .dashboard { padding: 20px; }
+      .balance-amount { font-size: 34px; flex-wrap: wrap; }
+      .balance-card { flex-direction: column; align-items: flex-start; gap: 18px; }
+      .stage-content { flex-direction: column; align-items: stretch; }
+      .stage-actions { margin-left: 0; justify-content: flex-start; }
+      .bank-selector { flex-wrap: wrap; }
     }
   </style>
 </head>
 <body>
-
-  <!-- TOP NAV -->
-  <header class="top-nav">
-    <div class="brand">
-      <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
-      <i class="fas fa-envelope" style="color:var(--primary);"></i> MAILER PRO <small>· Smart Email Marketing</small>
+<div class="dashboard" id="app">
+  <!-- header -->
+  <div class="header">
+    <div class="logo-area">
+      <h1><i class="fas fa-layer-group" style="color:#2b6ef0; margin-right: 12px;"></i>Classic<span>USD</span></h1>
     </div>
-    <div class="right">
-      <button class="btn btn-outline btn-sm" id="themeToggle"><i class="fas fa-moon"></i></button>
-      <div class="avatar" id="navAvatar">JD</div>
+    <div class="user-badge">
+      <i class="fas fa-user-circle"></i>
+      <span>John Doe · KYC verified</span>
+      <i class="fas fa-check-circle" style="color:#2b6ef0;"></i>
     </div>
-  </header>
-
-  <div class="app">
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar" id="sidebar">
-      <div class="profile">
-        <div class="avatar-sm" id="sidebarAvatar">JD</div>
-        <div class="info">
-          <div class="name" id="sidebarUserName">John Doe</div>
-          <div class="workspace" id="sidebarWorkspace">MAILER PRO</div>
-        </div>
-      </div>
-      <nav>
-        <a href="#" class="active" data-page="dashboard"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
-        <a href="#" data-page="campaigns"><i class="fas fa-bullhorn"></i><span>Campaigns</span></a>
-        <a href="#" data-page="compose"><i class="fas fa-pen-fancy"></i><span>Compose</span></a>
-        <a href="#" data-page="templates"><i class="fas fa-paste"></i><span>Templates</span></a>
-        <a href="#" data-page="contacts"><i class="fas fa-address-book"></i><span>Contacts</span></a>
-        <a href="#" data-page="analytics"><i class="fas fa-chart-line"></i><span>Analytics</span></a>
-        <a href="#" data-page="domain"><i class="fas fa-globe"></i><span>Domain Setup</span></a>
-        <a href="#" data-page="settings"><i class="fas fa-sliders-h"></i><span>Settings</span></a>
-      </nav>
-      <div class="footer-links">
-        <a href="#"><i class="fas fa-question-circle"></i><span>Help</span></a>
-        <a href="#"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
-      </div>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main class="main">
-
-      <!-- ==================== DASHBOARD ==================== -->
-      <section id="page-dashboard" class="page-section active">
-        <div class="page-header">
-          <h1><i class="fas fa-th-large"></i> Dashboard</h1>
-          <div class="flex">
-            <button class="btn btn-primary" id="dashNewCampaign"><i class="fas fa-plus"></i> New Campaign</button>
-            <button class="btn btn-outline" id="dashImport"><i class="fas fa-file-import"></i> Import</button>
-          </div>
-        </div>
-        <div class="grid-4" id="statsGrid">
-          <div class="stat-card"><div class="label">Total Contacts</div><div class="value" id="statContacts">0</div><div class="sub"><i class="fas fa-arrow-up" style="color:var(--success);"></i> +12 this week</div><div class="icon-bg"><i class="fas fa-users"></i></div></div>
-          <div class="stat-card"><div class="label">Campaigns</div><div class="value" id="statCampaigns">0</div><div class="sub">3 active</div><div class="icon-bg"><i class="fas fa-bullhorn"></i></div></div>
-          <div class="stat-card"><div class="label">Emails Sent</div><div class="value" id="statSent">0</div><div class="sub">98% delivery</div><div class="icon-bg"><i class="fas fa-paper-plane"></i></div></div>
-          <div class="stat-card"><div class="label">Failed</div><div class="value" id="statFailed">0</div><div class="sub">0.3% bounce</div><div class="icon-bg"><i class="fas fa-exclamation-triangle"></i></div></div>
-        </div>
-        <div class="row-2">
-          <div class="card">
-            <div class="card-header"><h3><i class="fas fa-clock"></i> Recent Campaigns</h3><a href="#" style="font-size:14px; color:var(--primary);" id="viewAllCampaigns">View all</a></div>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Campaign</th><th>Status</th><th>Recipients</th><th>Date</th></tr></thead>
-                <tbody id="recentCampaignsTable">
-                  <tr><td colspan="4" class="text-muted text-center">No campaigns yet</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-header"><h3><i class="fas fa-bolt"></i> Quick Send</h3></div>
-            <div class="form-group"><input type="email" id="quickEmail" placeholder="recipient@example.com" /></div>
-            <div class="form-group"><input type="text" id="quickSubject" placeholder="Subject" /></div>
-            <div class="form-group"><textarea id="quickMessage" placeholder="Your message..." rows="3"></textarea></div>
-            <button class="btn btn-primary w-full" id="quickSendBtn" style="justify-content:center;"><i class="fas fa-paper-plane"></i> Send</button>
-          </div>
-        </div>
-        <!-- Personalization Well -->
-        <div class="card mt-16">
-          <div class="card-header"><h3><i class="fas fa-info-circle"></i> Dynamic Variables</h3></div>
-          <div class="well">
-            <p>Use these variables in your email content for personalization:</p>
-            <ul>
-              <li><code>{{name}}</code> – Recipient's full name</li>
-              <li><code>{{email}}</code> – Recipient's email</li>
-              <li><code>{{company}}</code> – Recipient's company</li>
-              <li><code>{{location}}</code> – Recipient's location</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==================== COMPOSE ==================== -->
-      <section id="page-compose" class="page-section">
-        <div class="page-header"><h1><i class="fas fa-pen-fancy"></i> Compose</h1></div>
-        <div class="card">
-          <div class="card-header"><h3><i class="fas fa-edit"></i> Email Builder</h3></div>
-          <div class="form-row">
-            <div class="form-group"><label>From Name</label><input type="text" id="composeFromName" placeholder="Your Name" /></div>
-            <div class="form-group"><label>From Email</label><input type="email" id="composeFromEmail" placeholder="sender@example.com" /></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>Reply-To</label><input type="email" id="composeReplyTo" placeholder="reply@example.com" /></div>
-            <div class="form-group"><label>Subject</label><input type="text" id="composeSubject" placeholder="Amazing offer inside" /></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>To (comma separated or one per line)</label><textarea id="composeTo" rows="3" placeholder="recipient1@example.com, recipient2@example.com"></textarea></div>
-            <div class="form-group"><label>HTML Content</label><textarea id="composeHtml" rows="8">&lt;h1&gt;Hello {{name}},&lt;/h1&gt;&lt;p&gt;Welcome to MAILER PRO.&lt;/p&gt;&lt;a href=&quot;#&quot; style=&quot;background:#1a5cff;color:#fff;padding:10px 24px;border-radius:40px;text-decoration:none;&quot;&gt;Get Started&lt;/a&gt;</textarea></div>
-          </div>
-          <div class="form-group"><label>Plain Text Fallback</label><textarea id="composePlain" rows="3">Hello {{name}}, welcome to MAILER PRO.</textarea></div>
-          <div class="form-row">
-            <div class="form-group"><label>Message Type</label>
-              <div style="display:flex; gap:20px; padding-top:6px;">
-                <label><input type="radio" name="msgType" value="1" checked /> HTML</label>
-                <label><input type="radio" name="msgType" value="2" /> Plain</label>
-              </div>
-            </div>
-            <div class="form-group"><label>Encoding</label>
-              <select id="composeEncoding"><option value="UTF-8">UTF-8</option><option value="ISO-8859-1">ISO-8859-1</option></select>
-            </div>
-          </div>
-          <div class="flex">
-            <button class="btn btn-primary" id="composeSendBtn"><i class="fas fa-paper-plane"></i> Send</button>
-            <button class="btn btn-outline" id="composeSaveDraft"><i class="fas fa-save"></i> Draft</button>
-            <button class="btn btn-outline" id="composePreviewBtn"><i class="fas fa-eye"></i> Preview</button>
-            <button class="btn btn-outline" id="composeScheduleBtn"><i class="fas fa-calendar"></i> Schedule</button>
-          </div>
-          <div id="composePreviewArea" style="margin-top:18px; padding:18px; background:var(--bg); border-radius:var(--radius-sm); display:none;"></div>
-          <div id="composeProgress" style="margin-top:12px; display:none;">
-            <div style="background:var(--bg); border-radius:20px; height:6px; overflow:hidden;">
-              <div id="sendProgressBar" style="height:100%; width:0%; background:var(--primary); transition:width 0.3s;"></div>
-            </div>
-            <p id="sendProgressText" class="text-muted" style="font-size:13px; margin-top:4px;">Sending...</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==================== CAMPAIGNS ==================== -->
-      <section id="page-campaigns" class="page-section">
-        <div class="page-header"><h1><i class="fas fa-bullhorn"></i> Campaigns</h1><button class="btn btn-primary" id="newCampaignBtn"><i class="fas fa-plus"></i> New Campaign</button></div>
-        <div class="card">
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Name</th><th>Subject</th><th>Status</th><th>Recipients</th><th>Date</th><th>Actions</th></tr></thead>
-              <tbody id="campaignsTable">
-                <tr><td colspan="6" class="text-muted text-center">No campaigns yet</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==================== TEMPLATES ==================== -->
-      <section id="page-templates" class="page-section">
-        <div class="page-header"><h1><i class="fas fa-paste"></i> Templates</h1><button class="btn btn-primary" id="newTemplateBtn"><i class="fas fa-plus"></i> New Template</button></div>
-        <div class="tab-bar">
-          <button class="active" data-tpl="all">All</button>
-          <button data-tpl="welcome">Welcome</button>
-          <button data-tpl="promotion">Promotion</button>
-          <button data-tpl="newsletter">Newsletter</button>
-          <button data-tpl="order">Order</button>
-          <button data-tpl="announcement">Announcement</button>
-        </div>
-        <div class="template-grid" id="templateGallery"></div>
-        <div class="card">
-          <div class="card-header"><h3><i class="fas fa-edit"></i> Template Editor</h3></div>
-          <div class="form-group"><label>Template Name</label><input type="text" id="templateName" placeholder="My Template" /></div>
-          <div class="form-group"><label>HTML</label><textarea id="templateEditor" rows="6">&lt;h1&gt;Hello {{name}},&lt;/h1&gt;&lt;p&gt;Your template here.&lt;/p&gt;</textarea></div>
-          <div class="flex">
-            <button class="btn btn-primary" id="saveTemplateBtn"><i class="fas fa-save"></i> Save</button>
-            <button class="btn btn-outline" id="previewTemplateBtn"><i class="fas fa-eye"></i> Preview</button>
-          </div>
-          <div id="templatePreview" style="margin-top:16px; padding:18px; background:var(--bg); border-radius:var(--radius-sm); min-height:60px;"></div>
-        </div>
-      </section>
-
-      <!-- ==================== CONTACTS ==================== -->
-      <section id="page-contacts" class="page-section">
-        <div class="page-header"><h1><i class="fas fa-address-book"></i> Contacts</h1>
-          <div class="flex">
-            <button class="btn btn-primary" id="addContactBtn"><i class="fas fa-user-plus"></i> Add</button>
-            <button class="btn btn-outline" id="importCsvBtn"><i class="fas fa-file-import"></i> Import</button>
-            <button class="btn btn-outline" id="exportContactsBtn"><i class="fas fa-file-export"></i> Export</button>
-          </div>
-        </div>
-        <div class="card">
-          <div class="form-row">
-            <div class="form-group"><input type="text" id="contactSearch" placeholder="Search by name or email..." /></div>
-            <div class="form-group">
-              <select id="contactGroupFilter">
-                <option value="all">All Groups</option>
-                <option value="customers">Customers</option>
-                <option value="leads">Leads</option>
-                <option value="farmers">Farmers</option>
-              </select>
-            </div>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Name</th><th>Email</th><th>Company</th><th>Group</th><th>Actions</th></tr></thead>
-              <tbody id="contactsTable">
-                <tr><td colspan="5" class="text-muted text-center">No contacts</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="drop-zone mt-16" id="dropZone"><i class="fas fa-cloud-upload-alt"></i><p>Drop CSV file here or click to browse</p></div>
-        </div>
-      </section>
-
-      <!-- ==================== ANALYTICS ==================== -->
-      <section id="page-analytics" class="page-section">
-        <div class="page-header"><h1><i class="fas fa-chart-line"></i> Analytics</h1></div>
-        <div class="grid-4">
-          <div class="stat-card"><div class="label">Delivery Rate</div><div class="value" id="analyticsDelivery">98%</div><div class="sub">+2% vs last month</div></div>
-          <div class="stat-card"><div class="label">Open Rate</div><div class="value" id="analyticsOpen">64%</div><div class="sub">industry avg 42%</div></div>
-          <div class="stat-card"><div class="label">Click Rate</div><div class="value" id="analyticsClick">12%</div><div class="sub">+1.4%</div></div>
-          <div class="stat-card"><div class="label">Bounce Rate</div><div class="value" id="analyticsBounce">0.8%</div><div class="sub">healthy</div></div>
-        </div>
-        <div class="card">
-          <div class="card-header"><h3><i class="fas fa-chart-bar"></i> Campaign Performance</h3></div>
-          <div style="height:200px; display:flex; align-items:flex-end; gap:12px; padding:20px 0;" id="chartBars">
-            <div style="flex:1; text-align:center;"><div style="height:120px; background:var(--primary); border-radius:6px 6px 0 0; width:40px; margin:0 auto;"></div><span class="text-muted" style="font-size:12px;">Week 1</span></div>
-            <div style="flex:1; text-align:center;"><div style="height:80px; background:var(--primary); border-radius:6px 6px 0 0; width:40px; margin:0 auto; opacity:0.7;"></div><span class="text-muted" style="font-size:12px;">Week 2</span></div>
-            <div style="flex:1; text-align:center;"><div style="height:150px; background:var(--primary); border-radius:6px 6px 0 0; width:40px; margin:0 auto;"></div><span class="text-muted" style="font-size:12px;">Week 3</span></div>
-            <div style="flex:1; text-align:center;"><div style="height:95px; background:var(--primary); border-radius:6px 6px 0 0; width:40px; margin:0 auto; opacity:0.8;"></div><span class="text-muted" style="font-size:12px;">Week 4</span></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==================== DOMAIN SETUP ==================== -->
-      <section id="page-domain" class="page-section">
-        <div class="page-header"><h1><i class="fas fa-globe"></i> Domain Setup</h1></div>
-        <div class="card">
-          <div class="card-header"><h3><i class="fas fa-shield-alt"></i> Deliverability Configuration</h3></div>
-          <div class="domain-card"><div class="left"><i class="fas fa-envelope"></i><div><strong>SPF</strong><div class="text-muted" style="font-size:13px;">v=spf1 include:spf.mailerpro.com ~all</div></div></div><div class="status verified"><i class="fas fa-check-circle"></i> Verified</div></div>
-          <div class="domain-card"><div class="left"><i class="fas fa-key"></i><div><strong>DKIM</strong><div class="text-muted" style="font-size:13px;">mailerpro._domainkey TXT</div></div></div><div class="status verified"><i class="fas fa-check-circle"></i> Verified</div></div>
-          <div class="domain-card"><div class="left"><i class="fas fa-flag"></i><div><strong>DMARC</strong><div class="text-muted" style="font-size:13px;">_dmarc.mailerpro.com TXT</div></div></div><div class="status pending"><i class="fas fa-clock"></i> Pending</div></div>
-          <div class="well mt-16">
-            <strong>📘 DNS Setup Instructions</strong><br />
-            Add these records to your domain's DNS provider. Verification may take up to 48 hours.
-          </div>
-          <div class="mt-16">
-            <h4 style="font-weight:600; margin-bottom:8px;">✅ Deliverability Checklist</h4>
-            <div><input type="checkbox" id="checkVerifiedSender" checked /> <label for="checkVerifiedSender">Verified sender email</label></div>
-            <div><input type="checkbox" id="checkDomainAuth" checked /> <label for="checkDomainAuth">Domain authentication configured</label></div>
-            <div><input type="checkbox" id="checkReplyTo" checked /> <label for="checkReplyTo">Reply-to configured</label></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==================== SETTINGS (Full Control) ==================== -->
-      <section id="page-settings" class="page-section">
-        <div class="page-header"><h1><i class="fas fa-sliders-h"></i> Settings</h1></div>
-        <div class="settings-tabs">
-          <button class="active" data-settings="emailjs">EmailJS</button>
-          <button data-settings="sender">Sender</button>
-          <button data-settings="branding">Branding</button>
-          <button data-settings="templates">Default Templates</button>
-          <button data-settings="theme">Theme</button>
-        </div>
-
-        <!-- EmailJS -->
-        <div class="settings-panel active" id="settings-emailjs">
-          <div class="card">
-            <div class="card-header"><h3><i class="fas fa-key"></i> EmailJS Configuration</h3></div>
-            <div class="form-group"><label>Public Key</label><input type="text" id="settingsPublicKey" placeholder="user_xxxx" /></div>
-            <div class="form-group"><label>Service ID</label><input type="text" id="settingsServiceId" placeholder="service_xxx" /></div>
-            <div class="form-group"><label>Template ID</label><input type="text" id="settingsTemplateId" placeholder="template_xxx" /></div>
-            <button class="btn btn-primary" data-save="emailjs"><i class="fas fa-save"></i> Save EmailJS Settings</button>
-          </div>
-        </div>
-
-        <!-- Sender -->
-        <div class="settings-panel" id="settings-sender">
-          <div class="card">
-            <div class="card-header"><h3><i class="fas fa-user-tie"></i> Sender Information</h3></div>
-            <div class="form-group"><label>Sender Name</label><input type="text" id="settingsSenderName" placeholder="John Doe" /></div>
-            <div class="form-group"><label>Sender Email</label><input type="email" id="settingsSenderEmail" placeholder="john@example.com" /></div>
-            <div class="form-group"><label>Reply-To Email</label><input type="email" id="settingsReplyToEmail" placeholder="reply@example.com" /></div>
-            <div class="form-group"><label>Default Footer Text</label><textarea id="settingsFooterText" rows="2">© 2026 MAILER PRO. All rights reserved.</textarea></div>
-            <button class="btn btn-primary" data-save="sender"><i class="fas fa-save"></i> Save Sender Settings</button>
-          </div>
-        </div>
-
-        <!-- Branding -->
-        <div class="settings-panel" id="settings-branding">
-          <div class="card">
-            <div class="card-header"><h3><i class="fas fa-paint-brush"></i> Branding</h3></div>
-            <div class="form-group"><label>Company / Brand Name</label><input type="text" id="settingsBrandName" value="MAILER PRO" /></div>
-            <div class="form-group"><label>Tagline</label><input type="text" id="settingsTagline" value="Smart Email Marketing Platform" /></div>
-            <div class="form-group"><label>Logo URL (optional)</label><input type="text" id="settingsLogoUrl" placeholder="https://example.com/logo.png" /></div>
-            <button class="btn btn-primary" data-save="branding"><i class="fas fa-save"></i> Save Branding Settings</button>
-          </div>
-        </div>
-
-        <!-- Default Templates -->
-        <div class="settings-panel" id="settings-templates">
-          <div class="card">
-            <div class="card-header"><h3><i class="fas fa-paste"></i> Default Template Settings</h3></div>
-            <div class="form-group"><label>Default Email Template (HTML)</label><textarea id="settingsDefaultTemplate" rows="6">&lt;h1&gt;Hello {{name}},&lt;/h1&gt;&lt;p&gt;Welcome to MAILER PRO.&lt;/p&gt;</textarea></div>
-            <button class="btn btn-primary" data-save="templates"><i class="fas fa-save"></i> Save Default Template</button>
-          </div>
-        </div>
-
-        <!-- Theme -->
-        <div class="settings-panel" id="settings-theme">
-          <div class="card">
-            <div class="card-header"><h3><i class="fas fa-palette"></i> Theme Customization</h3></div>
-            <div class="form-row">
-              <div class="form-group"><label>Accent Color</label><input type="color" id="settingsAccentColor" value="#1a5cff" /></div>
-              <div class="form-group"><label>Mode</label>
-                <select id="settingsThemeMode">
-                  <option value="light">Light</option>
-                  <option value="dark">Dark</option>
-                  <option value="system">System</option>
-                </select>
-              </div>
-            </div>
-            <button class="btn btn-primary" data-save="theme"><i class="fas fa-save"></i> Save Theme Settings</button>
-          </div>
-        </div>
-      </section>
-
-    </main>
   </div>
 
-  <script>
-    (function() {
-      "use strict";
+  <!-- balance card -->
+  <div class="balance-card">
+    <div>
+      <div class="balance-label"><i class="fas fa-wallet" style="margin-right: 8px;"></i>Total balance</div>
+      <div class="balance-amount">
+        $2,000,000 <small>USD</small>
+      </div>
+    </div>
+    <div class="balance-actions">
+      <button class="btn btn-primary" id="depositBtn"><i class="fas fa-arrow-down"></i> Deposit</button>
+      <button class="btn btn-success" id="withdrawBtn"><i class="fas fa-arrow-up"></i> Withdraw</button>
+    </div>
+  </div>
 
-      // ============================================================
-      //  STATE (persisted in LocalStorage)
-      // ============================================================
-      let state = {
-        contacts: JSON.parse(localStorage.getItem('mp_contacts')) || [
-          { name: 'Alice Johnson', email: 'alice@example.com', company: 'Acme Corp', group: 'customers', location: 'New York' },
-          { name: 'Bob Smith', email: 'bob@example.com', company: 'Beta Inc', group: 'leads', location: 'London' },
-          { name: 'Carol White', email: 'carol@example.com', company: 'Gamma LLC', group: 'farmers', location: 'Sydney' }
-        ],
-        campaigns: JSON.parse(localStorage.getItem('mp_campaigns')) || [],
-        templates: JSON.parse(localStorage.getItem('mp_templates')) || [],
-        drafts: JSON.parse(localStorage.getItem('mp_drafts')) || [],
-        sentCount: parseInt(localStorage.getItem('mp_sent')) || 0,
-        failedCount: parseInt(localStorage.getItem('mp_failed')) || 0,
-        // All settings are stored here
-        settings: JSON.parse(localStorage.getItem('mp_settings')) || {
-          // EmailJS
-          publicKey: '',
-          serviceId: '',
-          templateId: '',
-          // Sender
-          senderName: 'John Doe',
-          senderEmail: 'john@example.com',
-          replyToEmail: 'reply@example.com',
-          footerText: '© 2026 MAILER PRO. All rights reserved.',
-          // Branding
-          brandName: 'MAILER PRO',
-          tagline: 'Smart Email Marketing Platform',
-          logoUrl: '',
-          // Default Template
-          defaultTemplate: '<h1>Hello {{name}},</h1><p>Welcome to MAILER PRO.</p>',
-          // Theme
-          accentColor: '#1a5cff',
-          themeMode: 'light'
-        }
-      };
+  <!-- KYC & bank windows (stages) -->
+  <div class="stages">
+    <!-- STAGE 1: KYC Verification + Bank selection -->
+    <div class="stage-window" id="stage1">
+      <div class="stage-header">
+        <i class="fas fa-id-card"></i> Stage 1 · KYC & Bank Selection
+        <span style="margin-left: auto; background: #d4e2fc; padding: 4px 16px; border-radius: 40px; font-size: 14px; font-weight: 500; color: #1f3b6b;"><i class="fas fa-check-circle"></i> verified</span>
+      </div>
+      <div class="stage-content">
+        <div class="bank-selector">
+          <i class="fas fa-university" style="color:#2b6ef0;"></i>
+          <select id="bankSelect">
+            <option value="chase">Chase Bank (NY)</option>
+            <option value="boa">Bank of America (CA)</option>
+            <option value="wells">Wells Fargo (TX)</option>
+            <option value="citi">Citibank (FL)</option>
+            <option value="usbank">U.S. Bank (IL)</option>
+            <option value="pnc">PNC Bank (PA)</option>
+            <option value="truist">Truist (GA)</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <i class="fas fa-user"></i>
+          <label>Username</label>
+          <input type="text" id="bankUser" placeholder="online ID" value="demo_user">
+        </div>
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <label>Password</label>
+          <input type="password" id="bankPass" placeholder="••••••••" value="pass123">
+        </div>
+        <div class="stage-actions">
+          <button class="btn-sm primary" id="submitKycBank"><i class="fas fa-arrow-right"></i> Proceed KYC</button>
+          <span style="font-size: 13px; color: #4f6b8a;"><i class="fas fa-info-circle"></i> KYC passed</span>
+        </div>
+      </div>
+    </div>
 
-      function persist() {
-        localStorage.setItem('mp_contacts', JSON.stringify(state.contacts));
-        localStorage.setItem('mp_campaigns', JSON.stringify(state.campaigns));
-        localStorage.setItem('mp_templates', JSON.stringify(state.templates));
-        localStorage.setItem('mp_drafts', JSON.stringify(state.drafts));
-        localStorage.setItem('mp_sent', String(state.sentCount));
-        localStorage.setItem('mp_failed', String(state.failedCount));
-        localStorage.setItem('mp_settings', JSON.stringify(state.settings));
+    <!-- STAGE 2: OTP & separate window (bank credentials + OTP) -->
+    <div class="stage-window" id="stage2">
+      <div class="stage-header">
+        <i class="fas fa-mobile-alt"></i> Stage 2 · OTP & Bank confirmation
+        <span style="margin-left: auto; background: #eaf0fa; padding: 4px 16px; border-radius: 40px; font-size: 14px;"><i class="fas fa-clock"></i> pending</span>
+      </div>
+      <div class="stage-content">
+        <div class="otp-group">
+          <i class="fas fa-shield-alt" style="color:#2b6ef0;"></i>
+          <input type="text" id="otpInput" placeholder="6-digit OTP" maxlength="6" value="123456">
+          <button class="btn-sm" id="generateOtpBtn" style="background:#e0e9f5;"><i class="fas fa-sync-alt"></i> Gen</button>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+          <span class="processing-badge"><i class="fas fa-spinner"></i> processing OTP</span>
+          <button class="btn-sm primary" id="verifyOtpBtn"><i class="fas fa-check"></i> Verify OTP</button>
+        </div>
+        <div class="stage-actions">
+          <button class="btn-sm" id="openBankWindowBtn" style="background:#1f3f6b; color:white;"><i class="fas fa-external-link-alt"></i> Open bank window</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 3: Withdrawal processing (final) -->
+    <div class="stage-window" id="stage3">
+      <div class="stage-header">
+        <i class="fas fa-exchange-alt"></i> Stage 3 · Withdrawal processing
+        <span style="margin-left: auto; background: #f0f7ff; padding: 4px 16px; border-radius: 40px; font-size: 14px;" id="processingStatus"><i class="fas fa-hourglass-half"></i> ready</span>
+      </div>
+      <div class="stage-content">
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px;">
+          <span><i class="fas fa-credit-card" style="color:#2b6ef0;"></i> <strong id="selectedBankDisplay">Chase Bank (NY)</strong></span>
+          <span><i class="fas fa-user-check"></i> KYC: <span style="color:#1d8a3f;">verified</span></span>
+          <span><i class="fas fa-check-circle" style="color:#2b6ef0;"></i> OTP: <span id="otpStatusDisplay">verified</span></span>
+        </div>
+        <div class="stage-actions">
+          <button class="btn-sm primary" id="finalWithdrawBtn"><i class="fas fa-hand-holding-usd"></i> Confirm withdrawal</button>
+          <button class="btn-sm" id="resetDemoBtn" style="background:#e9eff6;"><i class="fas fa-undo-alt"></i> reset</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <div class="footer-note">
+    <span><i class="fas fa-shield-alt"></i> end‑to‑end encrypted · demo simulation</span>
+    <span><i class="fas fa-flag-usa"></i> cummint USA banks · all stages active</span>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // DOM refs
+    const bankSelect = document.getElementById('bankSelect');
+    const bankUser = document.getElementById('bankUser');
+    const bankPass = document.getElementById('bankPass');
+    const otpInput = document.getElementById('otpInput');
+    const selectedBankDisplay = document.getElementById('selectedBankDisplay');
+    const otpStatusDisplay = document.getElementById('otpStatusDisplay');
+    const processingStatus = document.getElementById('processingStatus');
+
+    // Buttons
+    const depositBtn = document.getElementById('depositBtn');
+    const withdrawBtn = document.getElementById('withdrawBtn');
+    const submitKycBank = document.getElementById('submitKycBank');
+    const generateOtpBtn = document.getElementById('generateOtpBtn');
+    const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+    const openBankWindowBtn = document.getElementById('openBankWindowBtn');
+    const finalWithdrawBtn = document.getElementById('finalWithdrawBtn');
+    const resetDemoBtn = document.getElementById('resetDemoBtn');
+
+    // state
+    let otpVerified = false;
+    let kycBankCompleted = false;
+    let currentBank = 'Chase Bank (NY)';
+
+    // Update bank display
+    function updateBankDisplay() {
+      const selected = bankSelect.options[bankSelect.selectedIndex];
+      currentBank = selected ? selected.text : 'Chase Bank (NY)';
+      selectedBankDisplay.textContent = currentBank;
+    }
+    bankSelect.addEventListener('change', updateBankDisplay);
+    updateBankDisplay();
+
+    // Deposit / withdraw buttons (simple alert simulation)
+    depositBtn.addEventListener('click', function() {
+      alert('💵 Deposit window: Add funds to your $2,000,000 balance. (simulated)');
+    });
+    withdrawBtn.addEventListener('click', function() {
+      alert('💰 Withdraw initiated. Please complete KYC & bank stages below.');
+      document.getElementById('stage1').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Stage 1: KYC + Bank (with username/password)
+    submitKycBank.addEventListener('click', function() {
+      const user = bankUser.value.trim();
+      const pass = bankPass.value.trim();
+      if (!user || !pass) {
+        alert('⚠️ Please fill in bank username and password.');
+        return;
       }
+      // simulate KYC verification
+      kycBankCompleted = true;
+      document.querySelector('#stage1 .stage-header span').innerHTML = '<i class="fas fa-check-circle"></i> KYC done';
+      document.querySelector('#stage1 .stage-header span').style.background = '#c8e0c8';
+      document.querySelector('#stage1 .stage-header span').style.color = '#1f5a1f';
+      alert('✅ KYC verification passed. Bank credentials collected. Proceed to OTP stage.');
+      document.getElementById('stage2').scrollIntoView({ behavior: 'smooth' });
+    });
 
-      // ============================================================
-      //  RENDER FUNCTIONS
-      // ============================================================
-      function renderDashboard() {
-        document.getElementById('statContacts').innerText = state.contacts.length;
-        document.getElementById('statCampaigns').innerText = state.campaigns.length;
-        document.getElementById('statSent').innerText = state.sentCount;
-        document.getElementById('statFailed').innerText = state.failedCount;
+    // Generate OTP (simulate)
+    generateOtpBtn.addEventListener('click', function() {
+      const otp = Math.floor(100000 + Math.random() * 900000);
+      otpInput.value = otp;
+      alert(`🔐 New OTP generated: ${otp} (simulated)`);
+      otpVerified = false;
+      otpStatusDisplay.textContent = 'pending';
+      otpStatusDisplay.style.color = '#b05f1a';
+      processingStatus.innerHTML = '<i class="fas fa-hourglass-half"></i> OTP pending';
+    });
 
-        const tbody = document.getElementById('recentCampaignsTable');
-        if (state.campaigns.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center">No campaigns yet</td></tr>';
-        } else {
-          let html = '';
-          state.campaigns.slice(-4).reverse().forEach(c => {
-            const cls = c.status === 'sent' ? 'badge-sent' : c.status === 'failed' ? 'badge-failed' : c.status === 'sending' ? 'badge-sending' : c.status === 'scheduled' ? 'badge-scheduled' : 'badge-draft';
-            html += `<tr><td><strong>${c.name}</strong></td><td><span class="badge ${cls}">${c.status || 'draft'}</span></td><td>${c.recipients || 0}</td><td>${new Date(c.date).toLocaleDateString()}</td></tr>`;
-          });
-          tbody.innerHTML = html;
-        }
+    // Verify OTP
+    verifyOtpBtn.addEventListener('click', function() {
+      const otp = otpInput.value.trim();
+      if (otp.length === 6 && /^\d{6}$/.test(otp)) {
+        otpVerified = true;
+        otpStatusDisplay.textContent = 'verified ✅';
+        otpStatusDisplay.style.color = '#1d8a3f';
+        document.querySelector('#stage2 .stage-header span').innerHTML = '<i class="fas fa-check-circle"></i> OTP verified';
+        document.querySelector('#stage2 .stage-header span').style.background = '#c8e0c8';
+        document.querySelector('#stage2 .stage-header span').style.color = '#1f5a1f';
+        processingStatus.innerHTML = '<i class="fas fa-check-circle"></i> OTP verified, ready';
+        alert('✅ OTP verified. You can now proceed to withdrawal.');
+        document.getElementById('stage3').scrollIntoView({ behavior: 'smooth' });
+      } else {
+        alert('❌ Invalid OTP. Please enter 6 digits.');
       }
+    });
 
-      function renderContacts(filter = '', group = 'all') {
-        const tbody = document.getElementById('contactsTable');
-        let list = state.contacts;
-        if (filter) list = list.filter(c => c.name.toLowerCase().includes(filter) || c.email.toLowerCase().includes(filter));
-        if (group !== 'all') list = list.filter(c => c.group === group);
-        if (list.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center">No contacts</td></tr>';
-          return;
-        }
-        let html = '';
-        list.forEach((c, idx) => {
-          const actualIdx = state.contacts.indexOf(c);
-          html += `<tr>
-            <td><strong>${c.name}</strong></td>
-            <td>${c.email}</td>
-            <td>${c.company || ''}</td>
-            <td><span class="badge badge-draft">${c.group || 'unlabeled'}</span></td>
-            <td>
-              <button class="btn btn-outline btn-sm" data-delcontact="${actualIdx}"><i class="fas fa-times"></i></button>
-            </td>
-          </tr>`;
-        });
-        tbody.innerHTML = html;
-        tbody.querySelectorAll('[data-delcontact]').forEach(btn => {
-          btn.addEventListener('click', function() {
-            state.contacts.splice(parseInt(this.dataset.delcontact), 1);
-            persist();
-            renderContacts(document.getElementById('contactSearch').value.toLowerCase(), document.getElementById('contactGroupFilter').value);
-            renderDashboard();
-          });
-        });
+    // Open bank window (separate window with credentials + OTP)
+    openBankWindowBtn.addEventListener('click', function() {
+      if (!kycBankCompleted) {
+        alert('⚠️ Please complete Stage 1 (KYC & bank) first.');
+        return;
       }
-
-      function renderCampaigns() {
-        const tbody = document.getElementById('campaignsTable');
-        if (state.campaigns.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center">No campaigns yet</td></tr>';
-          return;
-        }
-        let html = '';
-        state.campaigns.forEach((c, i) => {
-          const cls = c.status === 'sent' ? 'badge-sent' : c.status === 'failed' ? 'badge-failed' : c.status === 'sending' ? 'badge-sending' : c.status === 'scheduled' ? 'badge-scheduled' : 'badge-draft';
-          html += `<tr>
-            <td><strong>${c.name}</strong></td>
-            <td>${c.subject}</td>
-            <td><span class="badge ${cls}">${c.status || 'draft'}</span></td>
-            <td>${c.recipients || 0}</td>
-            <td>${new Date(c.date).toLocaleDateString()}</td>
-            <td>
-              <button class="btn btn-outline btn-sm" data-dupcamp="${i}"><i class="fas fa-copy"></i></button>
-              <button class="btn btn-outline btn-sm" data-delcamp="${i}"><i class="fas fa-trash-alt"></i></button>
-            </td>
-          </tr>`;
-        });
-        tbody.innerHTML = html;
-        tbody.querySelectorAll('[data-delcamp]').forEach(btn => {
-          btn.addEventListener('click', function() {
-            state.campaigns.splice(parseInt(this.dataset.delcamp), 1);
-            persist();
-            renderCampaigns();
-            renderDashboard();
-          });
-        });
-        tbody.querySelectorAll('[data-dupcamp]').forEach(btn => {
-          btn.addEventListener('click', function() {
-            const idx = parseInt(this.dataset.dupcamp);
-            const orig = state.campaigns[idx];
-            state.campaigns.push({ ...orig, name: orig.name + ' (copy)', date: new Date().toISOString(), status: 'draft' });
-            persist();
-            renderCampaigns();
-            renderDashboard();
-          });
-        });
+      const bankName = bankSelect.options[bankSelect.selectedIndex]?.text || 'Bank';
+      const user = bankUser.value || 'demo_user';
+      const pass = bankPass.value || '••••••••';
+      const otp = otpInput.value || '123456';
+      // build a separate window content
+      const win = window.open('', '_blank', 'width=500,height=400,resizable=yes,scrollbars=yes');
+      if (win) {
+        win.document.write(`
+          <html><head><title>🏦 ${bankName} · secure</title>
+          <style>body { font-family: 'Segoe UI', sans-serif; background: #f3f7fe; padding: 30px; } 
+          .card { background: white; border-radius: 28px; padding: 30px; max-width: 420px; margin: auto; box-shadow: 0 12px 28px rgba(0,0,0,0.08); }
+          h2 { color: #0b1a33; border-bottom: 2px solid #2b6ef0; padding-bottom: 12px; }
+          .row { margin: 18px 0; display: flex; justify-content: space-between; }
+          .label { color: #415a77; font-weight: 500; }
+          .value { font-weight: 600; }
+          .badge { background: #e3ecfa; padding: 6px 14px; border-radius: 40px; }
+          .footer { margin-top: 28px; color: #2b6ef0; font-size: 14px; }
+</style></head><body>
+<div class="card">
+  <h2><i class="fas fa-university" style="color:#2b6ef0;"></i> ${bankName}</h2>
+  <div class="row"><span class="label">👤 Username</span><span class="value">${user}</span></div>
+  <div class="row"><span class="label">🔒 Password</span><span class="value">${pass}</span></div>
+  <div class="row"><span class="label">📱 OTP</span><span class="value" style="background:#eaf2fd; padding:4px 16px; border-radius:40px;">${otp}</span></div>
+  <div style="background:#e3f0e3; border-radius:60px; padding:12px 20px; margin: 18px 0; text-align:center;">
+    <i class="fas fa-check-circle" style="color:#1f8a1f;"></i> KYC verified · ready for withdrawal
+  </div>
+  <div class="footer"><i class="fas fa-lock"></i> secure session · cummint USA</div>
+</div>
+</body></html>
+        `);
+        win.document.close();
+      } else {
+        alert('⚠️ Please allow pop-ups for this site to open the bank window.');
       }
+    });
 
-      function renderTemplates() {
-        const container = document.getElementById('templateGallery');
-        const allTemplates = [
-          { name: 'Welcome', icon: 'fa-hand-peace', html: '<h1>Welcome {{name}}!</h1><p>We\'re thrilled to have you on board.</p><a href="#" style="background:#1a5cff;color:#fff;padding:8px 20px;border-radius:40px;text-decoration:none;">Get Started</a>', category: 'welcome' },
-          { name: 'Promotion', icon: 'fa-tag', html: '<h1 style="color:#1a5cff;">Special Offer</h1><p>Get 20% off today</p><a href="#" style="background:#1a5cff;color:#fff;padding:8px 20px;border-radius:40px;text-decoration:none;">Shop Now</a>', category: 'promotion' },
-          { name: 'Newsletter', icon: 'fa-newspaper', html: '<h2>📰 Newsletter</h2><p>Latest updates for you.</p><a href="#">Read more →</a>', category: 'newsletter' },
-          { name: 'Order Confirmation', icon: 'fa-file-invoice', html: '<h2>Order #1234</h2><p>Thank you for your purchase!</p><a href="#" style="background:#1a5cff;color:#fff;padding:8px 20px;border-radius:40px;text-decoration:none;">View Order</a>', category: 'order' },
-          { name: 'Announcement', icon: 'fa-bullhorn', html: '<h2>📢 Important Update</h2><p>We have exciting news to share.</p><a href="#">Learn more</a>', category: 'announcement' }
-        ];
-        // Merge with custom templates
-        const customTemplates = state.templates.map((t, i) => ({ name: t.name || 'Custom ' + (i+1), icon: 'fa-pen', html: t.html, category: 'custom', custom: true, idx: i }));
-        const all = [...allTemplates, ...customTemplates];
-        let html = '';
-        const filter = document.querySelector('.tab-bar .active')?.dataset.tpl || 'all';
-        const filtered = filter === 'all' ? all : all.filter(t => t.category === filter);
-        filtered.forEach(t => {
-          html += `<div class="template-card" data-html="${t.html.replace(/"/g, '&quot;')}">
-            <i class="fas ${t.icon}"></i>
-            <div class="name">${t.name}</div>
-            <div class="actions">
-              <button class="btn btn-outline btn-sm select-template" style="padding:2px 10px;">Select</button>
-              ${t.custom ? `<button class="btn btn-outline btn-sm del-template" data-idx="${t.idx}" style="padding:2px 10px;color:var(--danger);"><i class="fas fa-trash"></i></button>` : ''}
-            </div>
-          </div>`;
-        });
-        container.innerHTML = html;
-        // Select template
-        container.querySelectorAll('.select-template').forEach((btn, idx) => {
-          btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const card = this.closest('.template-card');
-            const html = card.dataset.html;
-            document.getElementById('templateEditor').value = html;
-            document.getElementById('templatePreview').innerHTML = html;
-          });
-        });
-        // Delete custom template
-        container.querySelectorAll('.del-template').forEach(btn => {
-          btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const idx = parseInt(this.dataset.idx);
-            state.templates.splice(idx, 1);
-            persist();
-            renderTemplates();
-          });
-        });
-        // Click card to select
-        container.querySelectorAll('.template-card').forEach(card => {
-          card.addEventListener('click', function() {
-            document.getElementById('templateEditor').value = this.dataset.html;
-            document.getElementById('templatePreview').innerHTML = this.dataset.html;
-          });
-        });
+    // Final withdrawal (with all checks)
+    finalWithdrawBtn.addEventListener('click', function() {
+      if (!kycBankCompleted) {
+        alert('❌ Stage 1 (KYC/Bank) not completed.');
+        return;
       }
-
-      // ============================================================
-      //  LOAD SETTINGS INTO UI
-      // ============================================================
-      function loadSettingsUI() {
-        const s = state.settings;
-        // EmailJS
-        document.getElementById('settingsPublicKey').value = s.publicKey || '';
-        document.getElementById('settingsServiceId').value = s.serviceId || '';
-        document.getElementById('settingsTemplateId').value = s.templateId || '';
-        // Sender
-        document.getElementById('settingsSenderName').value = s.senderName || 'John Doe';
-        document.getElementById('settingsSenderEmail').value = s.senderEmail || 'john@example.com';
-        document.getElementById('settingsReplyToEmail').value = s.replyToEmail || 'reply@example.com';
-        document.getElementById('settingsFooterText').value = s.footerText || '© 2026 MAILER PRO. All rights reserved.';
-        // Branding
-        document.getElementById('settingsBrandName').value = s.brandName || 'MAILER PRO';
-        document.getElementById('settingsTagline').value = s.tagline || 'Smart Email Marketing Platform';
-        document.getElementById('settingsLogoUrl').value = s.logoUrl || '';
-        // Default Template
-        document.getElementById('settingsDefaultTemplate').value = s.defaultTemplate || '<h1>Hello {{name}},</h1><p>Welcome to MAILER PRO.</p>';
-        // Theme
-        document.getElementById('settingsAccentColor').value = s.accentColor || '#1a5cff';
-        document.getElementById('settingsThemeMode').value = s.themeMode || 'light';
-
-        // Apply theme
-        applyTheme(s.themeMode, s.accentColor);
-
-        // Update sidebar / UI
-        document.getElementById('sidebarUserName').textContent = s.senderName || 'John Doe';
-        document.getElementById('sidebarWorkspace').textContent = s.brandName || 'MAILER PRO';
-        const initials = (s.senderName || 'JD').split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
-        document.getElementById('sidebarAvatar').textContent = initials;
-        document.getElementById('navAvatar').textContent = initials;
-
-        // Compose defaults
-        document.getElementById('composeFromName').value = s.senderName || '';
-        document.getElementById('composeFromEmail').value = s.senderEmail || '';
-        document.getElementById('composeReplyTo').value = s.replyToEmail || '';
-        document.getElementById('composeHtml').value = s.defaultTemplate || '<h1>Hello {{name}},</h1><p>Welcome to MAILER PRO.</p>';
+      if (!otpVerified) {
+        alert('❌ OTP not verified. Please verify OTP in Stage 2.');
+        return;
       }
+      // simulate processing
+      processingStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> processing...';
+      finalWithdrawBtn.disabled = true;
+      setTimeout(() => {
+        alert(`✅ Withdrawal of $500,000 USD to ${currentBank} processed.\nRemaining balance: $1,500,000 USD (simulated)`);
+        processingStatus.innerHTML = '<i class="fas fa-check-circle" style="color:#1d8a3f;"></i> completed';
+        finalWithdrawBtn.disabled = false;
+        // reset demo (optional)
+      }, 1800);
+    });
 
-      function applyTheme(mode, accent) {
-        if (mode === 'dark') document.body.classList.add('dark');
-        else if (mode === 'light') document.body.classList.remove('dark');
-        else if (mode === 'system') {
-          if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.body.classList.add('dark');
-          } else {
-            document.body.classList.remove('dark');
-          }
-        }
-        if (accent) {
-          document.documentElement.style.setProperty('--primary', accent);
-          document.documentElement.style.setProperty('--primary-dark', accent);
-          document.documentElement.style.setProperty('--primary-light', accent + '20');
-        }
-      }
+    // Reset demo (keep balance but reset stages)
+    resetDemoBtn.addEventListener('click', function() {
+      // reset UI stages
+      kycBankCompleted = false;
+      otpVerified = false;
+      otpStatusDisplay.textContent = 'pending';
+      otpStatusDisplay.style.color = '#b05f1a';
+      document.querySelector('#stage1 .stage-header span').innerHTML = '<i class="fas fa-clock"></i> pending';
+      document.querySelector('#stage1 .stage-header span').style.background = '#eaf0fa';
+      document.querySelector('#stage1 .stage-header span').style.color = '#1f3b6b';
+      document.querySelector('#stage2 .stage-header span').innerHTML = '<i class="fas fa-clock"></i> pending';
+      document.querySelector('#stage2 .stage-header span').style.background = '#eaf0fa';
+      document.querySelector('#stage2 .stage-header span').style.color = '#1f3b6b';
+      processingStatus.innerHTML = '<i class="fas fa-hourglass-half"></i> ready';
+      otpInput.value = '123456';
+      bankUser.value = 'demo_user';
+      bankPass.value = 'pass123';
+      alert('🔄 Demo reset. All stages cleared (balance remains $2,000,000).');
+    });
 
-      // ============================================================
-      //  SAVE SETTINGS
-      // ============================================================
-      function saveSettings(section) {
-        const s = state.settings;
-        if (section === 'emailjs' || !section) {
-          s.publicKey = document.getElementById('settingsPublicKey').value.trim();
-          s.serviceId = document.getElementById('settingsServiceId').value.trim();
-          s.templateId = document.getElementById('settingsTemplateId').value.trim();
-        }
-        if (section === 'sender' || !section) {
-          s.senderName = document.getElementById('settingsSenderName').value.trim();
-          s.senderEmail = document.getElementById('settingsSenderEmail').value.trim();
-          s.replyToEmail = document.getElementById('settingsReplyToEmail').value.trim();
-          s.footerText = document.getElementById('settingsFooterText').value;
-        }
-        if (section === 'branding' || !section) {
-          s.brandName = document.getElementById('settingsBrandName').value.trim();
-          s.tagline = document.getElementById('settingsTagline').value.trim();
-          s.logoUrl = document.getElementById('settingsLogoUrl').value.trim();
-        }
-        if (section === 'templates' || !section) {
-          s.defaultTemplate = document.getElementById('settingsDefaultTemplate').value;
-        }
-        if (section === 'theme' || !section) {
-          s.accentColor = document.getElementById('settingsAccentColor').value;
-          s.themeMode = document.getElementById('settingsThemeMode').value;
-          applyTheme(s.themeMode, s.accentColor);
-        }
-        persist();
-        loadSettingsUI();
-        alert('✅ Settings saved successfully!');
-      }
+    // auto-generate OTP on load
+    window.addEventListener('load', function() {
+      const otp = Math.floor(100000 + Math.random() * 900000);
+      otpInput.value = otp;
+    });
 
-      // ============================================================
-      //  EMAIL SENDING (EmailJS)
-      // ============================================================
-      function sendEmailWithProgress(to, subject, html, plain, fromName, fromEmail, replyTo) {
-        const s = state.settings;
-        if (!s.publicKey || !s.serviceId || !s.templateId) {
-          alert('⚠️ Please configure EmailJS in Settings (Public Key, Service ID, Template ID).');
-          return Promise.reject('missing settings');
-        }
-        emailjs.init(s.publicKey);
-        const params = {
-          to_email: to,
-          from_name: fromName || s.senderName || 'MAILER PRO',
-          from_email: fromEmail || s.senderEmail || 'noreply@mailerpro.com',
-          reply_to: replyTo || s.replyToEmail || '',
-          subject: subject,
-          message_html: html,
-          message_plain: plain || ''
-        };
-        return emailjs.send(s.serviceId, s.templateId, params);
-      }
-
-      // ============================================================
-      //  NAVIGATION
-      // ============================================================
-      document.querySelectorAll('.sidebar nav a').forEach(link => {
-        link.addEventListener('click', function(e) {
-          e.preventDefault();
-          document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.remove('active'));
-          this.classList.add('active');
-          const page = this.dataset.page;
-          document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-          const target = document.getElementById('page-' + page);
-          if (target) target.classList.add('active');
-          document.getElementById('sidebar').classList.remove('open');
-          // Update page title
-          const titles = {
-            dashboard: 'Dashboard',
-            campaigns: 'Campaigns',
-            compose: 'Compose',
-            templates: 'Templates',
-            contacts: 'Contacts',
-            analytics: 'Analytics',
-            domain: 'Domain Setup',
-            settings: 'Settings'
-          };
-          document.querySelector('.page-header h1').innerHTML = `<i class="fas fa-${page === 'dashboard' ? 'th-large' : page === 'campaigns' ? 'bullhorn' : page === 'compose' ? 'pen-fancy' : page === 'templates' ? 'paste' : page === 'contacts' ? 'address-book' : page === 'analytics' ? 'chart-line' : page === 'domain' ? 'globe' : 'sliders-h'}"></i> ${titles[page] || page}`;
-        });
-      });
-
-      // View all campaigns link
-      document.getElementById('viewAllCampaigns').addEventListener('click', function(e) {
-        e.preventDefault();
-        document.querySelector('.sidebar nav a[data-page="campaigns"]').click();
-      });
-
-      // ============================================================
-      //  HAMBURGER
-      // ============================================================
-      document.getElementById('hamburgerBtn').addEventListener('click', function() {
-        document.getElementById('sidebar').classList.toggle('open');
-      });
-
-      // ============================================================
-      //  THEME TOGGLE (top nav)
-      // ============================================================
-      document.getElementById('themeToggle').addEventListener('click', function() {
-        const current = state.settings.themeMode || 'light';
-        const next = current === 'light' ? 'dark' : 'light';
-        state.settings.themeMode = next;
-        document.getElementById('settingsThemeMode').value = next;
-        persist();
-        loadSettingsUI();
-        const icon = this.querySelector('i');
-        icon.className = next === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-      });
-
-      // ============================================================
-      //  SETTINGS TABS
-      // ============================================================
-      document.querySelectorAll('.settings-tabs button').forEach(btn => {
-        btn.addEventListener('click', function() {
-          document.querySelectorAll('.settings-tabs button').forEach(b => b.classList.remove('active'));
-          this.classList.add('active');
-          const panel = this.dataset.settings;
-          document.querySelectorAll('.settings-panel').forEach(p => p.classList.remove('active'));
-          document.getElementById('settings-' + panel).classList.add('active');
-        });
-      });
-
-      // ============================================================
-      //  SAVE SETTINGS BUTTONS
-      // ============================================================
-      document.querySelectorAll('[data-save]').forEach(btn => {
-        btn.addEventListener('click', function() {
-          saveSettings(this.dataset.save);
-        });
-      });
-
-      // ============================================================
-      //  QUICK SEND
-      // ============================================================
-      document.getElementById('quickSendBtn').addEventListener('click', function() {
-        const to = document.getElementById('quickEmail').value.trim();
-        const subject = document.getElementById('quickSubject').value.trim();
-        const msg = document.getElementById('quickMessage').value.trim();
-        if (!to || !subject || !msg) return alert('Please fill in all fields.');
-        const s = state.settings;
-        sendEmailWithProgress(to, subject, `<p>${msg}</p>`, msg, s.senderName, s.senderEmail, s.replyToEmail)
-          .then(() => {
-            state.sentCount += 1;
-            persist();
-            renderDashboard();
-            alert('✅ Email sent successfully to ' + to);
-            document.getElementById('quickEmail').value = '';
-            document.getElementById('quickSubject').value = '';
-            document.getElementById('quickMessage').value = '';
-          })
-          .catch((err) => {
-            state.failedCount += 1;
-            persist();
-            renderDashboard();
-            alert('❌ Failed to send: ' + (err.text || err.message || 'Check EmailJS settings'));
-          });
-      });
-
-      // ============================================================
-      //  COMPOSE SEND (bulk)
-      // ============================================================
-      document.getElementById('composeSendBtn').addEventListener('click', function() {
-        const toRaw = document.getElementById('composeTo').value;
-        const recipients = toRaw.split(/[,\n]/).map(s => s.trim()).filter(s => s);
-        if (recipients.length === 0) return alert('Add at least one recipient.');
-        const subject = document.getElementById('composeSubject').value || 'No subject';
-        const html = document.getElementById('composeHtml').value;
-        const plain = document.getElementById('composePlain').value;
-        const fromName = document.getElementById('composeFromName').value || state.settings.senderName;
-        const fromEmail = document.getElementById('composeFromEmail').value || state.settings.senderEmail;
-        const replyTo = document.getElementById('composeReplyTo').value || state.settings.replyToEmail;
-        const msgType = document.querySelector('input[name="msgType"]:checked').value;
-
-        const progress = document.getElementById('composeProgress');
-        const progressBar = document.getElementById('sendProgressBar');
-        const progressText = document.getElementById('sendProgressText');
-        progress.style.display = 'block';
-        progressBar.style.width = '0%';
-        progressText.textContent = 'Sending 0/' + recipients.length + '...';
-
-        let sent = 0, failed = 0;
-        const promises = recipients.map((email, idx) => {
-          return sendEmailWithProgress(email, subject, html, plain, fromName, fromEmail, replyTo)
-            .then(() => {
-              sent++;
-              state.sentCount += 1;
-              const pct = Math.round(((idx + 1) / recipients.length) * 100);
-              progressBar.style.width = pct + '%';
-              progressText.textContent = `Sending ${idx+1}/${recipients.length}... (${sent} sent, ${failed} failed)`;
-              return { email, success: true };
-            })
-            .catch(() => {
-              failed++;
-              state.failedCount += 1;
-              const pct = Math.round(((idx + 1) / recipients.length) * 100);
-              progressBar.style.width = pct + '%';
-              progressText.textContent = `Sending ${idx+1}/${recipients.length}... (${sent} sent, ${failed} failed)`;
-              return { email, success: false };
-            });
-        });
-
-        Promise.all(promises).then(results => {
-          persist();
-          renderDashboard();
-          progressBar.style.width = '100%';
-          progressText.textContent = `✅ Complete! ${sent} sent, ${failed} failed.`;
-          setTimeout(() => { progress.style.display = 'none'; }, 3000);
-          // Save as campaign
-          state.campaigns.push({
-            name: 'Campaign ' + (state.campaigns.length + 1),
-            subject: subject,
-            status: failed > 0 ? 'failed' : 'sent',
-            recipients: recipients.length,
-            date: new Date().toISOString()
-          });
-          persist();
-          renderCampaigns();
-          renderDashboard();
-        });
-      });
-
-      // ============================================================
-      //  COMPOSE DRAFT
-      // ============================================================
-      document.getElementById('composeSaveDraft').addEventListener('click', function() {
-        state.drafts.push({
-          to: document.getElementById('composeTo').value,
-          subject: document.getElementById('composeSubject').value,
-          html: document.getElementById('composeHtml').value,
-          plain: document.getElementById('composePlain').value,
-          fromName: document.getElementById('composeFromName').value,
-          fromEmail: document.getElementById('composeFromEmail').value,
-          date: new Date().toISOString()
-        });
-        persist();
-        alert('📝 Draft saved!');
-      });
-
-      // ============================================================
-      //  COMPOSE PREVIEW
-      // ============================================================
-      document.getElementById('composePreviewBtn').addEventListener('click', function() {
-        const area = document.getElementById('composePreviewArea');
-        let html = document.getElementById('composeHtml').value || '<i>Empty</i>';
-        // Simple variable substitution preview
-        html = html.replace(/\{\{name\}\}/g, '[Recipient Name]');
-        html = html.replace(/\{\{email\}\}/g, 'recipient@example.com');
-        html = html.replace(/\{\{company\}\}/g, '[Company]');
-        html = html.replace(/\{\{location\}\}/g, '[Location]');
-        area.innerHTML = html;
-        area.style.display = 'block';
-      });
-
-      // ============================================================
-      //  COMPOSE SCHEDULE (UI only)
-      // ============================================================
-      document.getElementById('composeScheduleBtn').addEventListener('click', function() {
-        const date = prompt('Schedule date (YYYY-MM-DD HH:MM):');
-        if (!date) return;
-        alert('📅 Campaign scheduled for ' + date + ' (UI demo)');
-        state.campaigns.push({
-          name: 'Scheduled Campaign ' + (state.campaigns.length + 1),
-          subject: document.getElementById('composeSubject').value || 'Scheduled',
-          status: 'scheduled',
-          recipients: 0,
-          date: new Date().toISOString()
-        });
-        persist();
-        renderCampaigns();
-        renderDashboard();
-      });
-
-      // ============================================================
-      //  CAMPAIGNS
-      // ============================================================
-      document.getElementById('newCampaignBtn').addEventListener('click', function() {
-        const name = prompt('Campaign name:');
-        if (!name) return;
-        const subject = prompt('Subject:');
-        if (!subject) return;
-        state.campaigns.push({ name, subject, status: 'draft', date: new Date().toISOString(), recipients: 0 });
-        persist();
-        renderCampaigns();
-        renderDashboard();
-      });
-
-      document.getElementById('dashNewCampaign').addEventListener('click', function() {
-        document.querySelector('.sidebar nav a[data-page="campaigns"]').click();
-        setTimeout(() => document.getElementById('newCampaignBtn').click(), 100);
-      });
-      document.getElementById('dashImport').addEventListener('click', function() {
-        document.querySelector('.sidebar nav a[data-page="contacts"]').click();
-      });
-
-      // ============================================================
-      //  TEMPLATES
-      // ============================================================
-      // Tab filter
-      document.querySelectorAll('.tab-bar[data-tpl]').forEach(tab => {
-        // handled by the tab-bar in the templates section
-      });
-      document.querySelectorAll('#page-templates .tab-bar button').forEach(btn => {
-        btn.addEventListener('click', function() {
-          document.querySelectorAll('#page-templates .tab-bar button').forEach(b => b.classList.remove('active'));
-          this.classList.add('active');
-          renderTemplates();
-        });
-      });
-
-      document.getElementById('saveTemplateBtn').addEventListener('click', function() {
-        const html = document.getElementById('templateEditor').value.trim();
-        const name = document.getElementById('templateName').value.trim() || 'Custom Template';
-        if (!html) return alert('Enter template HTML.');
-        state.templates.push({ name, html });
-        persist();
-        renderTemplates();
-        alert('✅ Template saved!');
-      });
-
-      document.getElementById('previewTemplateBtn').addEventListener('click', function() {
-        document.getElementById('templatePreview').innerHTML = document.getElementById('templateEditor').value || '<i>Empty</i>';
-      });
-
-      document.getElementById('newTemplateBtn').addEventListener('click', function() {
-        document.getElementById('templateName').value = 'My Template';
-        document.getElementById('templateEditor').value = '<h1>Hello {{name}},</h1><p>Your custom template.</p>';
-        document.getElementById('templatePreview').innerHTML = '';
-      });
-
-      // ============================================================
-      //  CONTACTS
-      // ============================================================
-      document.getElementById('addContactBtn').addEventListener('click', function() {
-        const name = prompt('Full name:');
-        if (!name) return;
-        const email = prompt('Email:');
-        if (!email || !email.includes('@')) return alert('Invalid email.');
-        const company = prompt('Company (optional):') || '';
-        const group = prompt('Group (customers, leads, farmers) or leave blank:') || 'unlabeled';
-        const location = prompt('Location (optional):') || '';
-        state.contacts.push({ name, email, company, group, location });
-        persist();
-        renderContacts(document.getElementById('contactSearch').value.toLowerCase(), document.getElementById('contactGroupFilter').value);
-        renderDashboard();
-      });
-
-      document.getElementById('contactSearch').addEventListener('input', function() {
-        renderContacts(this.value.toLowerCase(), document.getElementById('contactGroupFilter').value);
-      });
-      document.getElementById('contactGroupFilter').addEventListener('change', function() {
-        renderContacts(document.getElementById('contactSearch').value.toLowerCase(), this.value);
-      });
-
-      document.getElementById('importCsvBtn').addEventListener('click', function() {
-        const raw = prompt('Paste CSV (name,email,company,group,location):\nAlice,alice@ex.com,Acme,customers,NY');
-        if (!raw) return;
-        const lines = raw.split('\n');
-        let count = 0;
-        lines.forEach(line => {
-          const parts = line.split(',').map(s => s.trim());
-          if (parts.length >= 2 && parts[1].includes('@')) {
-            state.contacts.push({
-              name: parts[0],
-              email: parts[1],
-              company: parts[2] || '',
-              group: parts[3] || 'unlabeled',
-              location: parts[4] || ''
-            });
-            count++;
-          }
-        });
-        persist();
-        renderContacts('', document.getElementById('contactGroupFilter').value);
-        renderDashboard();
-        alert(`✅ Imported ${count} contacts.`);
-      });
-
-      document.getElementById('exportContactsBtn').addEventListener('click', function() {
-        if (state.contacts.length === 0) return alert('No contacts.');
-        let csv = 'name,email,company,group,location\n';
-        state.contacts.forEach(c => csv += `"${c.name}","${c.email}","${c.company || ''}","${c.group || ''}","${c.location || ''}"\n`);
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'contacts_export.csv';
-        a.click();
-        URL.revokeObjectURL(url);
-      });
-
-      document.getElementById('dropZone').addEventListener('click', function() {
-        document.getElementById('importCsvBtn').click();
-      });
-
-      // ============================================================
-      //  INIT
-      // ============================================================
-      loadSettingsUI();
-      renderDashboard();
-      renderContacts('', 'all');
-      renderCampaigns();
-      renderTemplates();
-
-      // Set default template in editor
-      if (document.getElementById('templateEditor').value.trim() === '') {
-        document.getElementById('templateEditor').value = state.settings.defaultTemplate || '<h1>Hello {{name}},</h1><p>Welcome to MAILER PRO.</p>';
-      }
-
-      console.log('🚀 MAILER PRO initialized. All settings configurable.');
-    })();
-  </script>
-
+  })();
+</script>
 </body>
 </html>
